@@ -1144,25 +1144,32 @@ img {
 
 /* FAQ Page Styles */
 .faq-hero {
-    background-color: var(--seasalt);
+    /* Background image added with dark overlay for readability */
+    background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('../assets/images/yellow-doors-banner.webp');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     padding: 140px 0 var(--section-padding);
     text-align: center;
+    color: var(--white);
 }
 
 .faq-title {
     font-size: clamp(2.5rem, 5vw, 3.5rem);
     margin-bottom: 1rem;
-    color: var(--eerie-black);
+    color: var(--white);
     font-weight: 700;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.35);
 }
 
 .faq-subtitle {
     font-size: 1.2rem;
-    color: var(--grey-text);
+    color: var(--tea-green);
     margin-bottom: 2rem;
     max-width: 600px;
     margin-left: auto;
     margin-right: auto;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.25);
 }
 
 .faq-cta {
