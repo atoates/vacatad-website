@@ -1216,8 +1216,8 @@ img {
     background-repeat: no-repeat;
     color: var(--white);
 }
-.contact-hero .legal-title { color: var(--white); }
-.contact-hero .legal-subtitle { color: var(--tea-green); font-weight: 600; }
+.contact-hero .legal-title { color: var(--white) !important; text-shadow: 0 2px 6px rgba(0,0,0,0.35); }
+.contact-hero .legal-subtitle { color: var(--tea-green) !important; font-weight: 600; text-shadow: 0 1px 3px rgba(0,0,0,0.25); }
 .contact-content-page .tabs { margin-top: 0.5rem; }
 
 .faq-category {
