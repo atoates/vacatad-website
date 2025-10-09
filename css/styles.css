@@ -1151,6 +1151,28 @@ img {
     gap: 3rem;
 }
 
+/* Tabs (used on Contact page) */
+.tabs {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+}
+.tab-link {
+    padding: 0.6rem 1rem;
+    border: 1px solid #e2e5e7;
+    background: var(--seasalt);
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    color: var(--eerie-black);
+}
+.tab-link.active {
+    background: var(--tea-green);
+    border-color: var(--tea-green);
+}
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+.embed-wrapper { margin: 1rem 0; }
+
 .faq-category {
     background-color: var(--seasalt);
     padding: 2rem;
