@@ -119,54 +119,53 @@ function initMobileMenu() {
 // Contact form functionality for VacatAd
 function initContactForm() {
     const contactForm = document.getElementById('contactForm');
-    
-    if (contactForm) {
-        contactForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Get form data
-            const formData = new FormData(this);
-            const name = formData.get('name');
-            const email = formData.get('email');
-            const propertyAddress = formData.get('property-address');
-            const consent = formData.get('consent');
-            
-            // Basic validation
-            if (!name || !email || !propertyAddress) {
-                showNotification('Please fill in all required fields.', 'error');
-                return;
-            }
-            
-            if (!isValidEmail(email)) {
-                showNotification('Please enter a valid email address.', 'error');
-                return;
-            }
-            
-            if (!consent) {
-                showNotification('Please consent to being contacted about business rates relief services.', 'error');
-                return;
-            }
-            
-            // Simulate form submission
-            const submitButton = this.querySelector('.submit-button');
-            const originalText = submitButton.textContent;
-            
-            submitButton.textContent = 'Sending...';
-            submitButton.disabled = true;
-            
-            // Simulate API call
-            setTimeout(() => {
-                showNotification('Thank you! We\'ll contact you within 24 hours with your personalised rates saving estimate.', 'success');
-                contactForm.reset();
-                
-                submitButton.textContent = originalText;
-                submitButton.disabled = false;
-                
-                // Track conversion event
-                trackConversion('consultation_request');
-            }, 2000);
-        });
-    }
+    if (!contactForm) return;
+
+    contactForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const formData = new FormData(this);
+        const name = formData.get('name')?.trim();
+        const email = formData.get('email')?.trim();
+        const propertyAddress = formData.get('property-address')?.trim();
+        const postcode = formData.get('postcode')?.trim().toUpperCase();
+        const consent = formData.get('consent');
+
+        if (!name || !email || !propertyAddress || !postcode) {
+            showNotification('Please complete all required fields.', 'error');
+            return;
+        }
+
+        if (!isValidEmail(email)) {
+            showNotification('Please enter a valid email address.', 'error');
+            return;
+        }
+
+        // Simple postcode validation (length & characters). For UK-specific, integrate fuller regex later.
+        const postcodePattern = /^[A-Za-z0-9 ]{3,10}$/;
+        if (!postcodePattern.test(postcode)) {
+            showNotification('Please enter a valid postcode.', 'error');
+            return;
+        }
+
+        if (!consent) {
+            showNotification('Please consent to be contacted about business rates relief.', 'error');
+            return;
+        }
+
+        const submitButton = this.querySelector('.submit-button');
+        const originalText = submitButton.textContent;
+        submitButton.textContent = 'Sending...';
+        submitButton.disabled = true;
+
+        setTimeout(() => {
+            showNotification('Thank you! Assessment request received — we\'ll reply within 1 business day.', 'success');
+            contactForm.reset();
+            submitButton.textContent = originalText;
+            submitButton.disabled = false;
+            trackConversion('assessment_request');
+        }, 1600);
+    });
 }
 
 // Phone number click tracking
