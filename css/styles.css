@@ -1041,6 +1041,13 @@ img {
     color: var(--eerie-black);
 }
 
+/* Improve contrast: primary button hover in dark final-cta */
+.final-cta .cta-button.primary:hover {
+    color: var(--white);
+    border-color: var(--white);
+    background-color: transparent;
+}
+
 @media screen and (max-width: 768px) {
     .final-cta-buttons {
         flex-direction: column;
