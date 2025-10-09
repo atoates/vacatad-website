@@ -970,7 +970,7 @@ img {
 /* Final CTA Section */
 .final-cta {
     /* Use background image with subtle dark overlay for readability */
-    background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('../assets/images/footer-background.png');
+    background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('../assets/images/footer-background.webp');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -979,6 +979,16 @@ img {
     border-top: 1px solid #e2e5e7;
     border-bottom: 1px solid #e2e5e7;
     color: var(--white);
+}
+
+/* PNG fallback for older browsers that cannot render WebP */
+@supports not (background: url('../assets/images/footer-background.webp')) {
+    .final-cta {
+        background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('../assets/images/footer-background.png');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
 }
 
 .final-cta-title {
