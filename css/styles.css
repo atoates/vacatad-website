@@ -970,7 +970,7 @@ img {
 /* Final CTA Section */
 .final-cta {
     /* Use background image with subtle dark overlay for readability */
-    background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('../assets/images/footer%20background.png');
+    background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('../assets/images/footer-background.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
