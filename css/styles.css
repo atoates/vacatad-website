@@ -969,22 +969,27 @@ img {
 
 /* Final CTA Section */
 .final-cta {
-    background-color: var(--seasalt);
+    /* Use background image with subtle dark overlay for readability */
+    background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('../assets/images/footer%20background.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     padding: var(--section-padding) 0;
     text-align: center;
     border-top: 1px solid #e2e5e7;
     border-bottom: 1px solid #e2e5e7;
+    color: var(--white);
 }
 
 .final-cta-title {
     font-size: clamp(2rem, 4vw, 2.6rem);
     margin-bottom: 1rem;
-    color: var(--eerie-black);
+    color: var(--white);
 }
 
 .final-cta-subtitle {
     font-size: 1.15rem;
-    color: var(--grey-text);
+    color: var(--white);
     max-width: 680px;
     margin: 0 auto 2.5rem;
     line-height: 1.6;
@@ -998,12 +1003,13 @@ img {
 }
 
 .final-cta-buttons .cta-button.secondary {
-    border-color: var(--eerie-black);
+    border-color: var(--white);
+    color: var(--white);
 }
 
 .final-cta-buttons .cta-button.secondary:hover {
-    background-color: var(--eerie-black);
-    color: var(--white);
+    background-color: var(--white);
+    color: var(--eerie-black);
 }
 
 @media screen and (max-width: 768px) {
