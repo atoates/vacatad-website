@@ -1151,8 +1151,8 @@ img {
 
 /* FAQ Page Styles */
 .faq-hero {
-    /* Background image added with dark overlay for readability */
-    background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('../assets/images/yellow-doors-banner.webp');
+    /* Background image added with lighter overlay for readability */
+    background: linear-gradient(rgba(0,0,0,0.25), rgba(0,0,0,0.25)), url('../assets/images/yellow-doors-banner.webp');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
