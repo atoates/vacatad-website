@@ -341,27 +341,29 @@ img {
 }
 
 .hero-small-print {
-    margin-top: 1.75rem;
-    font-size: 0.85rem;
-    letter-spacing: 0.5px;
+    margin-top: 3rem; /* Push it lower below the buttons */
+    font-size: 0.95rem;
+    letter-spacing: 0.75px;
     text-transform: uppercase;
-    color: var(--eerie-black);
-    font-weight: 600;
-    background: rgba(255,255,255,0.4);
+    color: var(--tea-green);
+    font-weight: 700;
+    background: rgba(35, 37, 35, 0.85); /* Higher contrast pill */
     display: inline-block;
-    padding: 6px 14px;
-    border-radius: 40px;
-    box-shadow: 0 3px 10px rgba(35,37,35,0.08);
+    padding: 10px 22px;
+    border-radius: 50px;
+    box-shadow: 0 6px 18px rgba(35,37,35,0.35);
     animation: fadeInUp 1s ease-out 0.6s both;
-    backdrop-filter: blur(4px);
+    backdrop-filter: blur(2px);
+    border: 1px solid rgba(219,244,204,0.4);
 }
 
 @media screen and (max-width: 768px) {
     .hero-small-print {
-        font-size: 0.75rem;
-        padding: 5px 12px;
+        font-size: 0.8rem;
+        padding: 8px 16px;
         width: 100%;
-        max-width: 340px;
+        max-width: 360px;
+        margin-top: 2.5rem; /* Slightly less spacing on mobile */
     }
 }
 
