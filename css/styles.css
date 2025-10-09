@@ -596,6 +596,37 @@ img {
     font-size: 1.2rem;
 }
 
+.tech-icon {
+    background: var(--tea-green);
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--eerie-black);
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(35,37,35,0.15);
+}
+
+.tech-item span {
+    line-height: 1.5;
+}
+
+.cta-button.contrast {
+    background-color: var(--eerie-black);
+    color: var(--tea-green);
+    border-color: var(--eerie-black);
+    box-shadow: 0 8px 24px rgba(35,37,35,0.35);
+}
+
+.cta-button.contrast:hover {
+    background-color: var(--tea-green);
+    color: var(--eerie-black);
+    border-color: var(--tea-green);
+    box-shadow: 0 12px 32px rgba(35,37,35,0.4);
+}
+
 .tech-cta {
     text-align: center;
 }
