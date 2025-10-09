@@ -1048,6 +1048,13 @@ img {
     background-color: transparent;
 }
 
+/* Improve contrast: primary button hover in dark faq-hero */
+.faq-hero .cta-button.primary:hover {
+    color: var(--white);
+    border-color: var(--white);
+    background-color: transparent;
+}
+
 @media screen and (max-width: 768px) {
     .final-cta-buttons {
         flex-direction: column;
