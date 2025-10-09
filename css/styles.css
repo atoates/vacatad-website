@@ -1042,7 +1042,8 @@ img {
 }
 
 /* Improve contrast: primary button hover in dark final-cta */
-.final-cta .cta-button.primary:hover {
+.final-cta .cta-button.primary:hover,
+.final-cta-buttons .cta-button.primary:hover {
     color: var(--white) !important;
     border-color: var(--white) !important;
     background-color: transparent !important;
