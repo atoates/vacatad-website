@@ -145,19 +145,42 @@ Year: 2025
 
   <script src="js/script.js"></script>
   <script>
-    // Simple tabs implementation
+    // Tabs with hash-based deep linking (#contact | #meeting)
     document.addEventListener('DOMContentLoaded', () => {
-      const links = document.querySelectorAll('.tab-link');
-      const panes = document.querySelectorAll('.tab-content');
+      const links = Array.from(document.querySelectorAll('.tab-link'));
+      const panes = Array.from(document.querySelectorAll('.tab-content'));
+      const tabMap = { contact: 'contact-tab', meeting: 'meeting-tab' };
+
+      function selectTabByKey(key) {
+        const id = tabMap[key] || tabMap.contact;
+        links.forEach(l => l.classList.remove('active'));
+        panes.forEach(p => p.classList.remove('active'));
+        const pane = document.getElementById(id);
+        const link = links.find(l => l.dataset.tab === id);
+        if (pane) pane.classList.add('active');
+        if (link) link.classList.add('active');
+      }
+
+      function handleHashChange() {
+        const key = (window.location.hash || '#contact').slice(1).toLowerCase();
+        selectTabByKey(tabMap[key] ? key : 'contact');
+      }
+
+      // Update hash on click and select
       links.forEach(link => {
         link.addEventListener('click', () => {
-          links.forEach(l => l.classList.remove('active'));
-          panes.forEach(p => p.classList.remove('active'));
-          link.classList.add('active');
-          const target = document.getElementById(link.dataset.tab);
-          if (target) target.classList.add('active');
+          const key = link.dataset.tab === 'meeting-tab' ? 'meeting' : 'contact';
+          if (window.location.hash !== '#' + key) {
+            window.location.hash = key; // triggers hashchange
+          } else {
+            handleHashChange();
+          }
         });
       });
+
+      window.addEventListener('hashchange', handleHashChange);
+      // Initial selection based on hash (default to contact)
+      handleHashChange();
     });
   </script>
 </body>
