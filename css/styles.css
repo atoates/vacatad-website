@@ -967,6 +967,33 @@ img {
     font-size: 0.9rem;
 }
 
+/* Footer social icons */
+.footer-social {
+    margin-top: 1rem;
+    display: flex;
+    gap: 0.5rem;
+}
+.social-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: #2c3e50;
+    color: #ecf0f1;
+    font-weight: 700;
+    font-size: 0.95rem;
+    transition: transform 0.15s ease, background-color 0.2s ease;
+}
+.social-link:hover { transform: translateY(-1px) scale(1.05); }
+.social-link.x { background: #111111; }
+.social-link.x:hover { background: #000000; }
+.social-link.linkedin { background: #0A66C2; }
+.social-link.linkedin:hover { background: #085aab; }
+.social-link.facebook { background: #1877F2; }
+.social-link.facebook:hover { background: #166fe0; }
+
 /* Final CTA Section */
 .final-cta {
     /* Use background image with subtle dark overlay for readability */
