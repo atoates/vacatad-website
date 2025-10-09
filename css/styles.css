@@ -981,15 +981,7 @@ img {
     color: var(--white);
 }
 
-/* PNG fallback for older browsers that cannot render WebP */
-@supports not (background: url('../assets/images/footer-background.webp')) {
-    .final-cta {
-        background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('../assets/images/footer-background.png');
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-    }
-}
+/* Removed PNG fallback as site standardizes on WebP */
 
 .final-cta-title {
     font-size: clamp(2rem, 4vw, 2.6rem);
