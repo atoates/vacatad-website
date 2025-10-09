@@ -798,6 +798,10 @@ img {
     font-size: 1.2rem;
 }
 
+.footer-section:last-child {
+    text-align: center;
+}
+
 .footer-section p {
     color: #bdc3c7;
     margin-bottom: 1rem;
@@ -846,6 +850,7 @@ img {
     transition: var(--transition);
     margin-bottom: 1rem;
     font-size: 0.9rem;
+    text-align: center;
 }
 
 .footer-cta:hover {
