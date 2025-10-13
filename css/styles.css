@@ -252,12 +252,11 @@ img {
 }
 
 .cta-button.primary:hover {
-    background-color: rgba(255, 255, 255, 0.2);
-    color: var(--eerie-black);
+    background-color: var(--eerie-black);
+    color: var(--tea-green);
     border-color: var(--tea-green);
     transform: translateY(-3px);
-    box-shadow: 0 10px 25px rgba(219, 244, 204, 0.3);
-    backdrop-filter: blur(5px);
+    box-shadow: 0 10px 30px rgba(35, 37, 35, 0.4);
 }
 
 .cta-button.secondary {
