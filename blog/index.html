@@ -282,10 +282,11 @@ Year: 2025
             <div class="container">
                 <div class="filter-buttons">
                     <button class="filter-btn active" data-filter="all">All Posts</button>
-                    <button class="filter-btn" data-filter="Property Security">Property Security</button>
-                    <button class="filter-btn" data-filter="Risk Management">Risk Management</button>
                     <button class="filter-btn" data-filter="Technology Solutions">Technology Solutions</button>
-                    <button class="filter-btn" data-filter="Vacant Properties">Vacant Properties</button>
+                    <button class="filter-btn" data-filter="Community Benefits">Community Benefits</button>
+                    <button class="filter-btn" data-filter="Innovation">Innovation</button>
+                    <button class="filter-btn" data-filter="Beneficial Occupation">Beneficial Occupation</button>
+                    <button class="filter-btn" data-filter="Relief Options">Relief Options</button>
                 </div>
             </div>
         </section>
@@ -432,22 +433,22 @@ Year: 2025
             `).join('');
         }
 
-        function filterPosts(category) {
-            currentFilter = category;
+        function filterPosts(tag) {
+            currentFilter = tag;
             
             // Update active button
             document.querySelectorAll('.filter-btn').forEach(btn => {
                 btn.classList.remove('active');
-                if (btn.dataset.filter === category) {
+                if (btn.dataset.filter === tag) {
                     btn.classList.add('active');
                 }
             });
             
             // Filter posts
-            if (category === 'all') {
+            if (tag === 'all') {
                 displayPosts(allPosts);
             } else {
-                const filtered = allPosts.filter(post => post.category === category);
+                const filtered = allPosts.filter(post => post.tags.includes(tag));
                 displayPosts(filtered);
             }
         }
