@@ -58,3 +58,14 @@ pids
 *.pid
 *.seed
 *.pid.lock
+
+# Blog migration files (temporary/development only)
+*.xml
+extract_posts.py
+convert_posts_to_html.py
+update_blog_images.py
+update_post_images_in_html.py
+update_all_blog_posts.py
+extracted_posts.json
+BLOG_MIGRATION_SUMMARY.md
+BLOG_IMAGES_UPDATE_SUMMARY.md
