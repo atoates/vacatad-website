@@ -98,10 +98,12 @@ Year: 2025
         }
         
         .blog-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            display: flex;
+            flex-direction: column;
             gap: 2rem;
             padding: 3rem 0;
+            max-width: 1000px;
+            margin: 0 auto;
         }
         
         .blog-card {
@@ -110,25 +112,26 @@ Year: 2025
             overflow: hidden;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            display: flex;
-            flex-direction: column;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 0;
+            min-height: 200px;
         }
         
         .blog-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-2px);
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
         }
         
         .blog-card.featured {
-            grid-column: span 2;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+            border-left: 4px solid var(--tea-green);
         }
         
         .blog-card-image {
             width: 100%;
-            height: 250px;
+            height: 100%;
             object-fit: cover;
+            min-height: 200px;
         }
         
         .blog-card.featured .blog-card-image {
@@ -208,17 +211,17 @@ Year: 2025
         }
         
         @media (max-width: 768px) {
-            .blog-card.featured {
-                grid-column: span 1;
+            .blog-card {
                 grid-template-columns: 1fr;
             }
             
-            .blog-card.featured .blog-card-image {
-                height: 250px;
+            .blog-card-image {
+                height: 200px;
+                min-height: 200px;
             }
             
             .blog-grid {
-                grid-template-columns: 1fr;
+                padding: 2rem 0;
             }
         }
     </style>
@@ -405,7 +408,7 @@ Year: 2025
             
             grid.innerHTML = posts.map(post => `
                 <article class="blog-card ${post.featured ? 'featured' : ''}">
-                    <img src="../${post.image}" alt="${post.imageAlt}" class="blog-card-image" loading="lazy">
+                    <img src="${post.image.replace('../', '')}" alt="${post.imageAlt}" class="blog-card-image" loading="lazy">
                     <div class="blog-card-content">
                         <div class="blog-meta">
                             <span class="blog-category">${post.category}</span>
