@@ -588,6 +588,10 @@ img {
     opacity: 1;
 }
 
+.client-logo[alt="Allsop"] {
+    height: 75px;
+}
+
 .client-logo[alt="Mounsey"] {
     height: 100px;
 }
@@ -608,6 +612,10 @@ img {
     
     .client-logo {
         height: 40px;
+    }
+    
+    .client-logo[alt="Allsop"] {
+        height: 60px;
     }
     
     .client-logo[alt="Mounsey"] {
