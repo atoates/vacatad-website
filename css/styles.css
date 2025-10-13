@@ -1041,19 +1041,20 @@ img {
     color: var(--eerie-black);
 }
 
-/* Improve contrast: primary button hover in dark final-cta */
-.final-cta .cta-button.primary:hover,
-.final-cta-buttons .cta-button.primary:hover {
-    color: var(--white) !important;
-    border-color: var(--white) !important;
-    background-color: transparent !important;
+/* Improve contrast: primary button hover in dark sections (higher specificity) */
+section.final-cta .cta-button.primary:hover,
+section.final-cta .final-cta-buttons .cta-button.primary:hover {
+    color: var(--white);
+    border-color: var(--white);
+    background-color: transparent;
 }
 
-/* Improve contrast: primary button hover in dark faq-hero */
-.faq-hero .cta-button.primary:hover {
-    color: var(--white) !important;
-    border-color: var(--white) !important;
-    background-color: transparent !important;
+/* Improve contrast: primary button hover in dark faq-hero (higher specificity) */
+section.faq-hero .faq-cta .cta-button.primary:hover,
+section.faq-hero .cta-button.primary:hover {
+    color: var(--white);
+    border-color: var(--white);
+    background-color: transparent;
 }
 
 @media screen and (max-width: 768px) {
@@ -1230,16 +1231,23 @@ img {
 .tab-content.active { display: block; }
 .embed-wrapper { margin: 1rem 0; }
 
-/* Contact page specific */
-.contact-hero {
+/* Contact page specific (higher specificity without !important) */
+section.contact-hero.legal-hero {
     background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('../assets/images/footer-background.webp');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     color: var(--white);
 }
-.contact-hero .legal-title { color: var(--white) !important; text-shadow: 0 2px 6px rgba(0,0,0,0.35); }
-.contact-hero .legal-subtitle { color: var(--tea-green) !important; font-weight: 600; text-shadow: 0 1px 3px rgba(0,0,0,0.25); }
+section.contact-hero.legal-hero .legal-title { 
+    color: var(--white); 
+    text-shadow: 0 2px 6px rgba(0,0,0,0.35); 
+}
+section.contact-hero.legal-hero .legal-subtitle { 
+    color: var(--tea-green); 
+    font-weight: 600; 
+    text-shadow: 0 1px 3px rgba(0,0,0,0.25); 
+}
 .contact-content-page .tabs { margin-top: 0.5rem; }
 
 .faq-category {
