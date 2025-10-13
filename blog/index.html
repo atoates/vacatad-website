@@ -1,0 +1,462 @@
+<!--
+Title: Blog | VacatAd
+Meta Description: Expert insights on business rates, empty property relief, and commercial property management. Stay informed with VacatAd's latest guides and tips.
+Author: VacatAd Ltd
+Year: 2025
+-->
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Expert insights on business rates, empty property relief, and commercial property management. Stay informed with VacatAd's latest guides and tips.">
+    <meta name="keywords" content="business rates blog, empty property rates, beneficial occupation, commercial property advice, tax relief">
+    <meta name="author" content="VacatAd Ltd">
+    <meta name="robots" content="index, follow">
+    
+    <title>Blog | VacatAd</title>
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://vacatad.com/blog/">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="../css/styles.css?v=20251013m">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicons/favicon-16x16.png">
+    <link rel="icon" type="image/webp" sizes="32x32" href="../assets/favicons/favicon-32x32.webp">
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/favicons/apple-touch-icon.png">
+    <link rel="icon" href="../assets/favicons/favicon.ico" sizes="any">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://vacatad.com/blog/">
+    <meta property="og:title" content="Blog | VacatAd">
+    <meta property="og:description" content="Expert insights on business rates, empty property relief, and commercial property management.">
+    <meta property="og:image" content="https://vacatad.com/assets/images/asset-8.webp">
+    <meta property="og:image:width" content="223">
+    <meta property="og:image:height" content="191">
+    <meta property="og:image:type" content="image/webp">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://vacatad.com/blog/">
+    <meta property="twitter:title" content="Blog | VacatAd">
+    <meta property="twitter:description" content="Expert insights on business rates, empty property relief, and commercial property management.">
+    <meta property="twitter:image" content="https://vacatad.com/assets/images/asset-8.webp">
+    
+    <style>
+        .blog-hero {
+            background: linear-gradient(135deg, var(--eerie-black) 0%, #1a1c1a 100%);
+            padding: 6rem 0 4rem;
+            text-align: center;
+            color: white;
+        }
+        
+        .blog-hero h1 {
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            margin-bottom: 1rem;
+            color: white;
+        }
+        
+        .blog-hero p {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .blog-filters {
+            padding: 2rem 0;
+            text-align: center;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: 0.5rem 1.5rem;
+            border: 2px solid var(--tea-green);
+            background: transparent;
+            color: var(--eerie-black);
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: var(--tea-green);
+            color: var(--eerie-black);
+        }
+        
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            padding: 3rem 0;
+        }
+        
+        .blog-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .blog-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+        
+        .blog-card.featured {
+            grid-column: span 2;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+        
+        .blog-card-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+        
+        .blog-card.featured .blog-card-image {
+            height: 100%;
+        }
+        
+        .blog-card-content {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+        
+        .blog-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.875rem;
+            color: var(--grey-text);
+            margin-bottom: 1rem;
+        }
+        
+        .blog-category {
+            color: var(--tea-green);
+            font-weight: 600;
+        }
+        
+        .blog-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--eerie-black);
+        }
+        
+        .blog-card.featured h3 {
+            font-size: 2rem;
+        }
+        
+        .blog-excerpt {
+            color: var(--grey-text);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+        
+        .blog-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+        
+        .blog-tag {
+            padding: 0.25rem 0.75rem;
+            background: var(--seasalt);
+            border-radius: 15px;
+            font-size: 0.75rem;
+            color: var(--grey-text);
+        }
+        
+        .read-more {
+            color: var(--tea-green);
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: gap 0.3s ease;
+        }
+        
+        .read-more:hover {
+            gap: 1rem;
+        }
+        
+        .no-posts {
+            text-align: center;
+            padding: 4rem 0;
+            color: var(--grey-text);
+        }
+        
+        @media (max-width: 768px) {
+            .blog-card.featured {
+                grid-column: span 1;
+                grid-template-columns: 1fr;
+            }
+            
+            .blog-card.featured .blog-card-image {
+                height: 250px;
+            }
+            
+            .blog-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <a href="../index.html">
+                        <img src="../assets/images/asset-8.webp" alt="VacatAd Logo" class="logo-icon" width="223" height="191">
+                        <span class="logo-text">VacatAd</span>
+                    </a>
+                </div>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="../index.html" class="nav-link">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="../index.html#why-vacatad" class="nav-link">Why VacatAd</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="../index.html#how-we-work" class="nav-link">How We Work</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="index.html" class="nav-link active">Blog</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="../faqs.html" class="nav-link">FAQs</a>
+                    </li>
+                </ul>
+                <div class="cta-nav">
+                    <a href="tel:03330900443" class="phone-link">0333 090 0443</a>
+                    <a href="../contact.html" class="cta-button-nav">Book Consultation</a>
+                </div>
+                <div class="nav-toggle" id="mobile-menu">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <section class="blog-hero">
+            <div class="container">
+                <h1>VacatAd Blog</h1>
+                <p>Expert insights on business rates, empty property relief, and commercial property management.</p>
+            </div>
+        </section>
+
+        <!-- Filters -->
+        <section class="blog-filters">
+            <div class="container">
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="all">All Posts</button>
+                    <button class="filter-btn" data-filter="Business Rates">Business Rates</button>
+                    <button class="filter-btn" data-filter="Tax Strategy">Tax Strategy</button>
+                    <button class="filter-btn" data-filter="Property Management">Property Management</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Blog Grid -->
+        <section class="blog-content">
+            <div class="container">
+                <div class="blog-grid" id="blog-grid">
+                    <!-- Blog posts will be loaded here via JavaScript -->
+                </div>
+                <div class="no-posts" id="no-posts" style="display: none;">
+                    <p>No posts found in this category.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="final-cta">
+            <div class="container">
+                <div class="final-cta-content">
+                    <h2>Ready to Reduce Your Empty Property Rates?</h2>
+                    <p>Calculate your potential savings or speak with our expert team for personalized advice.</p>
+                    <div class="cta-group">
+                        <a href="../contact.html#calculator" class="cta-button primary">Calculate Your Savings</a>
+                        <a href="tel:03330900443" class="cta-button secondary">Call: 0333 090 0443</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>VacatAd</h4>
+                    <p>Technology-first beneficial occupation resetting relief periods for vacant commercial property.</p>
+                    <div class="footer-contact">
+                        <p><strong>Email:</strong> <a href="mailto:hello@vacatad.com">hello@vacatad.com</a></p>
+                        <p><strong>Phone:</strong> <a href="tel:03330900443">0333 090 0443</a></p>
+                    </div>
+                    <div class="footer-social">
+                        <a href="https://x.com/vacatad" aria-label="VacatAd on X (Twitter)" target="_blank" rel="noopener" class="social-link x">
+                            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
+                                <path d="M4 4L20 20M20 4L4 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </a>
+                        <a href="https://www.linkedin.com/company/vacatad/" aria-label="VacatAd on LinkedIn" target="_blank" rel="noopener" class="social-link linkedin">
+                            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
+                                <rect x="3" y="9" width="4" height="12" fill="currentColor"/>
+                                <circle cx="5" cy="5" r="2" fill="currentColor"/>
+                                <path d="M16 9a5 5 0 0 1 5 5v7h-4v-7a1 1 0 0 0-1-1 1 1 0 0 0-1 1v7h-4v-7a5 5 0 0 1 5-5z" fill="currentColor"/>
+                            </svg>
+                        </a>
+                        <a href="https://www.facebook.com/vacatad" aria-label="VacatAd on Facebook" target="_blank" rel="noopener" class="social-link facebook">
+                            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
+                                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" fill="currentColor"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="../index.html">Home</a></li>
+                        <li><a href="../index.html#how-we-work">How We Work</a></li>
+                        <li><a href="../index.html#why-vacatad">Why VacatAd</a></li>
+                        <li><a href="../contact.html">Contact</a></li>
+                        <li><a href="index.html">Blog</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="../privacy.html">Privacy Policy</a></li>
+                        <li><a href="../terms.html">Terms of Service</a></li>
+                        <li><a href="../faqs.html">FAQs</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Get Started</h4>
+                    <a href="../contact.html#calculator" class="footer-cta">Calculate Your Savings</a>
+                    <p class="footer-tagline">Rapid setup. Real compliance. Proven outcomes.</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 VacatAd Ltd. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="../js/script.js"></script>
+    <script>
+        // Load and display blog posts
+        let allPosts = [];
+        let currentFilter = 'all';
+
+        async function loadPosts() {
+            try {
+                const response = await fetch('data/posts.json');
+                allPosts = await response.json();
+                displayPosts(allPosts);
+            } catch (error) {
+                console.error('Error loading blog posts:', error);
+                document.getElementById('no-posts').style.display = 'block';
+            }
+        }
+
+        function displayPosts(posts) {
+            const grid = document.getElementById('blog-grid');
+            const noPosts = document.getElementById('no-posts');
+            
+            if (posts.length === 0) {
+                grid.innerHTML = '';
+                noPosts.style.display = 'block';
+                return;
+            }
+            
+            noPosts.style.display = 'none';
+            
+            grid.innerHTML = posts.map(post => `
+                <article class="blog-card ${post.featured ? 'featured' : ''}">
+                    <img src="../${post.image}" alt="${post.imageAlt}" class="blog-card-image" loading="lazy">
+                    <div class="blog-card-content">
+                        <div class="blog-meta">
+                            <span class="blog-category">${post.category}</span>
+                            <span>•</span>
+                            <span>${post.date}</span>
+                            <span>•</span>
+                            <span>${post.readTime}</span>
+                        </div>
+                        <h3>${post.title}</h3>
+                        <p class="blog-excerpt">${post.excerpt}</p>
+                        <div class="blog-tags">
+                            ${post.tags.map(tag => `<span class="blog-tag">${tag}</span>`).join('')}
+                        </div>
+                        <a href="posts/${post.slug}.html" class="read-more">
+                            Read More →
+                        </a>
+                    </div>
+                </article>
+            `).join('');
+        }
+
+        function filterPosts(category) {
+            currentFilter = category;
+            
+            // Update active button
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.filter === category) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            // Filter posts
+            if (category === 'all') {
+                displayPosts(allPosts);
+            } else {
+                const filtered = allPosts.filter(post => post.category === category);
+                displayPosts(filtered);
+            }
+        }
+
+        // Event listeners
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterPosts(btn.dataset.filter);
+            });
+        });
+
+        // Load posts on page load
+        loadPosts();
+    </script>
+</body>
+</html>
