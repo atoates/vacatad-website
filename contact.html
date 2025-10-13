@@ -82,6 +82,7 @@ Year: 2025
       <div class="container">
         <div class="tabs">
           <button class="tab-link active" data-tab="contact-tab">Contact</button>
+          <button class="tab-link" data-tab="calculator-tab">Rate Saving Calculator</button>
           <button class="tab-link" data-tab="meeting-tab">Book a meeting</button>
         </div>
 
@@ -100,6 +101,24 @@ Year: 2025
             ></iframe>
             <script src='https://cdn.jotfor.ms/s/umd/latest/for-form-embed-handler.js'></script>
             <script>window.jotformEmbedHandler("iframe[id='JotFormIFrame-250277879809374']", "https://form.jotform.com/")</script>
+          </div>
+        </div>
+
+        <div class="tab-content" id="calculator-tab">
+          <div class="embed-wrapper">
+            <iframe
+              id="JotFormIFrame-242852480967064"
+              title="Rates Savings Calculator"
+              onload="window.parent.scrollTo(0,0)"
+              allowtransparency="true"
+              allow="geolocation; microphone; camera; fullscreen; payment"
+              src="https://form.jotform.com/242852480967064"
+              frameborder="0"
+              style="min-width:100%;max-width:100%;height:539px;border:none;"
+              scrolling="no"
+            ></iframe>
+            <script src='https://cdn.jotfor.ms/s/umd/latest/for-form-embed-handler.js'></script>
+            <script>window.jotformEmbedHandler("iframe[id='JotFormIFrame-242852480967064']", "https://form.jotform.com/")</script>
           </div>
         </div>
 
@@ -174,11 +193,11 @@ Year: 2025
 
   <script src="js/script.js"></script>
   <script>
-    // Tabs with hash-based deep linking (#contact | #meeting)
+    // Tabs with hash-based deep linking (#contact | #calculator | #meeting)
     document.addEventListener('DOMContentLoaded', () => {
       const links = Array.from(document.querySelectorAll('.tab-link'));
       const panes = Array.from(document.querySelectorAll('.tab-content'));
-      const tabMap = { contact: 'contact-tab', meeting: 'meeting-tab' };
+      const tabMap = { contact: 'contact-tab', calculator: 'calculator-tab', meeting: 'meeting-tab' };
 
       function selectTabByKey(key) {
         const id = tabMap[key] || tabMap.contact;
@@ -198,7 +217,10 @@ Year: 2025
       // Update hash on click and select
       links.forEach(link => {
         link.addEventListener('click', () => {
-          const key = link.dataset.tab === 'meeting-tab' ? 'meeting' : 'contact';
+          let key = 'contact';
+          if (link.dataset.tab === 'meeting-tab') key = 'meeting';
+          else if (link.dataset.tab === 'calculator-tab') key = 'calculator';
+          
           if (window.location.hash !== '#' + key) {
             window.location.hash = key; // triggers hashchange
           } else {
