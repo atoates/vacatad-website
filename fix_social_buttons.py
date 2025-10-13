@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """
 Fix social share button visibility:
-- Make icons white by default
+- Make icons white by default with !important
 - Turn light green (tea-green) on hover
+- Add fill: currentColor to SVG
 """
 
 import os
@@ -16,18 +17,37 @@ def fix_article(file_path):
     
     original_content = content
     
-    # Find and replace the social button styles
-    # Pattern to match all three social button styles
-    pattern = r'(\.share-twitter\s*{\s*background:\s*var\(--eerie-black\);\s*color:\s*)var\(--tea-green\)(\s*;\s*})'
-    replacement = r'\1white\2\n        \n        .share-twitter:hover {\n            color: var(--tea-green);\n        }'
+    # First, add fill: currentColor to .share-btn svg if not already present
+    if 'fill: currentColor;' not in content:
+        pattern = r'(\.share-btn svg\s*{\s*width:\s*20px;\s*height:\s*20px;)\s*}'
+        replacement = r'\1\n            fill: currentColor;\n        }'
+        content = re.sub(pattern, replacement, content)
+    
+    # Fix Twitter button - add !important to color
+    pattern = r'\.share-twitter\s*{\s*background:\s*var\(--eerie-black\);\s*color:\s*white;\s*}'
+    replacement = '.share-twitter {\n            background: var(--eerie-black);\n            color: white !important;\n        }'
     content = re.sub(pattern, replacement, content)
     
-    pattern = r'(\.share-linkedin\s*{\s*background:\s*var\(--eerie-black\);\s*color:\s*)var\(--tea-green\)(\s*;\s*})'
-    replacement = r'\1white\2\n        \n        .share-linkedin:hover {\n            color: var(--tea-green);\n        }'
+    pattern = r'\.share-twitter:hover\s*{\s*color:\s*var\(--tea-green\);\s*}'
+    replacement = '.share-twitter:hover {\n            color: var(--tea-green) !important;\n        }'
     content = re.sub(pattern, replacement, content)
     
-    pattern = r'(\.share-facebook\s*{\s*background:\s*var\(--eerie-black\);\s*color:\s*)var\(--tea-green\)(\s*;\s*})'
-    replacement = r'\1white\2\n        \n        .share-facebook:hover {\n            color: var(--tea-green);\n        }'
+    # Fix LinkedIn button - add !important to color
+    pattern = r'\.share-linkedin\s*{\s*background:\s*var\(--eerie-black\);\s*color:\s*white;\s*}'
+    replacement = '.share-linkedin {\n            background: var(--eerie-black);\n            color: white !important;\n        }'
+    content = re.sub(pattern, replacement, content)
+    
+    pattern = r'\.share-linkedin:hover\s*{\s*color:\s*var\(--tea-green\);\s*}'
+    replacement = '.share-linkedin:hover {\n            color: var(--tea-green) !important;\n        }'
+    content = re.sub(pattern, replacement, content)
+    
+    # Fix Facebook button - add !important to color
+    pattern = r'\.share-facebook\s*{\s*background:\s*var\(--eerie-black\);\s*color:\s*white;\s*}'
+    replacement = '.share-facebook {\n            background: var(--eerie-black);\n            color: white !important;\n        }'
+    content = re.sub(pattern, replacement, content)
+    
+    pattern = r'\.share-facebook:hover\s*{\s*color:\s*var\(--tea-green\);\s*}'
+    replacement = '.share-facebook:hover {\n            color: var(--tea-green) !important;\n        }'
     content = re.sub(pattern, replacement, content)
     
     # Write back if changed
