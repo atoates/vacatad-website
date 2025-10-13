@@ -1,0 +1,11 @@
+# VacatAd.com robots.txt
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://vacatad.com/sitemap.xml
+
+# Block any temporary or admin paths if they exist
+Disallow: /temp/
+Disallow: /admin/
+Disallow: /.git/

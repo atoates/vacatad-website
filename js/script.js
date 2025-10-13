@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize all functionality
     initNavigation();
     initSmoothScrolling();
-    initContactForm();
+    // initContactForm(); // Disabled - using Jotform embed instead
     initScrollEffects();
     initMobileMenu();
     initPhoneTracking();
@@ -116,7 +116,10 @@ function initMobileMenu() {
     }
 }
 
-// Contact form functionality for VacatAd
+// Contact form functionality - DEPRECATED
+// The homepage now uses Jotform embed instead of the custom form
+// Keeping this commented out for reference if needed in future
+/*
 function initContactForm() {
     const contactForm = document.getElementById('contactForm');
     if (!contactForm) return;
@@ -141,7 +144,6 @@ function initContactForm() {
             return;
         }
 
-        // Simple postcode validation (length & characters). For UK-specific, integrate fuller regex later.
         const postcodePattern = /^[A-Za-z0-9 ]{3,10}$/;
         if (!postcodePattern.test(postcode)) {
             showNotification('Please enter a valid postcode.', 'error');
@@ -167,6 +169,7 @@ function initContactForm() {
         }, 1600);
     });
 }
+*/
 
 // Phone number click tracking
 function initPhoneTracking() {
@@ -187,16 +190,22 @@ function isValidEmail(email) {
 
 // Conversion tracking
 function trackConversion(eventType) {
-    // You can integrate with Google Analytics, Facebook Pixel, etc.
-    console.log(`Conversion tracked: ${eventType}`);
+    // Only log in development environment
+    if (window.location.hostname === 'localhost' || 
+        window.location.hostname === '127.0.0.1' ||
+        window.location.port === '5500') {
+        console.log(`[DEV] Conversion tracked: ${eventType}`);
+    }
     
-    // Example Google Analytics 4 event
+    // Production analytics - Google Analytics 4
     if (typeof gtag !== 'undefined') {
         gtag('event', eventType, {
             event_category: 'leads',
             event_label: 'vacatad_website'
         });
     }
+    
+    // Add other analytics here (Facebook Pixel, LinkedIn, etc.)
 }
 
 // Notification system

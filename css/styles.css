@@ -278,7 +278,7 @@ img {
 /* Hero Section */
 .hero {
     background: linear-gradient(rgba(219, 244, 204, 0.4), rgba(219, 244, 204, 0.5)), 
-                url('../assets/images/why_footer2opt.webp');
+                url('../assets/images/hero-background-optimized.webp');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
