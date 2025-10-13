@@ -629,8 +629,28 @@ img {
 /* Process Flow Caption Section */
 .process-flow {
     padding: var(--section-padding) 0;
-    background-color: var(--white);
+    background-image: url('../assets/images/warehouse red beam.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     text-align: center;
+    position: relative;
+}
+
+.process-flow::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.85);
+    z-index: 1;
+}
+
+.process-flow .container {
+    position: relative;
+    z-index: 2;
 }
 
 .process-flow .section-subtitle {
