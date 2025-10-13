@@ -188,17 +188,22 @@ Year: 2025
         }
         
         .read-more {
-            color: var(--tea-green);
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: var(--eerie-black);
+            color: white;
             font-weight: 600;
             text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: gap 0.3s ease;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            border: 2px solid var(--eerie-black);
         }
         
         .read-more:hover {
-            gap: 1rem;
+            background: white;
+            color: var(--eerie-black);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
         }
         
         .no-posts {
