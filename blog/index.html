@@ -49,16 +49,39 @@ Year: 2025
     
     <style>
         .blog-hero {
-            background: linear-gradient(135deg, var(--eerie-black) 0%, #1a1c1a 100%);
-            padding: 6rem 0 4rem;
-            text-align: center;
+            position: relative;
             color: white;
+            text-align: center;
+            overflow: hidden;
+            height: 400px;
+        }
+        
+        .blog-hero .hero-banner {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+        
+        .blog-hero .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(34, 40, 49, 0.7);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 6rem 2rem 4rem;
         }
         
         .blog-hero h1 {
             font-size: clamp(2.5rem, 5vw, 3.5rem);
             margin-bottom: 1rem;
             color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
         
         .blog-hero p {
@@ -66,6 +89,7 @@ Year: 2025
             color: rgba(255, 255, 255, 0.9);
             max-width: 600px;
             margin: 0 auto;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
         }
         
         .blog-filters {
@@ -73,11 +97,33 @@ Year: 2025
             text-align: center;
         }
         
+        .filter-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            max-width: 100%;
+        }
+        
+        .filter-buttons-wrapper {
+            overflow-x: auto;
+            overflow-y: hidden;
+            scroll-behavior: smooth;
+            flex: 1;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .filter-buttons-wrapper::-webkit-scrollbar {
+            display: none;
+        }
+        
         .filter-buttons {
             display: flex;
             gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
+            justify-content: flex-start;
+            flex-wrap: nowrap;
+            padding: 0.5rem 0;
         }
         
         .filter-btn {
@@ -89,12 +135,46 @@ Year: 2025
             cursor: pointer;
             transition: all 0.3s ease;
             font-weight: 600;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
         
         .filter-btn:hover,
         .filter-btn.active {
             background: var(--tea-green);
             color: var(--eerie-black);
+        }
+        
+        .scroll-btn {
+            background: var(--tea-green);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+            color: var(--eerie-black);
+        }
+        
+        .scroll-btn:hover {
+            background: var(--eerie-black);
+            color: var(--tea-green);
+            transform: scale(1.1);
+        }
+        
+        .scroll-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        
+        .scroll-btn:disabled:hover {
+            background: var(--tea-green);
+            color: var(--eerie-black);
+            transform: none;
         }
         
         .blog-grid {
@@ -213,6 +293,28 @@ Year: 2025
         }
         
         @media (max-width: 768px) {
+            .blog-hero {
+                height: 300px;
+            }
+            
+            .blog-hero h1 {
+                font-size: 2rem;
+            }
+            
+            .blog-hero p {
+                font-size: 1rem;
+            }
+            
+            .scroll-btn {
+                width: 35px;
+                height: 35px;
+            }
+            
+            .filter-btn {
+                padding: 0.4rem 1.2rem;
+                font-size: 0.9rem;
+            }
+            
             .blog-card-image {
                 height: 200px;
             }
@@ -271,7 +373,8 @@ Year: 2025
     <main>
         <!-- Hero Section -->
         <section class="blog-hero">
-            <div class="container">
+            <img src="images/Blog banner - navigating the void (New LinkedIn Banner).webp" alt="VacatAd Blog" class="hero-banner">
+            <div class="container hero-overlay">
                 <h1>VacatAd Blog</h1>
                 <p>Expert insights on business rates, empty property relief, and commercial property management.</p>
             </div>
@@ -280,13 +383,58 @@ Year: 2025
         <!-- Filters -->
         <section class="blog-filters">
             <div class="container">
-                <div class="filter-buttons">
-                    <button class="filter-btn active" data-filter="all">All Posts</button>
-                    <button class="filter-btn" data-filter="Technology Solutions">Technology Solutions</button>
-                    <button class="filter-btn" data-filter="Community Benefits">Community Benefits</button>
-                    <button class="filter-btn" data-filter="Innovation">Innovation</button>
-                    <button class="filter-btn" data-filter="Beneficial Occupation">Beneficial Occupation</button>
-                    <button class="filter-btn" data-filter="Relief Options">Relief Options</button>
+                <div class="filter-container">
+                    <button class="scroll-btn scroll-left" id="scrollLeft" aria-label="Scroll left">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M12 4L6 10L12 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <div class="filter-buttons-wrapper">
+                        <div class="filter-buttons" id="filterButtons">
+                            <button class="filter-btn active" data-filter="all">All Posts</button>
+                            <button class="filter-btn" data-filter="Asset Management">Asset Management</button>
+                            <button class="filter-btn" data-filter="Asset Protection">Asset Protection</button>
+                            <button class="filter-btn" data-filter="Beginners Guide">Beginners Guide</button>
+                            <button class="filter-btn" data-filter="Beneficial Occupation">Beneficial Occupation</button>
+                            <button class="filter-btn" data-filter="Budget 2025">Budget 2025</button>
+                            <button class="filter-btn" data-filter="Case Study">Case Study</button>
+                            <button class="filter-btn" data-filter="Community Benefits">Community Benefits</button>
+                            <button class="filter-btn" data-filter="Compliance">Compliance</button>
+                            <button class="filter-btn" data-filter="Cost Analysis">Cost Analysis</button>
+                            <button class="filter-btn" data-filter="Cost Reduction">Cost Reduction</button>
+                            <button class="filter-btn" data-filter="Cost Savings">Cost Savings</button>
+                            <button class="filter-btn" data-filter="Crime Prevention">Crime Prevention</button>
+                            <button class="filter-btn" data-filter="Education">Education</button>
+                            <button class="filter-btn" data-filter="Ethical Solutions">Ethical Solutions</button>
+                            <button class="filter-btn" data-filter="Financial Planning">Financial Planning</button>
+                            <button class="filter-btn" data-filter="Government Consultation">Government Consultation</button>
+                            <button class="filter-btn" data-filter="Government Policy">Government Policy</button>
+                            <button class="filter-btn" data-filter="High Street">High Street</button>
+                            <button class="filter-btn" data-filter="Innovation">Innovation</button>
+                            <button class="filter-btn" data-filter="Landlord Support">Landlord Support</button>
+                            <button class="filter-btn" data-filter="Legal Compliance">Legal Compliance</button>
+                            <button class="filter-btn" data-filter="Legislation">Legislation</button>
+                            <button class="filter-btn" data-filter="Post-Pandemic">Post-Pandemic</button>
+                            <button class="filter-btn" data-filter="Property Owners">Property Owners</button>
+                            <button class="filter-btn" data-filter="Property Security">Property Security</button>
+                            <button class="filter-btn" data-filter="Regulatory Changes">Regulatory Changes</button>
+                            <button class="filter-btn" data-filter="Relief Options">Relief Options</button>
+                            <button class="filter-btn" data-filter="Relief Schemes">Relief Schemes</button>
+                            <button class="filter-btn" data-filter="Risk Management">Risk Management</button>
+                            <button class="filter-btn" data-filter="Strategic Solutions">Strategic Solutions</button>
+                            <button class="filter-btn" data-filter="Tax Avoidance">Tax Avoidance</button>
+                            <button class="filter-btn" data-filter="Tax Planning">Tax Planning</button>
+                            <button class="filter-btn" data-filter="Tax Reform">Tax Reform</button>
+                            <button class="filter-btn" data-filter="Technology Solutions">Technology Solutions</button>
+                            <button class="filter-btn" data-filter="Vacant Properties">Vacant Properties</button>
+                            <button class="filter-btn" data-filter="VacatAd Services">VacatAd Services</button>
+                        </div>
+                    </div>
+                    <button class="scroll-btn scroll-right" id="scrollRight" aria-label="Scroll right">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M8 4L14 10L8 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
                 </div>
             </div>
         </section>
@@ -453,12 +601,60 @@ Year: 2025
             }
         }
 
+        // Scroll button functionality
+        function updateScrollButtons() {
+            const wrapper = document.querySelector('.filter-buttons-wrapper');
+            const leftBtn = document.getElementById('scrollLeft');
+            const rightBtn = document.getElementById('scrollRight');
+            
+            if (!wrapper || !leftBtn || !rightBtn) return;
+            
+            const isAtStart = wrapper.scrollLeft <= 0;
+            const isAtEnd = wrapper.scrollLeft + wrapper.clientWidth >= wrapper.scrollWidth - 1;
+            
+            leftBtn.disabled = isAtStart;
+            rightBtn.disabled = isAtEnd;
+        }
+
+        function scrollFilters(direction) {
+            const wrapper = document.querySelector('.filter-buttons-wrapper');
+            if (!wrapper) return;
+            
+            const scrollAmount = 300;
+            const newScrollLeft = wrapper.scrollLeft + (direction === 'left' ? -scrollAmount : scrollAmount);
+            
+            wrapper.scrollTo({
+                left: newScrollLeft,
+                behavior: 'smooth'
+            });
+            
+            // Update buttons after scroll animation
+            setTimeout(updateScrollButtons, 300);
+        }
+
         // Event listeners
         document.querySelectorAll('.filter-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 filterPosts(btn.dataset.filter);
             });
         });
+
+        // Add scroll button handlers
+        const leftBtn = document.getElementById('scrollLeft');
+        const rightBtn = document.getElementById('scrollRight');
+        
+        if (leftBtn && rightBtn) {
+            leftBtn.addEventListener('click', () => scrollFilters('left'));
+            rightBtn.addEventListener('click', () => scrollFilters('right'));
+            
+            // Update buttons on scroll
+            const wrapper = document.querySelector('.filter-buttons-wrapper');
+            if (wrapper) {
+                wrapper.addEventListener('scroll', updateScrollButtons);
+                // Initial button state after load
+                setTimeout(updateScrollButtons, 100);
+            }
+        }
 
         // Load posts on page load
         loadPosts();
