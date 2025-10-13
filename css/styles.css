@@ -1094,6 +1094,94 @@ img {
 .social-link.facebook { background: #1877F2; }
 .social-link.facebook:hover { background: #166fe0; }
 
+/* Promo Banner Sections */
+.promo-banner {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 5rem 0;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.promo-banner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1;
+}
+
+.promo-banner .container {
+    position: relative;
+    z-index: 2;
+}
+
+.local-banner {
+    background-image: url('../assets/images/warehouse red beam.png');
+}
+
+.affiliate-banner {
+    background-image: url('../assets/images/yellow-doors-banner.webp');
+}
+
+.banner-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.banner-title {
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    margin-bottom: 1.5rem;
+    color: var(--white);
+    font-weight: 700;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.banner-subtitle {
+    font-size: 1.15rem;
+    color: var(--white);
+    margin-bottom: 2.5rem;
+    line-height: 1.6;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.promo-banner .cta-button {
+    display: inline-block;
+    padding: 1rem 2.5rem;
+    font-size: 1.1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.promo-banner .cta-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+@media screen and (max-width: 768px) {
+    .promo-banner {
+        padding: 3.5rem 0;
+    }
+    
+    .banner-title {
+        font-size: 1.8rem;
+    }
+    
+    .banner-subtitle {
+        font-size: 1rem;
+        margin-bottom: 2rem;
+    }
+    
+    .promo-banner .cta-button {
+        padding: 0.9rem 2rem;
+        font-size: 1rem;
+    }
+}
+
 /* Final CTA Section */
 .final-cta {
     /* Use background image with subtle dark overlay for readability */
