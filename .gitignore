@@ -59,13 +59,26 @@ pids
 *.seed
 *.pid.lock
 
-# Blog migration files (temporary/development only)
+# Blog migration and optimization files (temporary/development only)
 *.xml
 extract_posts.py
 convert_posts_to_html.py
 update_blog_images.py
 update_post_images_in_html.py
 update_all_blog_posts.py
+download_blog_images.py
+fix_image_paths.py
+convert_images_to_webp.py
+update_html_to_webp.py
+cleanup_unused_files.py
 extracted_posts.json
 BLOG_MIGRATION_SUMMARY.md
 BLOG_IMAGES_UPDATE_SUMMARY.md
+BLOG_IMAGES_DOWNLOAD_SUMMARY.md
+WEBP_OPTIMIZATION_SUMMARY.md
+CODE_REVIEW.md
+
+# Python virtual environment
+.venv/
+venv/
+env/
