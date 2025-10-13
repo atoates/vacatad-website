@@ -1,44 +1,332 @@
 [
   {
-    "id": "understanding-empty-property-rates-2025",
-    "title": "Understanding Empty Property Rates in 2025: A Complete Guide",
-    "slug": "understanding-empty-property-rates-2025",
-    "excerpt": "Empty property rates can cost landlords thousands. Learn how business rates work, what relief is available, and how to legally reduce your liability.",
-    "author": "VacatAd Team",
-    "date": "2025-10-13",
-    "readTime": "8 min read",
+    "id": 1,
+    "title": "A Beginner's Guide to Business Rates",
+    "slug": "a-beginners-guide-to-business-rates",
+    "excerpt": "Business rates are a crucial consideration for commercial property occupiers in the UK. Understanding their complexities can empower businesses to manage these expenses more effectively. This comprehensive guide covers the essentials of business rates, calculations, billing cycles, relief options, strategic cost-saving measures, and useful considerations for businesses.",
+    "author": {
+      "name": "VacatAd Team",
+      "role": "Property Solutions Experts"
+    },
+    "date": "Jan 15, 2025",
+    "readTime": "3 min read",
     "category": "Business Rates",
-    "tags": ["Empty Property Relief", "Business Rates", "Property Owners", "Tax Relief"],
+    "tags": [
+      "Empty Property Relief",
+      "Business Rates",
+      "Property Management",
+      "Tax Planning"
+    ],
     "featured": true,
-    "image": "assets/images/warehouse red beam.png",
-    "imageAlt": "Empty commercial warehouse property"
+    "image": "../images/warehouse red beam.png",
+    "imageAlt": "Empty commercial warehouse"
   },
   {
-    "id": "beneficial-occupation-explained",
-    "title": "What is Beneficial Occupation and How Does It Save You Money?",
-    "slug": "beneficial-occupation-explained",
-    "excerpt": "Beneficial occupation is a legal way to reset empty property relief periods. Discover how this compliance-focused approach can save you up to 100% on rates.",
-    "author": "VacatAd Team",
-    "date": "2025-10-10",
+    "id": 2,
+    "title": "Adapting to New Business Rates: How Vacatad Supports Property Owners",
+    "slug": "adapting-to-new-business-rates-how-vacatad-supports-property-owners",
+    "excerpt": "Property management is an ever-evolving field, and staying informed on regulatory changes and their implications on business rates has never been more crucial for property owners. A recent update from the government consultation on \"Business Rates Avoidance and Evasion\" sheds light on significant changes that will impact strategies for managing business rates on empty properties.",
+    "author": {
+      "name": "VacatAd Team",
+      "role": "Property Solutions Experts"
+    },
+    "date": "Aug 08, 2024",
+    "readTime": "4 min read",
+    "category": "Business Rates",
+    "tags": [
+      "Empty Property Relief",
+      "Business Rates",
+      "Property Management",
+      "Tax Planning"
+    ],
+    "featured": true,
+    "image": "../images/warehouse red beam.png",
+    "imageAlt": "Empty commercial warehouse"
+  },
+  {
+    "id": 3,
+    "title": "From Burden to Relief: Transforming Business Rates Management for Vacant Properties with Vacatad",
+    "slug": "from-burden-to-relief",
+    "excerpt": "Managing business rates for vacant properties can be a daunting task for landlords, especially with potential rate increases due to inflation and re-evaluation. Vacatad offers a groundbreaking solution with its technology-driven beneficial occupation model, ensuring seamless rates relief and significant savings. Discover how Vacatad's non-invasive, cost-effective approach can transform your financial management of vacant commercial spaces.",
+    "author": {
+      "name": "VacatAd Team",
+      "role": "Property Solutions Experts"
+    },
+    "date": "Jul 19, 2024",
+    "readTime": "3 min read",
+    "category": "Business Rates",
+    "tags": [
+      "Business Rates",
+      "Property Management",
+      "Tax Planning",
+      "Government Policy"
+    ],
+    "featured": true,
+    "image": "../images/warehouse red beam.png",
+    "imageAlt": "Empty commercial warehouse"
+  },
+  {
+    "id": 4,
+    "title": "New Business Rates Regulations: How Vacatad Aligns with Government Consultation Findings",
+    "slug": "how-vacatad-aligns-with-government-consultation-findings",
+    "excerpt": "In the wake of the 2024 Business Rates Consultation, the UK property management sector is at a crossroads. The consultation has spurred changes, notably extending the Empty Property Relief period to encourage genuine occupancy over short-term tactics. Amidst this regulatory evolution, Vacatad emerges as a game-changer with its innovative model. By turning vacant properties into beneficial spaces that comply with new regulations, Vacatad not only helps property owners navigate the complexities of business rates but also enriches communities by transforming empty spaces into assets. This forward-thinking approach aligns with the consultation's goals, offering a win-win for property owners and communities alike, heralding a new era in property management.",
+    "author": {
+      "name": "VacatAd Team",
+      "role": "Property Solutions Experts"
+    },
+    "date": "Mar 28, 2024",
     "readTime": "6 min read",
-    "category": "Tax Strategy",
-    "tags": ["Beneficial Occupation", "Rate Relief", "Compliance", "Commercial Property"],
-    "featured": true,
-    "image": "assets/images/architecture-1048092_1280.jpg",
-    "imageAlt": "Modern commercial building interior"
+    "category": "Business Rates",
+    "tags": [
+      "Empty Property Relief",
+      "Business Rates",
+      "Property Management",
+      "Tax Planning"
+    ],
+    "featured": false,
+    "image": "../images/warehouse red beam.png",
+    "imageAlt": "Empty commercial warehouse"
   },
   {
-    "id": "common-mistakes-empty-property-owners",
-    "title": "5 Costly Mistakes Empty Property Owners Make",
-    "slug": "common-mistakes-empty-property-owners",
-    "excerpt": "Avoid these common pitfalls that cost property owners thousands in unnecessary rates. Learn the mistakes that could be draining your profits.",
-    "author": "VacatAd Team",
-    "date": "2025-10-05",
-    "readTime": "5 min read",
-    "category": "Property Management",
-    "tags": ["Property Tips", "Cost Saving", "Empty Property", "Best Practices"],
+    "id": 5,
+    "title": "In-depth Analysis | Legally Reducing Business Rates on Vacant Property: VacatAd\u2019s Tech\u2011First Solution",
+    "slug": "in-depth-analysis-legally-reducing-business-rates-on-vacant-property-vacatads-techfirst-solution",
+    "excerpt": "Vacant commercial properties in the UK can become expensive burdens for landlords. Owners of empty shops, offices, or warehouses remain liable for business rates\u2014a tax on property occupancy\u2014even when there is no rental income. Across the sector, this adds up to over \u00a31.3 billion a year in business rates paid by landlords on vacant commercial units.",
+    "author": {
+      "name": "VacatAd Team",
+      "role": "Property Solutions Experts"
+    },
+    "date": "Feb 17, 2025",
+    "readTime": "7 min read",
+    "category": "Business Rates",
+    "tags": [
+      "Empty Property Relief",
+      "Business Rates",
+      "Property Management",
+      "Tax Planning"
+    ],
     "featured": false,
-    "image": "assets/images/asset-8.webp",
-    "imageAlt": "VacatAd property solutions"
+    "image": "../images/warehouse red beam.png",
+    "imageAlt": "Empty commercial warehouse"
+  },
+  {
+    "id": 6,
+    "title": "Vacant and Vulnerable: Securing Empty Commercial Properties in a Post-Pandemic World",
+    "slug": "jtg177zcrzd0d1881lzfmwfcrf3xi4",
+    "excerpt": "As the UK commercial property market shows signs of recovery in 2025, with declining vacancy rates across retail, office, and industrial sectors, the risks associated with empty properties remain significant. CBRE\u2019s UK Retail at a Glance Q1 2025 reports falling retail vacancies, yet vacant units continue to attract unauthorized occupation, theft, vandalism, fire, and environmental damage. These threats expose landlords to financial, legal, and reputational risks, making proactive security a strategic priority. This updated blog leverages the latest 2025 data to explore these challenges, best practice security measures, and technology-driven solutions like Vacatad\u2019s, ensuring compliance with business rates relief and asset protection in a dynamic market.",
+    "author": {
+      "name": "VacatAd Team",
+      "role": "Property Solutions Experts"
+    },
+    "date": "Apr 06, 2025",
+    "readTime": "5 min read",
+    "category": "Business Rates",
+    "tags": [
+      "Empty Property Relief",
+      "Business Rates",
+      "Property Management",
+      "Tax Planning"
+    ],
+    "featured": false,
+    "image": "../images/warehouse red beam.png",
+    "imageAlt": "Empty commercial warehouse"
+  },
+  {
+    "id": 7,
+    "title": "Legal Grey Areas and Innovative Solutions in Business Rates Mitigation \u2013 A Comparison",
+    "slug": "legal-grey-areas-and-innovative-solutions-in-business-rates-mitigation-a-comparison",
+    "excerpt": "A recent BBC report has shed light on a controversial business rates mitigation scheme in Liverpool, where an office building was converted into a snail farm to claim agricultural exemptions. This case raises significant legal and ethical concerns, as local authorities question whether such tactics genuinely align with the intended purpose of agricultural exemptions under UK law.While some companies turn to questionable schemes to reduce business rates, Vacatad offers a transparent, technology-driven solution. By focusing on genuine occupancy and beneficial uses such as public Wi-Fi networks, Vacatad ensures full compliance with legal requirements, offering a reliable alternative for businesses seeking to mitigate business rates without crossing ethical boundaries.",
+    "author": {
+      "name": "VacatAd Team",
+      "role": "Property Solutions Experts"
+    },
+    "date": "Sep 10, 2024",
+    "readTime": "3 min read",
+    "category": "Business Rates",
+    "tags": [
+      "Business Rates",
+      "Property Management",
+      "Tax Planning",
+      "Government Policy"
+    ],
+    "featured": false,
+    "image": "../images/warehouse red beam.png",
+    "imageAlt": "Empty commercial warehouse"
+  },
+  {
+    "id": 8,
+    "title": "Maximising Savings on Empty Commercial Spaces: Insights from Vacatad",
+    "slug": "maximising-savings-on-empty-commercial-spaces",
+    "excerpt": "In the evolving landscape of the UK's commercial property market, Vacatad emerges as a beacon of innovation, offering property owners a unique solution to the growing challenge of vacant properties. By blending technology-first approaches with a keen focus on community benefits, Vacatad not only secures empty spaces but also pioneers a model for reducing business rates through beneficial occupation. This strategy not only preserves the value and appeal of properties but also presents a cost-effective, hassle-free alternative to traditional property management methods. Vacatad stands committed to easing the burdens of property management, ensuring owners can navigate the complexities of unoccupied business rates with confidence and ease.",
+    "author": {
+      "name": "VacatAd Team",
+      "role": "Property Solutions Experts"
+    },
+    "date": "Dec 04, 2023",
+    "readTime": "3 min read",
+    "category": "Business Rates",
+    "tags": [
+      "Empty Property Relief",
+      "Business Rates",
+      "Property Management",
+      "Tax Planning"
+    ],
+    "featured": false,
+    "image": "../images/warehouse red beam.png",
+    "imageAlt": "Empty commercial warehouse"
+  },
+  {
+    "id": 9,
+    "title": "Navigating the Void: How Vacatad Revolutionises Relief for Empty Commercial Properties",
+    "slug": "navigating-the-void-how-vacatad-revolutionises-rates-relief",
+    "excerpt": "Vacatad revolutionises commercial property management by transforming empty spaces into opportunities for savings and community benefit through their innovative, hassle-free approach to business rates relief.",
+    "author": {
+      "name": "VacatAd Team",
+      "role": "Property Solutions Experts"
+    },
+    "date": "Apr 01, 2023",
+    "readTime": "2 min read",
+    "category": "Business Rates",
+    "tags": [
+      "Empty Property Relief",
+      "Business Rates",
+      "Property Management",
+      "Tax Planning"
+    ],
+    "featured": false,
+    "image": "../images/warehouse red beam.png",
+    "imageAlt": "Empty commercial warehouse"
+  },
+  {
+    "id": 10,
+    "title": "Revolutionising Empty Property Management: How Vacatad Offers a New Perspective",
+    "slug": "revolutionising-empty-property-management-how-vacatad-offers-a-new-perspective",
+    "excerpt": "Vacatad offers a revolutionary, technology-driven solution for managing vacant commercial properties, simplifying the attainment of business rates relief with minimal effort from property owners. It transforms empty properties into valuable assets, enhancing security, reducing financial burdens, and contributing positively to the community.",
+    "author": {
+      "name": "VacatAd Team",
+      "role": "Property Solutions Experts"
+    },
+    "date": "Feb 14, 2024",
+    "readTime": "3 min read",
+    "category": "Business Rates",
+    "tags": [
+      "Empty Property Relief",
+      "Business Rates",
+      "Property Management",
+      "Tax Planning"
+    ],
+    "featured": false,
+    "image": "../images/warehouse red beam.png",
+    "imageAlt": "Empty commercial warehouse"
+  },
+  {
+    "id": 11,
+    "title": "Securing Your Vacant Properties: How Vacatad Transforms Risks into Rewards in a Post-Pandemic World",
+    "slug": "securing-your-vacant-properties-how-vacatad-transforms-risks-into-rewards-in-a-post-pandemic-world",
+    "excerpt": "In the aftermath of the COVID-19 pandemic, the landscape of Britain's town centres has been dramatically altered. Once-bustling high streets are now shadowed by increasing vacancy rates, with commercial properties left empty as businesses either pivot to remote working or succumb to the economic pressures of the past few years. Unfortunately, these vacant spaces have become targets for criminal activities, notably the industrial-scale farming of cannabis by organised crime groups. ",
+    "author": {
+      "name": "VacatAd Team",
+      "role": "Property Solutions Experts"
+    },
+    "date": "Aug 12, 2024",
+    "readTime": "6 min read",
+    "category": "Business Rates",
+    "tags": [
+      "Business Rates",
+      "Property Management",
+      "Tax Planning",
+      "Government Policy"
+    ],
+    "featured": false,
+    "image": "../images/warehouse red beam.png",
+    "imageAlt": "Empty commercial warehouse"
+  },
+  {
+    "id": 12,
+    "title": "Spring Budget 2025 \u2013 Business Rates Shake-Up and the Case for Strategic Occupation",
+    "slug": "spring-budget-2025-business-rates-shake-up-and-the-case-for-strategic-occupation",
+    "excerpt": "The UK Government\u2019s Spring Budget 2025 has introduced a series of measures and updates that will significantly impact business rates and the way commercial properties are occupied. In an economic climate where many high streets and office blocks are struggling with vacancies, the Chancellor\u2019s latest announcements have put a spotlight on non-domestic (business) rates, relief schemes, and empty property taxation.",
+    "author": {
+      "name": "VacatAd Team",
+      "role": "Property Solutions Experts"
+    },
+    "date": "Mar 26, 2025",
+    "readTime": "12 min read",
+    "category": "Business Rates",
+    "tags": [
+      "Empty Property Relief",
+      "Business Rates",
+      "Property Management",
+      "Tax Planning"
+    ],
+    "featured": false,
+    "image": "../images/warehouse red beam.png",
+    "imageAlt": "Empty commercial warehouse"
+  },
+  {
+    "id": 13,
+    "title": "The True Cost of an Empty Property: A Technological Solution",
+    "slug": "the-true-cost-of-an-empty-property-a-technological-solution",
+    "excerpt": "The True Cost of an Empty Property: A Technological SolutionCommercial properties represent significant investments and play a central role in the success of businesses, whether they're office buildings, warehouses, or hospitality venues. When operational, these properties not only support business activities but also generate the necessary income to cover maintenance and other associated costs. However, when a business ceases operations or pauses, the once profitable asset can quickly become a financial burden.",
+    "author": {
+      "name": "VacatAd Team",
+      "role": "Property Solutions Experts"
+    },
+    "date": "Jun 11, 2024",
+    "readTime": "2 min read",
+    "category": "Business Rates",
+    "tags": [
+      "Empty Property Relief",
+      "Business Rates",
+      "Property Management",
+      "VacatAd Solutions"
+    ],
+    "featured": false,
+    "image": "../images/warehouse red beam.png",
+    "imageAlt": "Empty commercial warehouse"
+  },
+  {
+    "id": 14,
+    "title": "The UK's Business Rates Reform: What It Means for Property Owners and How Vacatad Can Help",
+    "slug": "the-uks-business-rates-reform-what-it-means-for-property-owners-and-how-vacatad-can-help",
+    "excerpt": "As the UK government continues to refine its business rates system, significant changes are on the horizon that will impact property owners, high street businesses, and local councils alike.",
+    "author": {
+      "name": "VacatAd Team",
+      "role": "Property Solutions Experts"
+    },
+    "date": "Nov 11, 2024",
+    "readTime": "4 min read",
+    "category": "Business Rates",
+    "tags": [
+      "Business Rates",
+      "Property Management",
+      "Tax Planning",
+      "Government Policy"
+    ],
+    "featured": false,
+    "image": "../images/warehouse red beam.png",
+    "imageAlt": "Empty commercial warehouse"
+  },
+  {
+    "id": 15,
+    "title": "The Vacatad Edge: Transforming Business Rates on Empty Properties",
+    "slug": "the-vacatad-edge-transforming-business-rates",
+    "excerpt": "Vacatad offers strategic solutions to navigate the complexities of business rates on empty commercial properties, providing property owners with innovative avenues for relief and exemption.",
+    "author": {
+      "name": "VacatAd Team",
+      "role": "Property Solutions Experts"
+    },
+    "date": "Jul 07, 2023",
+    "readTime": "2 min read",
+    "category": "Business Rates",
+    "tags": [
+      "Business Rates",
+      "Property Management",
+      "Tax Planning",
+      "VacatAd Solutions"
+    ],
+    "featured": false,
+    "image": "../images/warehouse red beam.png",
+    "imageAlt": "Empty commercial warehouse"
   }
 ]
