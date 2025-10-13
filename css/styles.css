@@ -569,10 +569,6 @@ img {
     width: fit-content;
 }
 
-.logo-track:hover {
-    animation-play-state: paused;
-}
-
 .logo-slide {
     flex-shrink: 0;
     padding: 0 3rem;
