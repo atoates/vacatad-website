@@ -50,61 +50,58 @@ Year: 2025
     
     <style>
         .post-hero {
-            background: linear-gradient(135deg, var(--eerie-black) 0%, #1a1c1a 100%);
-            padding: 6rem 0 3rem;
-            color: white;
+            width: 100%;
+            max-height: 500px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .post-hero img {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: cover;
+            max-height: 500px;
         }
         
         .post-header {
             max-width: 800px;
             margin: 0 auto;
-            text-align: center;
+            padding: 2rem 1rem 0;
         }
         
-        .post-category {
-            display: inline-block;
-            background: var(--tea-green);
-            color: var(--eerie-black);
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-weight: 600;
-            margin-bottom: 1rem;
-        }
+        
         
         .post-title {
             font-size: clamp(2rem, 5vw, 3rem);
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             line-height: 1.2;
+            color: var(--eerie-black);
         }
         
         .post-meta {
             display: flex;
-            gap: 1.5rem;
-            justify-content: center;
+            gap: 1rem;
             flex-wrap: wrap;
             font-size: 0.95rem;
-            color: rgba(255, 255, 255, 0.8);
+            color: var(--grey-text);
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #e0e0e0;
+            margin-bottom: 2rem;
         }
         
-        .post-image {
-            width: 100%;
-            max-width: 1200px;
-            margin: -3rem auto 3rem;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        .post-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
         
-        .post-image img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
+        
         
         .post-content {
             max-width: 800px;
             margin: 0 auto;
-            padding: 3rem 1rem;
+            padding: 0 1rem 3rem;
         }
         
         .post-content h2 {
@@ -142,6 +139,16 @@ Year: 2025
             color: var(--eerie-black);
         }
         
+        .post-content a {
+            color: var(--eerie-black);
+            text-decoration: underline;
+            transition: color 0.3s ease;
+        }
+        
+        .post-content a:hover {
+            color: var(--tea-green);
+        }
+        
         .highlight-box {
             background: var(--seasalt);
             border-left: 4px solid var(--tea-green);
@@ -171,6 +178,25 @@ Year: 2025
         .cta-box p {
             margin-bottom: 1.5rem;
             color: var(--eerie-black);
+        }
+        
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: var(--eerie-black);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 2px solid var(--eerie-black);
+        }
+        
+        .cta-button:hover {
+            background: white;
+            color: var(--eerie-black);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
         }
         
         .post-tags {
@@ -226,21 +252,38 @@ Year: 2025
         .share-buttons {
             display: flex;
             gap: 1rem;
+            align-items: center;
             margin: 2rem 0;
             padding-top: 2rem;
             border-top: 1px solid #e0e0e0;
         }
         
-        .share-btn {
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
-            text-decoration: none;
+        .share-label {
             font-weight: 600;
-            transition: transform 0.2s;
+            color: var(--eerie-black);
+            margin-right: 0.5rem;
+        }
+        
+        .share-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
         }
         
         .share-btn:hover {
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .share-btn svg {
+            width: 20px;
+            height: 20px;
         }
         
         .share-twitter {
@@ -259,17 +302,23 @@ Year: 2025
         }
         
         .back-to-blog {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--tea-green);
+            display: inline-block;
+            padding: 0.5rem 1.25rem;
+            background: var(--eerie-black);
+            color: white;
             text-decoration: none;
+            border-radius: 8px;
             font-weight: 600;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+            border: 2px solid var(--eerie-black);
         }
         
         .back-to-blog:hover {
-            gap: 1rem;
+            background: white;
+            color: var(--eerie-black);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
         }
         
         @media (max-width: 768px) {
@@ -290,7 +339,7 @@ Year: 2025
             <div class="nav-container">
                 <div class="nav-logo">
                     <a href="../../index.html">
-                        <img src="../../assets/images/asset-8.webp" alt="VacatAd Logo" class="logo-icon" width="223" height="191">
+                        <img src="../../assets/favicon.svg" alt="VacatAd Logo" class="logo-icon" width="32" height="32" style="border-radius: 50%;">
                         <span class="logo-text">VacatAd</span>
                     </a>
                 </div>
@@ -325,34 +374,31 @@ Year: 2025
 
     <!-- Main Content -->
     <main>
-        <!-- Post Hero -->
+        <!-- Hero Banner Image -->
         <section class="post-hero">
-            <div class="container">
-                <div class="post-header">
-                    <span class="post-category">Business Rates</span>
-                    <h1 class="post-title">The True Cost of an Empty Property: A Technological Solution: A Complete Guide</h1>
-                    <div class="post-meta">
-                        <span>By VacatAd Team</span>
-                        <span>•</span>
-                        <span>October 13, 2025</span>
-                        <span>•</span>
-                        <span>2 min read</span>
-                    </div>
-                </div>
-            </div>
+            <img src="../../images/Blog banner - navigating the void (New LinkedIn Banner).png" alt="The True Cost of an Empty Property: A Technological Solution" loading="eager">
         </section>
 
-        <!-- Featured Image -->
+        <!-- Post Header -->
         <div class="container">
-            <div class="post-image">
-                <img src="../../images/Blog banner - navigating the void (New LinkedIn Banner).png" alt="The True Cost of an Empty Property: A Technological Solution" loading="eager">
+            <div class="post-header">
+                <a href="../index.html" class="back-to-blog">← Back to Blog</a>
+                
+                <h1 class="post-title">The True Cost of an Empty Property: A Technological Solution</h1>
+                
+                <div class="post-meta">
+                    <span class="post-meta-item">By VacatAd Team</span>
+                    <span>•</span>
+                    <span class="post-meta-item">Jun 11, 2024</span>
+                    <span>•</span>
+                    <span class="post-meta-item">2 min read</span>
+                </div>
             </div>
         </div>
 
         <!-- Post Content -->
         <article class="post-content">
             <div class="container">
-                <a href="../index.html" class="back-to-blog">← Back to Blog</a>
 
                 <div   >Commercial properties represent significant investments and play a central role in the success of businesses, whether they're office buildings, warehouses, or hospitality venues. When operational, these properties not only support business activities but also generate necessary income to cover maintenance and other associated costs. However, when a business ceases operations or pauses, the once profitable asset can quickly become a financial burden.</p><h3 >The Financial and Security Risks of Vacant Properties</h3><p class="" >The challenges of maintaining a vacant commercial property extend beyond just the loss of income. Empty properties are susceptible to a host of issues, including criminal activities such as squatting, theft, and vandalism. These unauthorised intrusions can lead to substantial financial losses through damage, the need for extensive repairs, and waste disposal, underlining the importance of effective vacant property management solutions to protect these assets and reduce their financial impact.</p></div><img src="https://images.squarespace-cdn.com/content/v1/655f60baa8d1c109a277c4ed/a16181c6-d20b-4882-87d4-829903853bda/Screenshot+2024-06-11+at+09.41.40.png?format=original" alt=""/><div  >Vacatad: A Forward-Thinking Alternative</h3><p class="" >In response to the complexities of managing vacant properties, Vacatad offers an innovative solution that transcends traditional methods like Property Guardianship. Rather than relying on individuals to live in and look after an empty property, Vacatad utilises advanced technology to monitor, secure, and maintain commercial spaces. This approach not only deters unauthorised access and potential damage but also contributes positively to the community and enhances the property's value.</p></div><img src="https://images.squarespace-cdn.com/content/v1/655f60baa8d1c109a277c4ed/901fe634-1a8f-41ee-8be6-1b9e0b1611cc/Screenshot+2024-06-11+at+09.43.08.png?format=original" alt=""/><div  >The Advantages of Vacatad’s Technological Solution</h3><ul ><li><p class="" ><strong>Security and Maintenance</strong>: Vacatad’s technology-driven approach ensures ongoing security and maintenance of the property without the logistical and legal complexities associated with housing live-in guardians. This system is designed to detect and respond to issues promptly, mitigating risks and preventing damage.</p></li><li><p class="" ><strong>Cost Management</strong>: Addressing the financial drain of empty properties, Vacatad provides a cost-effective solution to manage business rates and maintenance costs. Their model helps property owners realise savings by potentially reducing or eliminating business rates, offering a significant financial advantage over traditional property management strategies.</p></li><li><p class="" ><strong>Community Benefit</strong>: Beyond mere property management, Vacatad’s installations offer additional value, such as free public Wi-Fi, thereby contributing to the community and enhancing the property’s appeal. This approach not only secures the property but also turns it into a resource for the local area.</p></li><li><p class="" ><strong>Ease and Efficiency</strong>: The deployment of Vacatad’s technology is straightforward, providing property owners with a hassle-free solution to the challenges of vacant property management. This efficiency is a stark contrast to the complexities and demands of managing property guardians, offering a streamlined and less invasive alternative.</p></li></ul><h3 >Elevating Property Management with Vacatad</h3><p class="" >Vacant commercial properties, without a doubt, pose a significant challenge for owners, translating into financial losses and security risks. However, with Vacatad’s innovative technology-based solution, property owners have access to a proactive strategy that not only secures and maintains their properties but also offers potential financial benefits and contributes positively to the surrounding community.</p><p class="" >Opting for Vacatad's solution not only addresses the immediate needs of securing and maintaining vacant properties but also transforms these spaces into assets that continue to offer value even in their unoccupied state. For property owners facing the dilemmas of vacancy, Vacatad presents an effective, efficient, and innovative alternative to traditional property management methods, redefining how vacant properties are managed in today’s dynamic real estate landscape.</p></div>
 
@@ -364,11 +410,31 @@ Year: 2025
                     <span class="post-tag">Tax Relief</span>
                 </div>
 
+                <!-- Contact CTA -->
+                <div class="cta-box">
+                    <h3>Ready to Reduce Your Business Rates?</h3>
+                    <p>Speak with our team to learn how VacatAd can help you legally reduce your business rates liability.</p>
+                    <a href="../../contact.html" class="cta-button">Get in Touch</a>
+                </div>
+
                 <!-- Share Buttons -->
                 <div class="share-buttons">
-                    <a href="https://twitter.com/intent/tweet?text=Understanding%20Empty%20Property%20Rates%20in%202025&url=https://vacatad.com/blog/posts/understanding-empty-property-rates-2025.html" target="_blank" rel="noopener" class="share-btn share-twitter">Share on Twitter</a>
-                    <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://vacatad.com/blog/posts/the-true-cost-of-an-empty-property-a-technological-solution.html" target="_blank" rel="noopener" class="share-btn share-linkedin">Share on LinkedIn</a>
-                    <a href="https://www.facebook.com/sharer/sharer.php?u=https://vacatad.com/blog/posts/the-true-cost-of-an-empty-property-a-technological-solution.html" target="_blank" rel="noopener" class="share-btn share-facebook">Share on Facebook</a>
+                    <span class="share-label">Share:</span>
+                    <a href="https://twitter.com/intent/tweet?text=The%20True%20Cost%20of%20an%20Empty%20Property:%20A%20Technological%20Solution&url=https://vacatad.com/blog/posts/the-true-cost-of-an-empty-property-a-technological-solution.html" target="_blank" rel="noopener" class="share-btn share-twitter" aria-label="Share on Twitter">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                        </svg>
+                    </a>
+                    <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://vacatad.com/blog/posts/the-true-cost-of-an-empty-property-a-technological-solution.html" target="_blank" rel="noopener" class="share-btn share-linkedin" aria-label="Share on LinkedIn">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                        </svg>
+                    </a>
+                    <a href="https://www.facebook.com/sharer/sharer.php?u=https://vacatad.com/blog/posts/the-true-cost-of-an-empty-property-a-technological-solution.html" target="_blank" rel="noopener" class="share-btn share-facebook" aria-label="Share on Facebook">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                        </svg>
+                    </a>
                 </div>
 
                 <!-- Author -->
