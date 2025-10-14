@@ -527,6 +527,16 @@ img {
 .why-image img {
     border-radius: var(--border-radius);
     box-shadow: 0 10px 30px rgba(35, 37, 35, 0.15);
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Ensure why-image doesn't get transform animations */
+.why-image,
+.why-image picture,
+.why-image img {
+    transform: none !important;
 }
 
 /* Process Section */

@@ -383,7 +383,7 @@ function initScrollEffects() {
         observer.observe(el);
     });
     
-    // Special scroll-based fade for sticky images
+    // Special scroll-based fade for sticky blue image (no movement, just fade)
     const stickyImage = document.querySelector('.why-image picture img');
     if (stickyImage) {
         stickyImage.style.opacity = '0';
@@ -399,7 +399,7 @@ function initScrollEffects() {
                         const elementTop = rect.top;
                         const elementHeight = rect.height;
                         
-                        // Calculate opacity based on position (0 to 1)
+                        // Calculate opacity based on position (0 to 1) - no transform
                         let opacity = 0;
                         if (elementTop < windowHeight && elementTop + elementHeight > 0) {
                             const visibleHeight = Math.min(windowHeight - elementTop, elementHeight);
@@ -419,6 +419,25 @@ function initScrollEffects() {
         }, { threshold: 0.1 });
         
         stickyObserver.observe(stickyImage);
+    }
+    
+    // Add section reveal for features-grid (hero to first section transition)
+    const featuresGrid = document.querySelector('.features-grid');
+    if (featuresGrid) {
+        featuresGrid.style.opacity = '0';
+        featuresGrid.style.transform = 'translateY(40px)';
+        featuresGrid.style.transition = 'opacity 1s ease, transform 1s ease';
+        
+        const featuresObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        featuresObserver.observe(featuresGrid);
     }
     
     // Scale in effect for CTAs and buttons
