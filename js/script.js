@@ -91,9 +91,16 @@ function initMobileMenu() {
     const navMenu = document.querySelector('.nav-menu');
     
     if (navToggle && navMenu) {
+        // Ensure aria-expanded reflects state
+        const syncAria = () => {
+            const isOpen = navMenu.classList.contains('active');
+            navToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        };
+
         navToggle.addEventListener('click', function() {
             navMenu.classList.toggle('active');
             navToggle.classList.toggle('active');
+            syncAria();
         });
 
         // Close menu when clicking on a link
@@ -102,6 +109,7 @@ function initMobileMenu() {
             link.addEventListener('click', function() {
                 navMenu.classList.remove('active');
                 navToggle.classList.remove('active');
+                syncAria();
             });
         });
 
@@ -112,8 +120,11 @@ function initMobileMenu() {
             if (!isClickInsideNav && navMenu.classList.contains('active')) {
                 navMenu.classList.remove('active');
                 navToggle.classList.remove('active');
+                syncAria();
             }
         });
+        // Initialize aria-expanded
+        syncAria();
     }
 }
 
@@ -393,15 +404,50 @@ function initFAQs() {
         const answer = item.querySelector('.faq-answer');
         
         if (question && answer) {
+            // Setup ARIA relationships
+            const qId = question.id || `faq-q-${Math.random().toString(36).slice(2, 8)}`;
+            const aId = answer.id || `faq-a-${Math.random().toString(36).slice(2, 8)}`;
+            question.id = qId;
+            answer.id = aId;
+            question.setAttribute('aria-controls', aId);
+            question.setAttribute('aria-expanded', 'false');
+            // If not a native button, make it keyboard accessible
+            if (question.tagName.toLowerCase() !== 'button' && question.getAttribute('role') !== 'button') {
+                question.setAttribute('role', 'button');
+                if (!question.hasAttribute('tabindex')) question.setAttribute('tabindex', '0');
+            }
+            answer.setAttribute('role', 'region');
+            answer.setAttribute('aria-labelledby', qId);
+
+            const openItem = (el) => {
+                el.classList.add('open');
+                const q = el.querySelector('.faq-question');
+                if (q) q.setAttribute('aria-expanded', 'true');
+            };
+            const closeItem = (el) => {
+                el.classList.remove('open');
+                const q = el.querySelector('.faq-question');
+                if (q) q.setAttribute('aria-expanded', 'false');
+            };
+
+            // Initialize closed state
+            closeItem(item);
+
             question.addEventListener('click', () => {
                 const isOpen = item.classList.contains('open');
-                
                 // Close all FAQs
-                faqItems.forEach(faq => faq.classList.remove('open'));
-                
-                // Open clicked FAQ if it wasn't already open
+                faqItems.forEach(closeItem);
+                // Open clicked if not already open
                 if (!isOpen) {
-                    item.classList.add('open');
+                    openItem(item);
+                }
+            });
+
+            // Keyboard interaction: Enter/Space toggles
+            question.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    question.click();
                 }
             });
         }

@@ -90,6 +90,29 @@ img {
     height: auto;
 }
 
+/* Accessibility: visible skip link for keyboard users */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 8px;
+    background: var(--tea-green);
+    color: var(--eerie-black);
+    padding: 8px 12px;
+    text-decoration: none;
+    z-index: 10000;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+.skip-link:focus {
+    top: 8px;
+}
+
+/* Safari backdrop blur fallback */
+.header { 
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
 /* Layout Components */
 .container {
     max-width: 1200px;

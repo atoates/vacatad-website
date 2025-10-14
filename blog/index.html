@@ -330,6 +330,7 @@ Year: 2025
     </style>
 </head>
 <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
     <!-- Header -->
     <header class="header">
         <nav class="navbar">
@@ -340,7 +341,7 @@ Year: 2025
                         <span class="logo-text">VacatAd</span>
                     </a>
                 </div>
-                <ul class="nav-menu">
+                <ul class="nav-menu" id="primary-navigation">
                     <li class="nav-item">
                         <a href="../index.html" class="nav-link">Home</a>
                     </li>
@@ -360,17 +361,17 @@ Year: 2025
                 <div class="cta-nav">
                     <a href="../contact.html" class="cta-button-nav">Get in touch</a>
                 </div>
-                <div class="nav-toggle" id="mobile-menu">
+                <button class="nav-toggle" id="mobile-menu" aria-label="Toggle menu" aria-controls="primary-navigation" aria-expanded="false">
                     <span class="bar"></span>
                     <span class="bar"></span>
                     <span class="bar"></span>
-                </div>
+                </button>
             </div>
         </nav>
     </header>
 
     <!-- Main Content -->
-    <main>
+    <main id="main-content">
         <!-- Hero Section -->
         <section class="blog-hero">
             <img src="../assets/images/footer-background.webp" alt="VacatAd Blog" class="hero-banner">
