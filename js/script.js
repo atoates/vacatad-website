@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initScrollEffects();
     initMobileMenu();
     initPhoneTracking();
+    initCTATracking();
     initFAQs();
 });
 
@@ -176,8 +177,22 @@ function initPhoneTracking() {
     const phoneLinks = document.querySelectorAll('a[href^="tel:"]');
     
     phoneLinks.forEach(link => {
-        link.addEventListener('click', function() {
-            trackConversion('phone_call');
+        link.addEventListener('click', function(e) {
+            const phoneNumber = this.getAttribute('href').replace('tel:', '');
+            trackPhoneClick(phoneNumber);
+        });
+    });
+}
+
+// CTA button tracking
+function initCTATracking() {
+    const ctaButtons = document.querySelectorAll('.cta-button, .cta-button-nav, .footer-cta');
+    
+    ctaButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            const buttonText = this.textContent.trim();
+            const section = this.closest('section')?.className || 'navigation';
+            trackCTAClick(buttonText, section);
         });
     });
 }
@@ -189,23 +204,66 @@ function isValidEmail(email) {
 }
 
 // Conversion tracking
-function trackConversion(eventType) {
+function trackConversion(eventType, eventData = {}) {
     // Only log in development environment
     if (window.location.hostname === 'localhost' || 
         window.location.hostname === '127.0.0.1' ||
         window.location.port === '5500') {
-        console.log(`[DEV] Conversion tracked: ${eventType}`);
+        console.log(`[DEV] Conversion tracked: ${eventType}`, eventData);
+        return;
     }
     
     // Production analytics - Google Analytics 4
     if (typeof gtag !== 'undefined') {
         gtag('event', eventType, {
-            event_category: 'leads',
-            event_label: 'vacatad_website'
+            event_category: eventData.category || 'engagement',
+            event_label: eventData.label || 'vacatad_website',
+            value: eventData.value || undefined,
+            ...eventData
         });
     }
     
     // Add other analytics here (Facebook Pixel, LinkedIn, etc.)
+}
+
+// Enhanced tracking for specific actions
+function trackPhoneClick(phoneNumber) {
+    trackConversion('phone_call', {
+        category: 'leads',
+        label: 'phone_click',
+        phone_number: phoneNumber
+    });
+}
+
+function trackFormSubmit(formType) {
+    trackConversion('form_submit', {
+        category: 'leads',
+        label: formType,
+        form_type: formType
+    });
+}
+
+function trackCTAClick(ctaText, ctaLocation) {
+    trackConversion('cta_click', {
+        category: 'engagement',
+        label: ctaText,
+        location: ctaLocation
+    });
+}
+
+function trackBlogRead(articleTitle, readTime) {
+    trackConversion('blog_read', {
+        category: 'content',
+        label: articleTitle,
+        read_time: readTime
+    });
+}
+
+function trackCalculatorUse() {
+    trackConversion('calculator_use', {
+        category: 'leads',
+        label: 'rates_calculator'
+    });
 }
 
 // Notification system
