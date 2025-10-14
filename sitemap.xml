@@ -2,44 +2,140 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://vacatad.com/</loc>
-    <lastmod>2025-10-13</lastmod>
+    <lastmod>2025-10-15</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
+    <priority>1</priority>
   </url>
   <url>
     <loc>https://vacatad.com/faqs.html</loc>
-    <lastmod>2025-10-13</lastmod>
+    <lastmod>2025-10-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://vacatad.com/contact.html</loc>
-    <lastmod>2025-10-13</lastmod>
+    <lastmod>2025-10-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://vacatad.com/blog/</loc>
-    <lastmod>2025-10-14</lastmod>
+    <lastmod>2025-10-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://vacatad.com/local.html</loc>
-    <lastmod>2025-10-14</lastmod>
+    <lastmod>2025-10-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://vacatad.com/affiliate-program.html</loc>
+    <lastmod>2025-10-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://vacatad.com/privacy.html</loc>
-    <lastmod>2025-10-13</lastmod>
+    <lastmod>2025-10-15</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
     <loc>https://vacatad.com/terms.html</loc>
-    <lastmod>2025-10-13</lastmod>
+    <lastmod>2025-10-15</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://vacatad.com/blog/posts/jtg177zcrzd0d1881lzfmwfcrf3xi4.html</loc>
+    <lastmod>2025-04-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://vacatad.com/blog/posts/spring-budget-2025-business-rates-shake-up-and-the-case-for-strategic-occupation.html</loc>
+    <lastmod>2025-03-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://vacatad.com/blog/posts/in-depth-analysis-legally-reducing-business-rates-on-vacant-property-vacatads-techfirst-solution.html</loc>
+    <lastmod>2025-02-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://vacatad.com/blog/posts/a-beginners-guide-to-business-rates.html</loc>
+    <lastmod>2025-01-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vacatad.com/blog/posts/the-uks-business-rates-reform-what-it-means-for-property-owners-and-how-vacatad-can-help.html</loc>
+    <lastmod>2024-11-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://vacatad.com/blog/posts/legal-grey-areas-and-innovative-solutions-in-business-rates-mitigation-a-comparison.html</loc>
+    <lastmod>2024-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://vacatad.com/blog/posts/securing-your-vacant-properties-how-vacatad-transforms-risks-into-rewards-in-a-post-pandemic-world.html</loc>
+    <lastmod>2024-08-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://vacatad.com/blog/posts/adapting-to-new-business-rates-how-vacatad-supports-property-owners.html</loc>
+    <lastmod>2024-08-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vacatad.com/blog/posts/from-burden-to-relief.html</loc>
+    <lastmod>2024-07-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vacatad.com/blog/posts/the-true-cost-of-an-empty-property-a-technological-solution.html</loc>
+    <lastmod>2024-06-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://vacatad.com/blog/posts/how-vacatad-aligns-with-government-consultation-findings.html</loc>
+    <lastmod>2024-03-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://vacatad.com/blog/posts/revolutionising-empty-property-management-how-vacatad-offers-a-new-perspective.html</loc>
+    <lastmod>2024-02-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://vacatad.com/blog/posts/maximising-savings-on-empty-commercial-spaces.html</loc>
+    <lastmod>2023-12-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://vacatad.com/blog/posts/the-vacatad-edge-transforming-business-rates.html</loc>
+    <lastmod>2023-07-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://vacatad.com/blog/posts/navigating-the-void-how-vacatad-revolutionises-rates-relief.html</loc>
+    <lastmod>2023-03-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
 </urlset>

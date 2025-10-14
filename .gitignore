@@ -60,7 +60,7 @@ pids
 *.pid.lock
 
 # Blog migration and optimization files (temporary/development only)
-*.xml
+# Note: sitemap.xml is tracked and should not be ignored
 extract_posts.py
 convert_posts_to_html.py
 update_blog_images.py

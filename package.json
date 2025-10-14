@@ -1,0 +1,22 @@
+{
+  "name": "vacatad-website",
+  "version": "1.0.0",
+  "description": "VacatAd - Technology-first beneficial occupation for vacant commercial property",
+  "scripts": {
+    "generate-sitemap": "node generate-sitemap.js",
+    "build": "npm run generate-sitemap"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/atoates/vacatad-website.git"
+  },
+  "keywords": [
+    "business-rates",
+    "commercial-property",
+    "vacant-property",
+    "beneficial-occupation"
+  ],
+  "author": "VacatAd Ltd",
+  "license": "UNLICENSED",
+  "private": true
+}

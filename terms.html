@@ -27,6 +27,7 @@ Year: 2025
     <link rel="icon" href="assets/favicons/favicon.ico" sizes="any">
 </head>
 <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
     <header class="header">
         <nav class="navbar">
             <div class="nav-container">
@@ -36,28 +37,28 @@ Year: 2025
                         <span class="logo-text">VacatAd</span>
                     </a>
                 </div>
-                <ul class="nav-menu">
-                    <li><a href="index.html" class="nav-link">Home</a></li>
-                    <li><a href="index.html#why-vacatad" class="nav-link">Why VacatAd</a></li>
-                    <li><a href="index.html#how-we-work" class="nav-link">How We Work</a></li>
-                    <li><a href="blog/index.html" class="nav-link">Blog</a></li>
+                <ul class="nav-menu" id="primary-navigation">
+                    <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
+                    <li class="nav-item"><a href="index.html#why-vacatad" class="nav-link">Why VacatAd</a></li>
+                    <li class="nav-item"><a href="index.html#how-we-work" class="nav-link">How We Work</a></li>
+                    <li class="nav-item"><a href="blog/index.html" class="nav-link">Blog</a></li>
                     <li class="nav-item"><a href="faqs.html" class="nav-link">FAQs</a></li>
-                    <li><a href="privacy.html" class="nav-link">Privacy</a></li>
-                    <li><a href="terms.html" class="nav-link active">Terms</a></li>
+                    <li class="nav-item"><a href="privacy.html" class="nav-link">Privacy</a></li>
+                    <li class="nav-item"><a href="terms.html" class="nav-link active">Terms</a></li>
                 </ul>
                 <div class="cta-nav">
                     <a href="contact.html" class="cta-button-nav">Get in touch</a>
                 </div>
-                <div class="nav-toggle" id="mobile-menu">
+                <button class="nav-toggle" id="mobile-menu" aria-label="Toggle menu" aria-controls="primary-navigation" aria-expanded="false" type="button">
                     <span class="bar"></span>
                     <span class="bar"></span>
                     <span class="bar"></span>
-                </div>
+                </button>
             </div>
         </nav>
     </header>
 
-    <main>
+    <main id="main-content">
         <section class="legal-hero">
             <div class="container">
                 <h1 class="legal-title">Terms of Service</h1>
