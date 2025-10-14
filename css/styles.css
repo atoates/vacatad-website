@@ -30,6 +30,7 @@
 html {
     scroll-behavior: smooth;
     font-size: 16px;
+    overflow-x: hidden;
 }
 
 body {
@@ -37,6 +38,8 @@ body {
     line-height: 1.6;
     color: var(--eerie-black);
     background-color: var(--white);
+    overflow-x: hidden;
+    max-width: 100%;
 }
 
 /* Typography */
@@ -68,6 +71,8 @@ p {
     color: var(--grey-text);
     font-size: 1.1rem;
     line-height: 1.7;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 a {
@@ -90,6 +95,8 @@ img {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 var(--container-padding);
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .section-title {
@@ -98,6 +105,7 @@ img {
     margin-bottom: 1rem;
     color: var(--eerie-black);
     font-weight: 700;
+    word-wrap: break-word;
 }
 
 .section-subtitle {
@@ -108,6 +116,7 @@ img {
     max-width: 600px;
     margin-left: auto;
     margin-right: auto;
+    word-wrap: break-word;
 }
 
 /* Header and Navigation */
@@ -1593,11 +1602,18 @@ section.contact-hero.legal-hero .legal-subtitle {
 @media screen and (max-width: 768px) {
     :root {
         --section-padding: 60px;
+        --container-padding: 20px;
+    }
+
+    /* Ensure no horizontal overflow */
+    body {
+        overflow-x: hidden;
     }
 
     .hero {
         background-attachment: scroll; /* Better performance on mobile */
         min-height: 80vh;
+        padding: 120px 0 60px;
     }
 
     .nav-logo .logo-text {
@@ -1689,20 +1705,109 @@ section.contact-hero.legal-hero .legal-subtitle {
         gap: 2rem;
     }
 
+    /* Fix "Why VacatAd" section mobile formatting */
+    .why-vacatad {
+        padding: 50px 0;
+    }
+
+    .why-content {
+        margin-top: 2rem;
+    }
+
+    .intro-text {
+        font-size: 1.1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .benefits-list {
+        margin-bottom: 2rem;
+    }
+
+    .benefits-list li {
+        font-size: 0.95rem;
+        line-height: 1.5;
+        margin-bottom: 1rem;
+    }
+
+    /* Ensure text doesn't overflow */
+    .section-title {
+        font-size: 1.8rem;
+        line-height: 1.2;
+        padding: 0 10px;
+    }
+
+    .section-subtitle {
+        font-size: 1rem;
+        padding: 0 10px;
+        margin-bottom: 2rem;
+    }
+
+    /* Process section improvements */
     .process-steps {
         grid-template-columns: 1fr;
+        gap: 2.5rem;
     }
 
+    .process-step {
+        padding: 2rem 1rem;
+    }
+
+    /* Results grid mobile */
     .results-grid {
         grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
     }
 
+    /* Form improvements */
     .form-row {
         grid-template-columns: 1fr;
     }
 
+    .contact-form {
+        padding: 2rem 1.5rem;
+    }
+
+    /* Tech grid */
     .tech-grid {
         grid-template-columns: 1fr;
+    }
+
+    .tech-item {
+        padding: 1.25rem;
+        font-size: 0.95rem;
+    }
+
+    /* Banner improvements */
+    .banner-title {
+        font-size: 1.75rem;
+        line-height: 1.2;
+        padding: 0 10px;
+    }
+
+    .banner-subtitle {
+        font-size: 1rem;
+        line-height: 1.5;
+        padding: 0 10px;
+    }
+
+    /* Footer improvements */
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+    }
+
+    .footer-section:last-child {
+        text-align: left;
+    }
+
+    /* Testimonial mobile */
+    .testimonial {
+        padding: 2rem 1.5rem;
+    }
+
+    .testimonial blockquote {
+        font-size: 1.1rem;
+        line-height: 1.5;
     }
 }
 
@@ -1712,29 +1817,158 @@ section.contact-hero.legal-hero .legal-subtitle {
         --section-padding: 50px;
     }
 
+    /* Prevent horizontal scroll */
+    html, body {
+        overflow-x: hidden;
+        max-width: 100%;
+    }
+
     .hero {
-        padding: 120px 0 var(--section-padding);
+        padding: 100px 0 50px;
         min-height: auto;
     }
 
+    /* Hero content improvements */
+    .hero-title {
+        font-size: 1.75rem;
+        line-height: 1.1;
+    }
+
+    .hero-description {
+        font-size: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    /* Tighter button spacing */
+    .hero-buttons {
+        gap: 1rem;
+    }
+
+    /* Section title improvements */
+    .section-title {
+        font-size: 1.6rem;
+        padding: 0 5px;
+    }
+
+    .section-subtitle {
+        font-size: 0.95rem;
+        padding: 0 5px;
+    }
+
+    /* Feature cards */
     .feature-card,
     .contact-form {
         padding: 2rem 1.5rem;
     }
 
+    /* Why VacatAd section */
+    .intro-text {
+        font-size: 1rem;
+    }
+
+    .benefits-list li {
+        font-size: 0.9rem;
+    }
+
+    /* Results improvements */
     .results-grid {
         grid-template-columns: 1fr;
+        gap: 1rem;
     }
 
     .result-number {
         font-size: 2.5rem;
     }
 
+    .result-label {
+        font-size: 1rem;
+    }
+
+    .result-description {
+        font-size: 0.85rem;
+    }
+
+    /* Testimonial */
     .testimonial {
-        padding: 2rem;
+        padding: 1.75rem 1.25rem;
     }
 
     .testimonial blockquote {
+        font-size: 1rem;
+    }
+
+    .testimonial cite {
+        font-size: 0.9rem;
+    }
+
+    /* Process steps */
+    .process-step {
+        padding: 1.5rem 0.75rem;
+    }
+
+    .process-step h3 {
         font-size: 1.1rem;
+    }
+
+    .process-step p {
+        font-size: 0.9rem;
+    }
+
+    /* Tech items */
+    .tech-item {
+        padding: 1rem;
+        font-size: 0.9rem;
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .tech-icon {
+        margin-bottom: 0.75rem;
+    }
+
+    /* Banner text */
+    .banner-title {
+        font-size: 1.5rem;
+    }
+
+    .banner-subtitle {
+        font-size: 0.95rem;
+    }
+
+    /* Final CTA */
+    .final-cta-title {
+        font-size: 1.75rem;
+    }
+
+    .final-cta-subtitle {
+        font-size: 1rem;
+    }
+
+    /* FAQ improvements */
+    .faq-title {
+        font-size: 2rem;
+    }
+
+    .faq-subtitle {
+        font-size: 1rem;
+    }
+
+    .category-title {
+        font-size: 1.5rem;
+    }
+
+    .faq-question {
+        font-size: 0.95rem;
+        padding: 1rem;
+    }
+
+    /* Footer */
+    .footer-section h4 {
+        font-size: 1.1rem;
+    }
+
+    .footer-section p,
+    .footer-section ul li a {
+        font-size: 0.9rem;
     }
 }
