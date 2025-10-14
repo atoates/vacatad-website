@@ -1988,7 +1988,163 @@ section.contact-hero.legal-hero .legal-subtitle {
         font-size: 0.95rem;
         padding: 1rem;
     }
+}
 
+/* ========================================
+   Scroll Animation Enhancements
+   ======================================== */
+
+/* Smooth scroll behavior */
+@media (prefers-reduced-motion: no-preference) {
+    html {
+        scroll-behavior: smooth;
+    }
+}
+
+/* Section reveal animations */
+section {
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+/* Stagger animation delays for cards */
+.feature-card:nth-child(1) { animation-delay: 0.1s; }
+.feature-card:nth-child(2) { animation-delay: 0.2s; }
+.feature-card:nth-child(3) { animation-delay: 0.3s; }
+.feature-card:nth-child(4) { animation-delay: 0.4s; }
+.feature-card:nth-child(5) { animation-delay: 0.5s; }
+.feature-card:nth-child(6) { animation-delay: 0.6s; }
+
+.process-step:nth-child(1) { animation-delay: 0.15s; }
+.process-step:nth-child(2) { animation-delay: 0.3s; }
+.process-step:nth-child(3) { animation-delay: 0.45s; }
+.process-step:nth-child(4) { animation-delay: 0.6s; }
+
+/* Hover effects with smooth transitions */
+.feature-card,
+.process-step,
+.blog-card,
+.client-logo {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.feature-card:hover,
+.process-step:hover,
+.blog-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 40px rgba(35, 37, 35, 0.12);
+}
+
+.client-logo:hover {
+    transform: scale(1.1);
+    filter: brightness(1.1);
+}
+
+/* Button hover animations */
+.cta-button,
+.cta-button-nav,
+.footer-cta {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.cta-button::before,
+.cta-button-nav::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.cta-button:hover::before,
+.cta-button-nav:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+/* Parallax sections */
+.parallax-section {
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+/* Loading skeleton for async content */
+@keyframes shimmer {
+    0% {
+        background-position: -468px 0;
+    }
+    100% {
+        background-position: 468px 0;
+    }
+}
+
+.skeleton {
+    background: linear-gradient(to right, #f6f7f8 0%, #edeef1 20%, #f6f7f8 40%, #f6f7f8 100%);
+    background-size: 800px 104px;
+    animation: shimmer 1.2s linear infinite;
+    border-radius: 4px;
+}
+
+/* Progress bar for scroll depth */
+.scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--blue-accent), var(--tea-green));
+    z-index: 9999;
+    transition: width 0.1s ease;
+}
+
+/* Smooth reveal for images */
+img {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+img.lazy-loading {
+    opacity: 0;
+}
+
+img.lazy-loaded {
+    opacity: 1;
+}
+
+/* Enhanced focus states for accessibility */
+*:focus-visible {
+    outline: 3px solid var(--blue-accent);
+    outline-offset: 2px;
+    border-radius: 2px;
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+    
+    .parallax-section {
+        background-attachment: scroll;
+    }
+}
+
+/* ======================================== */
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
     /* Footer */
     .footer-section h4 {
         font-size: 1.1rem;

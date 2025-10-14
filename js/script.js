@@ -9,6 +9,8 @@ document.addEventListener('DOMContentLoaded', function() {
     initPhoneTracking();
     initCTATracking();
     initFAQs();
+    initScrollProgress();
+    initParallaxEffects();
 });
 
 // Navigation functionality
@@ -351,28 +353,115 @@ function initScrollEffects() {
         });
     }, observerOptions);
     
-    // Observe elements for animation
-    const animateElements = document.querySelectorAll('.feature-card, .process-step, .result-item, .tech-item, .contact-info, .contact-form');
-    animateElements.forEach(el => {
+    // Enhanced animation types - different effects for different elements
+    const fadeUpElements = document.querySelectorAll('.feature-card, .process-step, .result-item, .tech-item, .contact-info, .contact-form, .blog-card, .faq-item, .client-logo, .legal-section');
+    fadeUpElements.forEach((el, index) => {
         el.style.opacity = '0';
         el.style.transform = 'translateY(30px)';
-        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        el.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
+        el.classList.add('fade-up');
         observer.observe(el);
     });
     
-    // Add CSS for animation
+    // Fade in from left
+    const fadeLeftElements = document.querySelectorAll('.why-text, .hero-title, .section-header');
+    fadeLeftElements.forEach((el, index) => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateX(-30px)';
+        el.style.transition = `opacity 0.8s ease ${index * 0.15}s, transform 0.8s ease ${index * 0.15}s`;
+        el.classList.add('fade-left');
+        observer.observe(el);
+    });
+    
+    // Fade in from right
+    const fadeRightElements = document.querySelectorAll('.why-image, .hero-description');
+    fadeRightElements.forEach((el, index) => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateX(30px)';
+        el.style.transition = `opacity 0.8s ease ${index * 0.15}s, transform 0.8s ease ${index * 0.15}s`;
+        el.classList.add('fade-right');
+        observer.observe(el);
+    });
+    
+    // Scale in effect for CTAs and buttons
+    const scaleElements = document.querySelectorAll('.cta-button, .cta-group, .footer-cta');
+    scaleElements.forEach((el, index) => {
+        el.style.opacity = '0';
+        el.style.transform = 'scale(0.9)';
+        el.style.transition = `opacity 0.5s ease ${index * 0.1}s, transform 0.5s ease ${index * 0.1}s`;
+        el.classList.add('scale-in');
+        observer.observe(el);
+    });
+    
+    // Parallax effect for hero sections
+    const heroSections = document.querySelectorAll('.hero, .blog-hero');
+    window.addEventListener('scroll', throttle(function() {
+        const scrolled = window.pageYOffset;
+        heroSections.forEach(hero => {
+            if (scrolled < window.innerHeight) {
+                hero.style.transform = `translateY(${scrolled * 0.5}px)`;
+            }
+        });
+    }, 16));
+    
+    // Counter animation for stats
+    const statNumbers = document.querySelectorAll('.stat-number, .result-value');
+    const statsObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting && !entry.target.classList.contains('counted')) {
+                entry.target.classList.add('counted');
+                animateCounter(entry.target);
+            }
+        });
+    }, { threshold: 0.5 });
+    
+    statNumbers.forEach(stat => statsObserver.observe(stat));
+    
+    // Add CSS for animations
     const style = document.createElement('style');
     style.textContent = `
         .animate-in {
             opacity: 1 !important;
-            transform: translateY(0) !important;
+            transform: translateY(0) translateX(0) scale(1) !important;
         }
         
         .scrolled {
             box-shadow: 0 2px 20px rgba(35, 37, 35, 0.15) !important;
         }
+        
+        /* Smooth scroll behavior for all elements */
+        .fade-up, .fade-left, .fade-right, .scale-in {
+            will-change: transform, opacity;
+        }
+        
+        /* Reduce motion for users who prefer it */
+        @media (prefers-reduced-motion: reduce) {
+            .fade-up, .fade-left, .fade-right, .scale-in {
+                transition: none !important;
+                opacity: 1 !important;
+                transform: none !important;
+            }
+        }
     `;
     document.head.appendChild(style);
+}
+
+// Animate counter for statistics
+function animateCounter(element) {
+    const target = parseInt(element.textContent.replace(/\D/g, ''));
+    const duration = 2000;
+    const increment = target / (duration / 16);
+    let current = 0;
+    
+    const timer = setInterval(() => {
+        current += increment;
+        if (current >= target) {
+            element.textContent = element.textContent.replace(/\d+/, target);
+            clearInterval(timer);
+        } else {
+            element.textContent = element.textContent.replace(/\d+/, Math.floor(current));
+        }
+    }, 16);
 }
 
 // Performance optimization: lazy loading for images
@@ -485,6 +574,81 @@ if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initLazyLoading);
 } else {
     initLazyLoading();
+}
+
+// Scroll progress indicator
+function initScrollProgress() {
+    // Create progress bar element
+    const progressBar = document.createElement('div');
+    progressBar.className = 'scroll-progress';
+    document.body.appendChild(progressBar);
+    
+    // Update progress on scroll
+    window.addEventListener('scroll', throttle(function() {
+        const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = (window.pageYOffset / windowHeight) * 100;
+        progressBar.style.width = scrolled + '%';
+    }, 16));
+}
+
+// Parallax effects for hero and image sections
+function initParallaxEffects() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        return; // Respect user preference for reduced motion
+    }
+    
+    const parallaxElements = document.querySelectorAll('.why-image img, .hero-container');
+    
+    if (parallaxElements.length === 0) return;
+    
+    window.addEventListener('scroll', throttle(function() {
+        const scrolled = window.pageYOffset;
+        
+        parallaxElements.forEach((element, index) => {
+            const rect = element.getBoundingClientRect();
+            const elementTop = rect.top + scrolled;
+            const elementHeight = rect.height;
+            
+            // Only apply parallax when element is in viewport
+            if (scrolled + window.innerHeight > elementTop && scrolled < elementTop + elementHeight) {
+                const speed = 0.3 + (index * 0.1); // Different speeds for variety
+                const yPos = -(scrolled - elementTop) * speed;
+                element.style.transform = `translateY(${yPos}px)`;
+            }
+        });
+    }, 16));
+}
+
+// Smooth reveal for sections as they enter viewport
+function initSectionReveal() {
+    const sections = document.querySelectorAll('section:not(.hero)');
+    
+    const revealObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+                revealObserver.unobserve(entry.target);
+            }
+        });
+    }, {
+        threshold: 0.15,
+        rootMargin: '0px 0px -100px 0px'
+    });
+    
+    sections.forEach(section => {
+        section.style.opacity = '0';
+        section.style.transform = 'translateY(20px)';
+        section.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+        revealObserver.observe(section);
+    });
+}
+
+// Call section reveal on load
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initSectionReveal);
+} else {
+    initSectionReveal();
 }
 
 // Export functions for potential external use
