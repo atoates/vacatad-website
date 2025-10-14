@@ -469,6 +469,19 @@ img {
     margin-top: 3rem;
 }
 
+.why-image {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--border-radius);
+    min-height: 500px;
+}
+
+.why-image picture {
+    position: sticky;
+    top: 100px;
+    display: block;
+}
+
 .intro-text {
     font-size: 1.2rem;
     color: var(--eerie-black);
@@ -600,7 +613,7 @@ img {
 .logo-track {
     display: flex;
     align-items: center;
-    animation: scroll 40s linear infinite;
+    animation: scroll 20s linear infinite;
     width: fit-content;
 }
 
@@ -1730,6 +1743,16 @@ section.contact-hero.legal-hero .legal-subtitle {
     .contact-content {
         grid-template-columns: 1fr;
         gap: 2rem;
+    }
+    
+    /* Fix sticky image behavior on mobile */
+    .why-image {
+        min-height: 300px;
+    }
+    
+    .why-image picture {
+        position: relative;
+        top: 0;
     }
 
     /* Fix "Why VacatAd" section mobile formatting */

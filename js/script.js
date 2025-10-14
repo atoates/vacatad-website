@@ -374,7 +374,7 @@ function initScrollEffects() {
     });
     
     // Fade in from right
-    const fadeRightElements = document.querySelectorAll('.why-image, .hero-description');
+    const fadeRightElements = document.querySelectorAll('.hero-description');
     fadeRightElements.forEach((el, index) => {
         el.style.opacity = '0';
         el.style.transform = 'translateX(30px)';
@@ -382,6 +382,44 @@ function initScrollEffects() {
         el.classList.add('fade-right');
         observer.observe(el);
     });
+    
+    // Special scroll-based fade for sticky images
+    const stickyImage = document.querySelector('.why-image picture img');
+    if (stickyImage) {
+        stickyImage.style.opacity = '0';
+        stickyImage.style.transition = 'opacity 1.2s ease';
+        
+        const stickyObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // Gradually fade in based on scroll progress
+                    const fadeInOnScroll = () => {
+                        const rect = entry.target.getBoundingClientRect();
+                        const windowHeight = window.innerHeight;
+                        const elementTop = rect.top;
+                        const elementHeight = rect.height;
+                        
+                        // Calculate opacity based on position (0 to 1)
+                        let opacity = 0;
+                        if (elementTop < windowHeight && elementTop + elementHeight > 0) {
+                            const visibleHeight = Math.min(windowHeight - elementTop, elementHeight);
+                            opacity = Math.min(visibleHeight / (elementHeight * 0.5), 1);
+                        }
+                        
+                        stickyImage.style.opacity = opacity;
+                    };
+                    
+                    // Initial fade
+                    fadeInOnScroll();
+                    
+                    // Update on scroll
+                    window.addEventListener('scroll', throttle(fadeInOnScroll, 16));
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        stickyObserver.observe(stickyImage);
+    }
     
     // Scale in effect for CTAs and buttons
     const scaleElements = document.querySelectorAll('.cta-button, .cta-group, .footer-cta');
