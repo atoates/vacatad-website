@@ -11,7 +11,7 @@
 
 const ANALYTICS_CONFIG = {
     // Google Analytics 4 Measurement ID
-    measurementId: 'G-XXXXXXXXXX',
+    measurementId: 'G-DEZQKBTTFH',
     
     // Enable/disable based on environment
     enabled: !['localhost', '127.0.0.1'].includes(window.location.hostname),
