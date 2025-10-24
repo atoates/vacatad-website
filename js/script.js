@@ -354,7 +354,8 @@ function initScrollEffects() {
     }, observerOptions);
     
     // Enhanced animation types - different effects for different elements
-    const fadeUpElements = document.querySelectorAll('.feature-card, .process-step, .result-item, .tech-item, .contact-info, .contact-form, .blog-card, .faq-item, .client-logo, .legal-section');
+    // Note: .legal-section removed to ensure legal content is immediately visible
+    const fadeUpElements = document.querySelectorAll('.feature-card, .process-step, .result-item, .tech-item, .contact-info, .contact-form, .blog-card, .faq-item, .client-logo');
     fadeUpElements.forEach((el, index) => {
         el.style.opacity = '0';
         el.style.transform = 'translateY(30px)';
