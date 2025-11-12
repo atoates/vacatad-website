@@ -1,5 +1,68 @@
 [
   {
+    "id": 20,
+    "title": "From Empty Units to Community Hubs: The Social Value of VacatAd",
+    "slug": "from-empty-units-to-community-hubs-the-social-value-of-vacatad",
+    "excerpt": "Vacant commercial properties often represent more than a financial burden — they symbolise decline in local economies. VacatAd's model turns that challenge into opportunity. By transforming unoccupied properties into active digital spaces — offering free Wi-Fi access and local advertising — each site becomes a miniature community hub.",
+    "author": {
+      "name": "VacatAd Team",
+      "role": "Property Solutions Experts"
+    },
+    "date": "Aug 14, 2025",
+    "readTime": "8 min read",
+    "tags": [
+      "Community Benefits",
+      "Social Value",
+      "ESG",
+      "High Street Regeneration"
+    ],
+    "featured": true,
+    "image": "../images/Blog banner - navigating the void (New LinkedIn Banner).webp",
+    "imageAlt": "From Empty Units to Community Hubs: The Social Value of VacatAd"
+  },
+  {
+    "id": 19,
+    "title": "Understanding the 13-Week Occupation Rule: How to Stay Compliant",
+    "slug": "understanding-the-13-week-occupation-rule-how-to-stay-compliant",
+    "excerpt": "Following the government's reform to the Empty Property Relief reset period, landlords must now ensure that any reoccupation lasts for a full 13 weeks before a new relief period can be claimed. The change, effective from April 2024, was designed to discourage short-term avoidance tactics — but it also introduced new administrative and legal challenges for property owners.",
+    "author": {
+      "name": "VacatAd Team",
+      "role": "Property Solutions Experts"
+    },
+    "date": "Jul 10, 2025",
+    "readTime": "9 min read",
+    "tags": [
+      "Compliance",
+      "Relief Schemes",
+      "13-Week Rule",
+      "Empty Property Relief"
+    ],
+    "featured": true,
+    "image": "../images/24.08.08 - Blog banner - rates consultation.webp",
+    "imageAlt": "Understanding the 13-Week Occupation Rule: How to Stay Compliant"
+  },
+  {
+    "id": 18,
+    "title": "Why 2025 Is the Year Technology Redefined Business Rates Mitigation",
+    "slug": "why-2025-is-the-year-technology-redefined-business-rates-mitigation",
+    "excerpt": "Across the UK, property owners are facing increasing scrutiny from local authorities as business rates reforms continue to tighten enforcement. Traditional mitigation schemes — such as temporary storage or nominal tenancies — are now more likely to face challenge. In this environment, technology has become the key to maintaining compliance while still reducing costs.",
+    "author": {
+      "name": "VacatAd Team",
+      "role": "Property Solutions Experts"
+    },
+    "date": "Jun 18, 2025",
+    "readTime": "7 min read",
+    "tags": [
+      "Technology Solutions",
+      "Innovation",
+      "Compliance",
+      "Data-Driven"
+    ],
+    "featured": true,
+    "image": "../images/25.03.27+-+Blog+-+in-depth+analysis.webp",
+    "imageAlt": "Why 2025 Is the Year Technology Redefined Business Rates Mitigation"
+  },
+  {
     "id": 17,
     "title": "Beneficial Occupation Explained: What Landlords Need to Know",
     "slug": "beneficial-occupation-explained-what-landlords-need-to-know",
