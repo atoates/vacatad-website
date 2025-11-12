@@ -108,16 +108,42 @@ Year: 2025
         .filter-controls {
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
-            gap: 2rem;
-            flex-wrap: wrap;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .month-filters-wrapper {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
         }
         
         .month-filters {
             display: flex;
             gap: 0.75rem;
-            flex-wrap: wrap;
-            flex: 1;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            scrollbar-color: var(--tea-green) #f0f0f0;
+        }
+        
+        .month-filters::-webkit-scrollbar {
+            height: 6px;
+        }
+        
+        .month-filters::-webkit-scrollbar-track {
+            background: #f0f0f0;
+            border-radius: 3px;
+        }
+        
+        .month-filters::-webkit-scrollbar-thumb {
+            background: var(--tea-green);
+            border-radius: 3px;
+        }
+        
+        .month-filters::-webkit-scrollbar-thumb:hover {
+            background: #88c999;
         }
         
         .filter-btn {
@@ -372,9 +398,13 @@ Year: 2025
                 gap: 1rem;
             }
             
+            .month-filters-wrapper {
+                width: 100%;
+            }
+            
             .month-filters {
-                justify-content: flex-start;
                 gap: 0.5rem;
+                padding-bottom: 0.5rem;
             }
             
             .filter-btn {
@@ -478,18 +508,23 @@ Year: 2025
         <section class="blog-filters">
             <div class="container">
                 <div class="filter-controls">
-                    <div class="month-filters">
-                        <button class="filter-btn active" data-month="all">All Months</button>
-                        <button class="filter-btn" data-month="2025-08">August 2025</button>
-                        <button class="filter-btn" data-month="2025-07">July 2025</button>
-                        <button class="filter-btn" data-month="2025-06">June 2025</button>
-                        <button class="filter-btn" data-month="2025-05">May 2025</button>
-                        <button class="filter-btn" data-month="2025-04">April 2025</button>
-                        <button class="filter-btn" data-month="2025-03">March 2025</button>
-                        <button class="filter-btn" data-month="2025-02">February 2025</button>
-                        <button class="filter-btn" data-month="2025-01">January 2025</button>
-                        <button class="filter-btn" data-month="2024">2024</button>
-                        <button class="filter-btn" data-month="2023">2023</button>
+                    <div class="month-filters-wrapper">
+                        <div class="month-filters">
+                            <button class="filter-btn active" data-month="all">All</button>
+                            <button class="filter-btn" data-month="2025-11">Nov '25</button>
+                            <button class="filter-btn" data-month="2025-10">Oct '25</button>
+                            <button class="filter-btn" data-month="2025-09">Sep '25</button>
+                            <button class="filter-btn" data-month="2025-08">Aug '25</button>
+                            <button class="filter-btn" data-month="2025-07">Jul '25</button>
+                            <button class="filter-btn" data-month="2025-06">Jun '25</button>
+                            <button class="filter-btn" data-month="2025-05">May '25</button>
+                            <button class="filter-btn" data-month="2025-04">Apr '25</button>
+                            <button class="filter-btn" data-month="2025-03">Mar '25</button>
+                            <button class="filter-btn" data-month="2025-02">Feb '25</button>
+                            <button class="filter-btn" data-month="2025-01">Jan '25</button>
+                            <button class="filter-btn" data-month="2024">2024</button>
+                            <button class="filter-btn" data-month="2023">2023</button>
+                        </div>
                     </div>
                     <div class="tags-dropdown-container">
                         <button class="tags-dropdown-btn" id="tagsDropdownBtn">
@@ -653,10 +688,26 @@ Year: 2025
         let currentMonthFilter = 'all';
         let currentTagFilter = null;
 
+        // Parse date string like "Aug 14, 2025" to ISO format "2025-08-14"
+        function parseDate(dateString) {
+            const monthMap = {
+                'Jan': '01', 'Feb': '02', 'Mar': '03', 'Apr': '04',
+                'May': '05', 'Jun': '06', 'Jul': '07', 'Aug': '08',
+                'Sep': '09', 'Oct': '10', 'Nov': '11', 'Dec': '12'
+            };
+            const [month, day, year] = dateString.split(/[\s,]+/);
+            return `${year}-${monthMap[month]}-${day.padStart(2, '0')}`;
+        }
+
         async function loadPosts() {
             try {
                 const response = await fetch('data/posts.json');
                 allPosts = await response.json();
+                
+                // Add parsed ISO date to each post for filtering
+                allPosts.forEach(post => {
+                    post.dateISO = parseDate(post.date);
+                });
                 
                 // Sort posts by date (newest first)
                 allPosts.sort((a, b) => new Date(b.dateISO) - new Date(a.dateISO));
@@ -815,8 +866,8 @@ Year: 2025
                 e.stopPropagation();
                 const tag = btn.dataset.tag;
                 
-                // If clicking the active tag, clear the filter
-                if (btn.classList.contains('active')) {
+                // If clicking "all" or the active tag, clear the filter
+                if (tag === 'all' || btn.classList.contains('active')) {
                     clearTagFilter();
                 } else {
                     filterPostsByTag(tag);
