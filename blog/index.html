@@ -328,8 +328,26 @@ Year: 2025
             color: var(--eerie-black);
         }
         
+        .blog-card h3 a {
+            color: var(--eerie-black);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .blog-card h3 a:hover {
+            color: var(--tea-green);
+        }
+        
         .blog-card.featured h3 {
             font-size: 2rem;
+        }
+        
+        .blog-card-image {
+            transition: transform 0.3s ease;
+        }
+        
+        .blog-card a:hover .blog-card-image {
+            transform: scale(1.02);
         }
         
         .blog-excerpt {
@@ -627,7 +645,7 @@ Year: 2025
                     <p>Technology-first beneficial occupation resetting relief periods for vacant commercial property.</p>
                     <div class="footer-contact">
                         <p><strong>Email:</strong> <a href="mailto:hello@vacatad.com">hello@vacatad.com</a></p>
-                        <p><strong>📞</strong> <a href="tel:03330900443">0333 090 0443</a></p>
+                        <p><strong>Phone:</strong> <a href="tel:03330900443">0333 090 0443</a></p>
                     </div>
                     <div class="footer-social">
                         <a href="https://x.com/vacatad" aria-label="VacatAd on X (Twitter)" target="_blank" rel="noopener" class="social-link x">
@@ -733,7 +751,9 @@ Year: 2025
             
             grid.innerHTML = posts.map(post => `
                 <article class="blog-card ${post.featured ? 'featured' : ''}">
-                    <img src="${post.image.replace('../', '')}" alt="${post.imageAlt}" class="blog-card-image" loading="lazy">
+                    <a href="posts/${post.slug}.html">
+                        <img src="${post.image.replace('../', '')}" alt="${post.imageAlt}" class="blog-card-image" loading="lazy">
+                    </a>
                     <div class="blog-card-content">
                         <div class="blog-meta">
                             <span class="blog-category">By ${post.author.name}</span>
@@ -742,7 +762,7 @@ Year: 2025
                             <span>•</span>
                             <span>${post.readTime}</span>
                         </div>
-                        <h3>${post.title}</h3>
+                        <h3><a href="posts/${post.slug}.html">${post.title}</a></h3>
                         <p class="blog-excerpt">${post.excerpt}</p>
                         <div class="blog-tags">
                             ${post.tags.map(tag => `<span class="blog-tag">${tag}</span>`).join('')}
