@@ -99,43 +99,29 @@ Year: 2025
         
         .blog-filters {
             padding: 2rem 0;
-            text-align: center;
             position: relative;
             z-index: 10;
             background: white;
+            border-bottom: 1px solid #e0e0e0;
         }
         
-        .filter-container {
-            position: relative;
+        .filter-controls {
             display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            max-width: 100%;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 2rem;
+            flex-wrap: wrap;
         }
         
-        .filter-buttons-wrapper {
-            overflow-x: auto;
-            overflow-y: hidden;
-            scroll-behavior: smooth;
+        .month-filters {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
             flex: 1;
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-        
-        .filter-buttons-wrapper::-webkit-scrollbar {
-            display: none;
-        }
-        
-        .filter-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: flex-start;
-            flex-wrap: nowrap;
-            padding: 0.5rem 0;
         }
         
         .filter-btn {
-            padding: 0.5rem 1.5rem;
+            padding: 0.5rem 1.25rem;
             border: 2px solid var(--tea-green);
             background: transparent;
             color: var(--eerie-black);
@@ -144,7 +130,7 @@ Year: 2025
             transition: all 0.3s ease;
             font-weight: 600;
             white-space: nowrap;
-            flex-shrink: 0;
+            font-size: 0.9rem;
         }
         
         .filter-btn:hover,
@@ -153,36 +139,100 @@ Year: 2025
             color: var(--eerie-black);
         }
         
-        .scroll-btn {
-            background: var(--tea-green);
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
+        .tags-dropdown-container {
+            position: relative;
+            min-width: 200px;
+        }
+        
+        .tags-dropdown-btn {
+            padding: 0.5rem 1.25rem;
+            border: 2px solid var(--eerie-black);
+            background: white;
+            color: var(--eerie-black);
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
             display: flex;
             align-items: center;
-            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+        }
+        
+        .tags-dropdown-btn:hover {
+            background: var(--eerie-black);
+            color: white;
+        }
+        
+        .tags-dropdown-btn svg {
+            transition: transform 0.3s ease;
+        }
+        
+        .tags-dropdown-btn.active svg {
+            transform: rotate(180deg);
+        }
+        
+        .tags-dropdown {
+            position: absolute;
+            top: calc(100% + 0.5rem);
+            right: 0;
+            background: white;
+            border: 2px solid var(--eerie-black);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            width: 280px;
+            max-height: 400px;
+            overflow: hidden;
+            display: none;
+            z-index: 100;
+        }
+        
+        .tags-dropdown.active {
+            display: block;
+        }
+        
+        .tags-search {
+            padding: 1rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .tags-search input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .tags-list {
+            max-height: 320px;
+            overflow-y: auto;
+            padding: 0.5rem;
+        }
+        
+        .tag-option {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: none;
+            background: transparent;
+            text-align: left;
             cursor: pointer;
+            border-radius: 8px;
+            transition: background 0.2s ease;
+            font-size: 0.9rem;
+        }
+        
+        .tag-option:hover {
+            background: var(--seasalt);
+        }
+        
+        .tag-option.active {
+            background: var(--tea-green);
+            font-weight: 600;
             transition: all 0.3s ease;
             flex-shrink: 0;
             color: var(--eerie-black);
-        }
-        
-        .scroll-btn:hover {
-            background: var(--eerie-black);
-            color: var(--tea-green);
-            transform: scale(1.1);
-        }
-        
-        .scroll-btn:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-        }
-        
-        .scroll-btn:disabled:hover {
-            background: var(--tea-green);
-            color: var(--eerie-black);
-            transform: none;
         }
         
         .blog-grid {
@@ -316,14 +366,34 @@ Year: 2025
                 font-size: 1rem;
             }
             
-            .scroll-btn {
-                width: 35px;
-                height: 35px;
+            .filter-controls {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 1rem;
+            }
+            
+            .month-filters {
+                justify-content: flex-start;
+                gap: 0.5rem;
             }
             
             .filter-btn {
-                padding: 0.4rem 1.2rem;
-                font-size: 0.9rem;
+                padding: 0.4rem 1rem;
+                font-size: 0.85rem;
+            }
+            
+            .tags-dropdown-container {
+                width: 100%;
+            }
+            
+            .tags-dropdown-btn {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .tags-dropdown {
+                width: 100%;
+                max-width: 100%;
             }
             
             .blog-card-image {
@@ -407,58 +477,81 @@ Year: 2025
         <!-- Filters -->
         <section class="blog-filters">
             <div class="container">
-                <div class="filter-container">
-                    <button class="scroll-btn scroll-left" id="scrollLeft" aria-label="Scroll left">
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                            <path d="M12 4L6 10L12 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </button>
-                    <div class="filter-buttons-wrapper">
-                        <div class="filter-buttons" id="filterButtons">
-                            <button class="filter-btn active" data-filter="all">All Posts</button>
-                            <button class="filter-btn" data-filter="Asset Management">Asset Management</button>
-                            <button class="filter-btn" data-filter="Asset Protection">Asset Protection</button>
-                            <button class="filter-btn" data-filter="Beginners Guide">Beginners Guide</button>
-                            <button class="filter-btn" data-filter="Beneficial Occupation">Beneficial Occupation</button>
-                            <button class="filter-btn" data-filter="Budget 2025">Budget 2025</button>
-                            <button class="filter-btn" data-filter="Case Study">Case Study</button>
-                            <button class="filter-btn" data-filter="Community Benefits">Community Benefits</button>
-                            <button class="filter-btn" data-filter="Compliance">Compliance</button>
-                            <button class="filter-btn" data-filter="Cost Analysis">Cost Analysis</button>
-                            <button class="filter-btn" data-filter="Cost Reduction">Cost Reduction</button>
-                            <button class="filter-btn" data-filter="Cost Savings">Cost Savings</button>
-                            <button class="filter-btn" data-filter="Crime Prevention">Crime Prevention</button>
-                            <button class="filter-btn" data-filter="Education">Education</button>
-                            <button class="filter-btn" data-filter="Ethical Solutions">Ethical Solutions</button>
-                            <button class="filter-btn" data-filter="Financial Planning">Financial Planning</button>
-                            <button class="filter-btn" data-filter="Government Consultation">Government Consultation</button>
-                            <button class="filter-btn" data-filter="Government Policy">Government Policy</button>
-                            <button class="filter-btn" data-filter="High Street">High Street</button>
-                            <button class="filter-btn" data-filter="Innovation">Innovation</button>
-                            <button class="filter-btn" data-filter="Landlord Support">Landlord Support</button>
-                            <button class="filter-btn" data-filter="Legal Compliance">Legal Compliance</button>
-                            <button class="filter-btn" data-filter="Legislation">Legislation</button>
-                            <button class="filter-btn" data-filter="Post-Pandemic">Post-Pandemic</button>
-                            <button class="filter-btn" data-filter="Property Owners">Property Owners</button>
-                            <button class="filter-btn" data-filter="Property Security">Property Security</button>
-                            <button class="filter-btn" data-filter="Regulatory Changes">Regulatory Changes</button>
-                            <button class="filter-btn" data-filter="Relief Options">Relief Options</button>
-                            <button class="filter-btn" data-filter="Relief Schemes">Relief Schemes</button>
-                            <button class="filter-btn" data-filter="Risk Management">Risk Management</button>
-                            <button class="filter-btn" data-filter="Strategic Solutions">Strategic Solutions</button>
-                            <button class="filter-btn" data-filter="Tax Avoidance">Tax Avoidance</button>
-                            <button class="filter-btn" data-filter="Tax Planning">Tax Planning</button>
-                            <button class="filter-btn" data-filter="Tax Reform">Tax Reform</button>
-                            <button class="filter-btn" data-filter="Technology Solutions">Technology Solutions</button>
-                            <button class="filter-btn" data-filter="Vacant Properties">Vacant Properties</button>
-                            <button class="filter-btn" data-filter="VacatAd Services">VacatAd Services</button>
+                <div class="filter-controls">
+                    <div class="month-filters">
+                        <button class="filter-btn active" data-month="all">All Months</button>
+                        <button class="filter-btn" data-month="2025-08">August 2025</button>
+                        <button class="filter-btn" data-month="2025-07">July 2025</button>
+                        <button class="filter-btn" data-month="2025-06">June 2025</button>
+                        <button class="filter-btn" data-month="2025-05">May 2025</button>
+                        <button class="filter-btn" data-month="2025-04">April 2025</button>
+                        <button class="filter-btn" data-month="2025-03">March 2025</button>
+                        <button class="filter-btn" data-month="2025-02">February 2025</button>
+                        <button class="filter-btn" data-month="2025-01">January 2025</button>
+                        <button class="filter-btn" data-month="2024">2024</button>
+                        <button class="filter-btn" data-month="2023">2023</button>
+                    </div>
+                    <div class="tags-dropdown-container">
+                        <button class="tags-dropdown-btn" id="tagsDropdownBtn">
+                            Filter by Tag
+                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                                <path d="M2 4L6 8L10 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                        <div class="tags-dropdown" id="tagsDropdown">
+                            <div class="tags-search">
+                                <input type="text" id="tagSearch" placeholder="Search tags...">
+                            </div>
+                            <div class="tags-list" id="tagsList">
+                                <button class="tag-option" data-tag="all">All Tags</button>
+                                <button class="tag-option" data-tag="Asset Management">Asset Management</button>
+                                <button class="tag-option" data-tag="Asset Protection">Asset Protection</button>
+                                <button class="tag-option" data-tag="Beginners Guide">Beginners Guide</button>
+                                <button class="tag-option" data-tag="Beneficial Occupation">Beneficial Occupation</button>
+                                <button class="tag-option" data-tag="Budget 2025">Budget 2025</button>
+                                <button class="tag-option" data-tag="Case Study">Case Study</button>
+                                <button class="tag-option" data-tag="Community Benefits">Community Benefits</button>
+                                <button class="tag-option" data-tag="Compliance">Compliance</button>
+                                <button class="tag-option" data-tag="Cost Analysis">Cost Analysis</button>
+                                <button class="tag-option" data-tag="Cost Reduction">Cost Reduction</button>
+                                <button class="tag-option" data-tag="Cost Savings">Cost Savings</button>
+                                <button class="tag-option" data-tag="Crime Prevention">Crime Prevention</button>
+                                <button class="tag-option" data-tag="Data-Driven">Data-Driven</button>
+                                <button class="tag-option" data-tag="Education">Education</button>
+                                <button class="tag-option" data-tag="Empty Property Relief">Empty Property Relief</button>
+                                <button class="tag-option" data-tag="ESG">ESG</button>
+                                <button class="tag-option" data-tag="Ethical Solutions">Ethical Solutions</button>
+                                <button class="tag-option" data-tag="Financial Planning">Financial Planning</button>
+                                <button class="tag-option" data-tag="Government Consultation">Government Consultation</button>
+                                <button class="tag-option" data-tag="Government Policy">Government Policy</button>
+                                <button class="tag-option" data-tag="High Street">High Street</button>
+                                <button class="tag-option" data-tag="High Street Regeneration">High Street Regeneration</button>
+                                <button class="tag-option" data-tag="Innovation">Innovation</button>
+                                <button class="tag-option" data-tag="Landlord Guide">Landlord Guide</button>
+                                <button class="tag-option" data-tag="Landlord Support">Landlord Support</button>
+                                <button class="tag-option" data-tag="Legal Compliance">Legal Compliance</button>
+                                <button class="tag-option" data-tag="Legislation">Legislation</button>
+                                <button class="tag-option" data-tag="Post-Pandemic">Post-Pandemic</button>
+                                <button class="tag-option" data-tag="Property Owners">Property Owners</button>
+                                <button class="tag-option" data-tag="Property Security">Property Security</button>
+                                <button class="tag-option" data-tag="Rating Law">Rating Law</button>
+                                <button class="tag-option" data-tag="Regulatory Changes">Regulatory Changes</button>
+                                <button class="tag-option" data-tag="Relief Options">Relief Options</button>
+                                <button class="tag-option" data-tag="Relief Schemes">Relief Schemes</button>
+                                <button class="tag-option" data-tag="Risk Management">Risk Management</button>
+                                <button class="tag-option" data-tag="Social Value">Social Value</button>
+                                <button class="tag-option" data-tag="Strategic Solutions">Strategic Solutions</button>
+                                <button class="tag-option" data-tag="Tax Avoidance">Tax Avoidance</button>
+                                <button class="tag-option" data-tag="Tax Planning">Tax Planning</button>
+                                <button class="tag-option" data-tag="Tax Reform">Tax Reform</button>
+                                <button class="tag-option" data-tag="Technology Solutions">Technology Solutions</button>
+                                <button class="tag-option" data-tag="13-Week Rule">13-Week Rule</button>
+                                <button class="tag-option" data-tag="Vacant Properties">Vacant Properties</button>
+                                <button class="tag-option" data-tag="Vacant Property">Vacant Property</button>
+                                <button class="tag-option" data-tag="VacatAd Services">VacatAd Services</button>
+                            </div>
                         </div>
                     </div>
-                    <button class="scroll-btn scroll-right" id="scrollRight" aria-label="Scroll right">
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                            <path d="M8 4L14 10L8 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </button>
                 </div>
             </div>
         </section>
@@ -557,12 +650,17 @@ Year: 2025
     <script>
         // Load and display blog posts
         let allPosts = [];
-        let currentFilter = 'all';
+        let currentMonthFilter = 'all';
+        let currentTagFilter = null;
 
         async function loadPosts() {
             try {
                 const response = await fetch('data/posts.json');
                 allPosts = await response.json();
+                
+                // Sort posts by date (newest first)
+                allPosts.sort((a, b) => new Date(b.dateISO) - new Date(a.dateISO));
+                
                 displayPosts(allPosts);
             } catch (error) {
                 console.error('Error loading blog posts:', error);
@@ -606,80 +704,125 @@ Year: 2025
             `).join('');
         }
 
-        function filterPosts(tag) {
-            currentFilter = tag;
+        function filterPostsByMonth(monthFilter) {
+            currentMonthFilter = monthFilter;
+            applyFilters();
             
-            // Update active button
-            document.querySelectorAll('.filter-btn').forEach(btn => {
+            // Update active month button
+            document.querySelectorAll('.month-filters .filter-btn').forEach(btn => {
                 btn.classList.remove('active');
-                if (btn.dataset.filter === tag) {
+                if (btn.dataset.month === monthFilter) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        function filterPostsByTag(tag) {
+            currentTagFilter = tag;
+            applyFilters();
+            
+            // Update active tag button
+            document.querySelectorAll('.tag-option').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.tag === tag) {
                     btn.classList.add('active');
                 }
             });
             
-            // Filter posts
-            if (tag === 'all') {
-                displayPosts(allPosts);
-            } else {
-                const filtered = allPosts.filter(post => post.tags.includes(tag));
-                displayPosts(filtered);
+            // Update dropdown button text
+            const dropdownBtn = document.getElementById('tagsDropdownBtn');
+            dropdownBtn.textContent = tag || 'Filter by Tag...';
+            
+            // Close dropdown
+            document.getElementById('tagsDropdown').classList.remove('active');
+        }
+
+        function applyFilters() {
+            let filtered = [...allPosts];
+            
+            // Apply month filter
+            if (currentMonthFilter !== 'all') {
+                filtered = filtered.filter(post => {
+                    const postDate = post.dateISO;
+                    if (currentMonthFilter.length === 4) {
+                        // Year filter (e.g., "2024")
+                        return postDate.startsWith(currentMonthFilter);
+                    } else {
+                        // Month filter (e.g., "2025-08")
+                        return postDate.startsWith(currentMonthFilter);
+                    }
+                });
             }
+            
+            // Apply tag filter
+            if (currentTagFilter) {
+                filtered = filtered.filter(post => post.tags.includes(currentTagFilter));
+            }
+            
+            displayPosts(filtered);
         }
 
-        // Scroll button functionality
-        function updateScrollButtons() {
-            const wrapper = document.querySelector('.filter-buttons-wrapper');
-            const leftBtn = document.getElementById('scrollLeft');
-            const rightBtn = document.getElementById('scrollRight');
+        function clearTagFilter() {
+            currentTagFilter = null;
+            applyFilters();
             
-            if (!wrapper || !leftBtn || !rightBtn) return;
+            // Reset dropdown button
+            const dropdownBtn = document.getElementById('tagsDropdownBtn');
+            dropdownBtn.textContent = 'Filter by Tag...';
             
-            const isAtStart = wrapper.scrollLeft <= 0;
-            const isAtEnd = wrapper.scrollLeft + wrapper.clientWidth >= wrapper.scrollWidth - 1;
-            
-            leftBtn.disabled = isAtStart;
-            rightBtn.disabled = isAtEnd;
-        }
-
-        function scrollFilters(direction) {
-            const wrapper = document.querySelector('.filter-buttons-wrapper');
-            if (!wrapper) return;
-            
-            const scrollAmount = 300;
-            const newScrollLeft = wrapper.scrollLeft + (direction === 'left' ? -scrollAmount : scrollAmount);
-            
-            wrapper.scrollTo({
-                left: newScrollLeft,
-                behavior: 'smooth'
+            // Remove active state from all tags
+            document.querySelectorAll('.tag-option').forEach(btn => {
+                btn.classList.remove('active');
             });
-            
-            // Update buttons after scroll animation
-            setTimeout(updateScrollButtons, 300);
         }
 
-        // Event listeners
-        document.querySelectorAll('.filter-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                filterPosts(btn.dataset.filter);
+        // Tags dropdown toggle
+        const tagsDropdownBtn = document.getElementById('tagsDropdownBtn');
+        const tagsDropdown = document.getElementById('tagsDropdown');
+        
+        tagsDropdownBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            tagsDropdown.classList.toggle('active');
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!tagsDropdown.contains(e.target) && !tagsDropdownBtn.contains(e.target)) {
+                tagsDropdown.classList.remove('active');
+            }
+        });
+        
+        // Tag search functionality
+        const tagSearch = document.getElementById('tagSearch');
+        tagSearch.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            document.querySelectorAll('.tag-option').forEach(btn => {
+                const tagText = btn.dataset.tag.toLowerCase();
+                btn.style.display = tagText.includes(searchTerm) ? 'block' : 'none';
             });
         });
 
-        // Add scroll button handlers
-        const leftBtn = document.getElementById('scrollLeft');
-        const rightBtn = document.getElementById('scrollRight');
-        
-        if (leftBtn && rightBtn) {
-            leftBtn.addEventListener('click', () => scrollFilters('left'));
-            rightBtn.addEventListener('click', () => scrollFilters('right'));
-            
-            // Update buttons on scroll
-            const wrapper = document.querySelector('.filter-buttons-wrapper');
-            if (wrapper) {
-                wrapper.addEventListener('scroll', updateScrollButtons);
-                // Initial button state after load
-                setTimeout(updateScrollButtons, 100);
-            }
-        }
+        // Month filter event listeners
+        document.querySelectorAll('.month-filters .filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterPostsByMonth(btn.dataset.month);
+            });
+        });
+
+        // Tag filter event listeners
+        document.querySelectorAll('.tag-option').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const tag = btn.dataset.tag;
+                
+                // If clicking the active tag, clear the filter
+                if (btn.classList.contains('active')) {
+                    clearTagFilter();
+                } else {
+                    filterPostsByTag(tag);
+                }
+            });
+        });
 
         // Load posts on page load
         loadPosts();
