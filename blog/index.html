@@ -731,11 +731,21 @@ Year: 2025
                     post.dateISO = parseDate(post.date);
                     // Make a safe URL for images (encode spaces and special chars)
                     try {
-                        // Images are now in posts/{slug}/image1.ext format
+                        // Images are now in posts/{date-slug}/image1.ext format
                         post.imageUrl = encodeURI(post.image);
+                        // Extract folder name from image path for URL generation
+                        // Image path format: posts/25-10-02-slug/image1.ext
+                        const imagePathMatch = post.image.match(/posts\/([^\/]+)\//);
+                        if (imagePathMatch) {
+                            post.folderName = imagePathMatch[1];
+                        } else {
+                            // Fallback to slug if extraction fails
+                            post.folderName = post.slug;
+                        }
                     } catch (e) {
                         // Fallback to raw replacement if something unexpected
                         post.imageUrl = post.image;
+                        post.folderName = post.slug;
                     }
                 });
                 
@@ -761,9 +771,11 @@ Year: 2025
             
             noPosts.style.display = 'none';
             
-            grid.innerHTML = posts.map(post => `
+            grid.innerHTML = posts.map(post => {
+                const folderName = post.folderName || post.slug;
+                return `
                 <article class="blog-card ${post.featured ? 'featured' : ''}">
-                    <a href="posts/${post.slug}/">
+                    <a href="posts/${folderName}/">
                         <img src="${post.imageUrl}" alt="${post.imageAlt}" class="blog-card-image" loading="lazy" width="800" height="600">
                     </a>
                     <div class="blog-card-content">
@@ -774,17 +786,18 @@ Year: 2025
                             <span>•</span>
                             <span>${post.readTime}</span>
                         </div>
-                        <h3><a href="posts/${post.slug}/">${post.title}</a></h3>
+                        <h3><a href="posts/${folderName}/">${post.title}</a></h3>
                         <p class="blog-excerpt">${post.excerpt}</p>
                         <div class="blog-tags">
                             ${post.tags.map(tag => `<span class="blog-tag">${tag}</span>`).join('')}
                         </div>
-                        <a href="posts/${post.slug}/" class="read-more">
+                        <a href="posts/${folderName}/" class="read-more">
                             Read More →
                         </a>
                     </div>
                 </article>
-            `).join('');
+            `;
+            }).join('');
         }
 
         function filterPostsByMonth(monthFilter) {
