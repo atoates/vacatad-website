@@ -80,6 +80,78 @@ const STATIC_PAGES = [
         lastmod: '2025-10-15',
         changefreq: 'monthly',
         priority: 0.8
+    },
+    {
+        loc: '/city/london.html',
+        lastmod: '2025-10-15',
+        changefreq: 'monthly',
+        priority: 0.7
+    },
+    {
+        loc: '/city/manchester.html',
+        lastmod: '2025-10-15',
+        changefreq: 'monthly',
+        priority: 0.7
+    },
+    {
+        loc: '/city/birmingham.html',
+        lastmod: '2025-10-15',
+        changefreq: 'monthly',
+        priority: 0.7
+    },
+    {
+        loc: '/city/leeds.html',
+        lastmod: '2025-10-15',
+        changefreq: 'monthly',
+        priority: 0.7
+    },
+    {
+        loc: '/city/liverpool.html',
+        lastmod: '2025-10-15',
+        changefreq: 'monthly',
+        priority: 0.7
+    },
+    {
+        loc: '/city/bristol.html',
+        lastmod: '2025-10-15',
+        changefreq: 'monthly',
+        priority: 0.7
+    },
+    {
+        loc: '/city/sheffield.html',
+        lastmod: '2025-10-15',
+        changefreq: 'monthly',
+        priority: 0.7
+    },
+    {
+        loc: '/city/edinburgh.html',
+        lastmod: '2025-10-15',
+        changefreq: 'monthly',
+        priority: 0.7
+    },
+    {
+        loc: '/city/glasgow.html',
+        lastmod: '2025-10-15',
+        changefreq: 'monthly',
+        priority: 0.7
+    },
+    {
+        loc: '/city/newcastle.html',
+        lastmod: '2025-10-15',
+        changefreq: 'monthly',
+        priority: 0.7
+    },
+    {
+        loc: '/city/nottingham.html',
+        lastmod: '2025-10-15',
+        changefreq: 'monthly',
+        priority: 0.7
+    },
+    {
+        loc: '/city/leicester.html',
+        lastmod: '2025-10-15',
+        changefreq: 'monthly',
+        priority: 0.7
     }
 ];
 
