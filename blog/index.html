@@ -725,6 +725,13 @@ Year: 2025
                 // Add parsed ISO date to each post for filtering
                 allPosts.forEach(post => {
                     post.dateISO = parseDate(post.date);
+                    // Make a safe URL for images (encode spaces and special chars)
+                    try {
+                        post.imageUrl = encodeURI(post.image.replace('../', ''));
+                    } catch (e) {
+                        // Fallback to raw replacement if something unexpected
+                        post.imageUrl = post.image.replace('../', '');
+                    }
                 });
                 
                 // Sort posts by date (newest first)
@@ -752,7 +759,7 @@ Year: 2025
             grid.innerHTML = posts.map(post => `
                 <article class="blog-card ${post.featured ? 'featured' : ''}">
                     <a href="posts/${post.slug}.html">
-                        <img src="${post.image.replace('../', '')}" alt="${post.imageAlt}" class="blog-card-image" loading="lazy">
+                        <img src="${post.imageUrl}" alt="${post.imageAlt}" class="blog-card-image" loading="lazy">
                     </a>
                     <div class="blog-card-content">
                         <div class="blog-meta">
