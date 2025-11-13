@@ -88,6 +88,12 @@ const STATIC_PAGES = [
         priority: 0.9
     },
     {
+        loc: '/the-team.html',
+        lastmod: '2025-10-15',
+        changefreq: 'monthly',
+        priority: 0.5
+    },
+    {
         loc: '/city/london.html',
         lastmod: '2025-10-15',
         changefreq: 'monthly',
