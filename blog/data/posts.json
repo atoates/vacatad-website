@@ -1,5 +1,27 @@
 [
   {
+    "id": 22,
+    "title": "Business Rates \"Forward Look\": What the Latest Updates Mean for Your Business",
+    "slug": "business-rates-forward-look-what-the-latest-updates-mean-for-your-business",
+    "excerpt": "The UK government is implementing major reforms to the business rates system over the next few years. These changes aim to create a fairer, more modern business rates system that protects high street businesses and ensures large properties pay their share.",
+    "author": {
+      "name": "VacatAd Team",
+      "role": "Property Solutions Experts"
+    },
+    "date": "Oct 2, 2025",
+    "readTime": "18 min read",
+    "tags": [
+      "Business Rates",
+      "Government Policy",
+      "Tax Reform",
+      "High Street",
+      "Regulatory Changes"
+    ],
+    "featured": true,
+    "image": "../images/placeholder-business-rates-forward-look.webp",
+    "imageAlt": "Business Rates \"Forward Look\": What the Latest Updates Mean for Your Business"
+  },
+  {
     "id": 21,
     "title": "High Court's 2025 Ruling Reshapes Business Rates Mitigation Landscape",
     "slug": "high-courts-2025-ruling-reshapes-business-rates-mitigation-landscape",
