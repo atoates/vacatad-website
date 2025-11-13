@@ -71,13 +71,14 @@ Year: 2025
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            padding: 80px 0 50px;
+            padding: 0;
             text-align: center;
             color: var(--white);
             position: relative;
             min-height: 30vh;
             display: flex;
             align-items: center;
+            justify-content: center;
         }
         
         .cities-hero::before {
@@ -107,7 +108,7 @@ Year: 2025
         .cities-hero .hero-subtitle {
             font-size: clamp(1.2rem, 2.5vw, 1.6rem);
             color: var(--tea-green);
-            margin-bottom: 2.5rem;
+            margin-bottom: 0;
             max-width: 800px;
             margin-left: auto;
             margin-right: auto;
@@ -116,7 +117,13 @@ Year: 2025
         }
         
         .cities-content {
-            padding: var(--section-padding) 0;
+            padding: 0;
+        }
+        
+        .coverage-section {
+            background: var(--seasalt);
+            padding: 2rem 0;
+            margin-top: 0;
         }
         
         .cities-map-layout {
@@ -216,7 +223,7 @@ Year: 2025
         
         .coverage-intro {
             max-width: 800px;
-            margin: 0 auto 3rem;
+            margin: 0 auto 1.5rem;
             text-align: center;
         }
         
@@ -229,8 +236,12 @@ Year: 2025
         
         @media (max-width: 768px) {
             .cities-hero {
-                padding: 70px 0 40px;
+                padding: 0;
                 min-height: 25vh;
+            }
+            
+            .coverage-section {
+                padding: 1.5rem 0;
             }
         }
     </style>
@@ -289,13 +300,18 @@ Year: 2025
 
         <!-- Cities Content -->
         <section class="cities-content">
-            <div class="container">
-                <div class="coverage-intro">
-                    <h2 class="section-title">Serving Property Owners Nationwide</h2>
-                    <p class="section-subtitle">
-                        VacatAd provides business rates relief services across major UK cities. Our technology-first approach works for property owners in London, Manchester, Birmingham, and cities throughout England, Scotland, and Wales. Select your city below to learn more about our local services.
-                    </p>
+            <div class="coverage-section">
+                <div class="container">
+                    <div class="coverage-intro">
+                        <h2 class="section-title">Serving Property Owners Nationwide</h2>
+                        <p class="section-subtitle">
+                            VacatAd provides business rates relief services across major UK cities. Our technology-first approach works for property owners in London, Manchester, Birmingham, and cities throughout England, Scotland, and Wales. Select your city below to learn more about our local services.
+                        </p>
+                    </div>
                 </div>
+            </div>
+            
+            <div class="container">
 
                 <!-- Cities and Map Layout -->
                 <div class="cities-map-layout">
