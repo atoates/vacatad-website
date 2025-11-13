@@ -140,79 +140,27 @@ Year: 2025
             text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
         }
         
-        .city-stats {
+                    .city-stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+                padding: 0.75rem 1rem;
+                margin: 1rem 0;
+            }
+            
+            .city-benefits {
+                grid-template-columns: 1fr;
+            }
+        }
+            
+            .city-stats {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            margin: 3rem 0;
-            padding: 2rem;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+            padding: 1rem 1.5rem;
             background: var(--seasalt);
             border-radius: var(--border-radius);
         }
-        
-        .city-stat {
-            text-align: center;
-        }
-        
-        .city-stat-number {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--tea-green);
-            margin-bottom: 0.5rem;
-        }
-        
-        .city-stat-label {
-            font-size: 1rem;
-            color: var(--grey-text);
-        }
-        
-        .city-content {
-            padding: var(--section-padding) 0;
-        }
-        
-        .city-benefits {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            margin: 3rem 0;
-        }
-        
-        .city-benefit {
-            background: var(--white);
-            padding: 2rem;
-            border-radius: var(--border-radius);
-            border: 1px solid #e8e9ea;
-            transition: var(--transition);
-        }
-        
-        .city-benefit:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(35, 37, 35, 0.1);
-            border-color: var(--tea-green);
-        }
-        
-        .city-benefit h3 {
-            color: var(--eerie-black);
-            margin-bottom: 1rem;
-            font-size: 1.3rem;
-        }
-        
-        .city-benefit p {
-            color: var(--grey-text);
-            line-height: 1.6;
-        }
-        
-        @media (max-width: 768px) {
-            .city-hero {
-                padding: 140px 0 60px;
-                min-height: 60vh;
-            }
-            
-            .city-stats {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 1.5rem;
-                padding: 1.5rem;
-            }
             
             .city-benefits {
                 grid-template-columns: 1fr;
