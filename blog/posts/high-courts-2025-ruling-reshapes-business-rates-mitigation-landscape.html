@@ -171,8 +171,40 @@ Year: 2025
         }
         
         .article-image {
-            margin: 2.5rem 0;
+            float: left;
+            width: 50%;
+            margin: 1.5rem 1.5rem 1.5rem 0;
             text-align: center;
+        }
+        
+        .article-image img {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Clear float - add clearfix to paragraphs after images */
+        .article-image + p,
+        .article-image + h2,
+        .article-image + h3 {
+            clear: both;
+        }
+        
+        @media (max-width: 768px) {
+            .article-image {
+                float: none;
+                width: 100%;
+                margin: 1.5rem 0;
+            }
+        }
+        
+        /* Clear float after images */
+        .article-image::after {
+            content: "";
+            display: table;
+            clear: both;
         }
         
         .article-image img {
