@@ -1744,6 +1744,50 @@ section.contact-hero.legal-hero .legal-subtitle {
     }
 }
 
+/* Promo Banner */
+.promo-banner {
+    padding: 4rem 0;
+    text-align: center;
+    color: var(--white);
+    position: relative;
+}
+
+.promo-banner .container {
+    position: relative;
+    z-index: 2;
+}
+
+.banner-content {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.banner-title {
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    margin-bottom: 1.5rem;
+    color: var(--white);
+    font-weight: 700;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+}
+
+.banner-subtitle {
+    font-size: clamp(1.1rem, 2vw, 1.3rem);
+    margin-bottom: 2.5rem;
+    color: rgba(255, 255, 255, 0.95);
+    line-height: 1.7;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+}
+
+.banner-content .cta-button {
+    margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+    .promo-banner {
+        padding: 3rem 0;
+    }
+}
+
 /* Responsive Design */
 @media screen and (max-width: 1024px) {
     .cta-nav {

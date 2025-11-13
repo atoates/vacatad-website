@@ -1,0 +1,585 @@
+<!--
+Title: Business Rates Relief Across the UK | VacatAd
+Meta Description: VacatAd provides business rates relief services across major UK cities. Find your local service area and reduce empty property costs with our technology-first solution.
+Author: VacatAd Ltd
+Year: 2025
+-->
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="VacatAd provides business rates relief services across major UK cities. Find your local service area and reduce empty property costs with our technology-first solution.">
+    <meta name="keywords" content="business rates relief UK, empty property rates, commercial property rates, vacant property relief, UK cities">
+    <meta name="author" content="VacatAd Ltd">
+    <meta name="robots" content="index, follow">
+    
+    <title>Business Rates Relief Across the UK | VacatAd</title>
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://vacatad.com/city/">
+    
+    <!-- Performance Optimizations -->
+    <link rel="preconnect" href="https://www.googletagmanager.com">
+    <link rel="dns-prefetch" href="https://www.google-analytics.com">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="../css/styles.css?v=20251015">
+    
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#232523">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicons/favicon-16x16.png">
+    <link rel="icon" type="image/webp" sizes="32x32" href="../assets/favicons/favicon-32x32.webp">
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/favicons/apple-touch-icon.png">
+    <link rel="icon" href="../assets/favicons/favicon.ico" sizes="any">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://vacatad.com/city/">
+    <meta property="og:title" content="Business Rates Relief Across the UK | VacatAd">
+    <meta property="og:description" content="Find VacatAd's business rates relief services in your city. Serving property owners across major UK cities.">
+    <meta property="og:image" content="https://vacatad.com/assets/images/asset-8.webp">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://vacatad.com/city/">
+    <meta property="twitter:title" content="Business Rates Relief Across the UK | VacatAd">
+    <meta property="twitter:description" content="Find VacatAd's business rates relief services in your city. Serving property owners across major UK cities.">
+    <meta property="twitter:image" content="https://vacatad.com/assets/images/asset-8.webp">
+    
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DEZQKBTTFH"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-DEZQKBTTFH', {
+            'send_page_view': true,
+            'cookie_flags': 'SameSite=None;Secure'
+        });
+    </script>
+    
+    <style>
+        .cities-hero {
+            background: linear-gradient(rgba(35, 37, 35, 0.85), rgba(35, 37, 35, 0.9)), 
+                        url('https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            padding: 160px 0 100px;
+            text-align: center;
+            color: var(--white);
+            position: relative;
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+        }
+        
+        .cities-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(219, 244, 204, 0.2), rgba(109, 206, 209, 0.2));
+            z-index: 1;
+        }
+        
+        .cities-hero .container {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .cities-hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            margin-bottom: 1.5rem;
+            color: var(--white);
+            font-weight: 700;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+        }
+        
+        .cities-hero .hero-subtitle {
+            font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+            color: var(--tea-green);
+            margin-bottom: 2.5rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            font-weight: 500;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .cities-content {
+            padding: var(--section-padding) 0;
+        }
+        
+        .uk-map-container {
+            max-width: 1200px;
+            margin: 3rem auto;
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: 0 4px 12px rgba(35, 37, 35, 0.1);
+        }
+        
+        .uk-map-svg {
+            width: 100%;
+            height: auto;
+            max-height: 700px;
+        }
+        
+        .city-link {
+            cursor: pointer;
+            text-decoration: none;
+        }
+        
+        .city-marker {
+            transition: all 0.3s ease;
+        }
+        
+        .city-link:hover .city-marker {
+            fill: var(--blue-accent);
+            transform: scale(1.2);
+        }
+        
+        .city-link:hover text {
+            fill: var(--blue-accent);
+            font-weight: 800;
+        }
+        
+        .cities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        
+        .city-card {
+            background: var(--white);
+            border: 2px solid #e8e9ea;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            text-align: center;
+            transition: var(--transition);
+            text-decoration: none;
+            display: block;
+            color: inherit;
+        }
+        
+        .city-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(35, 37, 35, 0.15);
+            border-color: var(--tea-green);
+        }
+        
+        .city-card-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--tea-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            color: var(--eerie-black);
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .city-card h3 {
+            color: var(--eerie-black);
+            margin-bottom: 0.5rem;
+            font-size: 1.5rem;
+        }
+        
+        .city-card p {
+            color: var(--grey-text);
+            font-size: 0.95rem;
+            margin: 0;
+        }
+        
+        .city-card-arrow {
+            margin-top: 1rem;
+            color: var(--tea-green);
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .city-card:hover .city-card-arrow {
+            transform: translateX(5px);
+        }
+        
+        .coverage-intro {
+            max-width: 800px;
+            margin: 0 auto 3rem;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            .cities-hero {
+                padding: 140px 0 60px;
+                min-height: 50vh;
+            }
+            
+            .cities-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .uk-map-container {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <a href="../index.html">
+                        <img src="../assets/images/asset-8.webp" alt="VacatAd Logo" class="logo-icon" width="223" height="191">
+                        <span class="logo-text">VacatAd</span>
+                    </a>
+                </div>
+                <ul class="nav-menu" id="primary-navigation">
+                    <li class="nav-item">
+                        <a href="../index.html" class="nav-link">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="../index.html#why-vacatad" class="nav-link">Why VacatAd</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="../index.html#how-we-work" class="nav-link">How We Work</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="../blog/index.html" class="nav-link">Blog</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="../faqs.html" class="nav-link">FAQs</a>
+                    </li>
+                </ul>
+                <div class="cta-nav">
+                    <a href="../router-dashboard.html" class="cta-button-nav dashboard">Dashboard</a>
+                    <a href="../contact.html" class="cta-button-nav">Get in touch</a>
+                </div>
+                <button class="nav-toggle" id="mobile-menu" aria-label="Toggle menu" aria-controls="primary-navigation" aria-expanded="false">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content">
+        <!-- Cities Hero Section -->
+        <section class="cities-hero">
+            <div class="container">
+                <h1>Business Rates Relief Across the UK</h1>
+                <p class="hero-subtitle">Find VacatAd's proven, compliant technology-first solution in your city</p>
+            </div>
+        </section>
+
+        <!-- Cities Content -->
+        <section class="cities-content">
+            <div class="container">
+                <div class="coverage-intro">
+                    <h2 class="section-title">Serving Property Owners Nationwide</h2>
+                    <p class="section-subtitle">
+                        VacatAd provides business rates relief services across major UK cities. Our technology-first approach works for property owners in London, Manchester, Birmingham, and cities throughout England, Scotland, and Wales. Click on your city below to learn more about our local services.
+                    </p>
+                </div>
+
+                <!-- UK Map SVG -->
+                <div class="uk-map-container">
+                    <svg class="uk-map-svg" viewBox="0 0 1000 1200" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Simplified UK outline (England, Scotland, Wales) -->
+                        <!-- England -->
+                        <path d="M 300 400 L 700 400 L 750 500 L 700 700 L 600 900 L 500 1000 L 400 950 L 300 800 L 250 600 L 250 500 Z" 
+                              fill="var(--seasalt)" 
+                              stroke="var(--eerie-black)" 
+                              stroke-width="4"
+                              opacity="0.3"/>
+                        <!-- Scotland -->
+                        <path d="M 300 100 L 700 100 L 750 200 L 700 350 L 600 400 L 500 380 L 400 350 L 350 250 L 300 150 Z" 
+                              fill="var(--seasalt)" 
+                              stroke="var(--eerie-black)" 
+                              stroke-width="4"
+                              opacity="0.3"/>
+                        <!-- Wales -->
+                        <path d="M 200 500 L 300 500 L 320 600 L 300 700 L 250 650 L 200 600 Z" 
+                              fill="var(--seasalt)" 
+                              stroke="var(--eerie-black)" 
+                              stroke-width="3"
+                              opacity="0.3"/>
+                        
+                        <!-- City markers with links - positioned more accurately -->
+                        <!-- London -->
+                        <a href="london.html" xlink:href="london.html" class="city-link">
+                            <circle cx="500" cy="550" r="18" fill="var(--tea-green)" stroke="var(--white)" stroke-width="3" class="city-marker" data-city="london"/>
+                            <text x="500" y="535" text-anchor="middle" fill="var(--eerie-black)" font-size="14" font-weight="700">London</text>
+                        </a>
+                        
+                        <!-- Manchester -->
+                        <a href="manchester.html" xlink:href="manchester.html" class="city-link">
+                            <circle cx="450" cy="450" r="16" fill="var(--tea-green)" stroke="var(--white)" stroke-width="3" class="city-marker" data-city="manchester"/>
+                            <text x="450" y="435" text-anchor="middle" fill="var(--eerie-black)" font-size="13" font-weight="700">Manchester</text>
+                        </a>
+                        
+                        <!-- Birmingham -->
+                        <a href="birmingham.html" xlink:href="birmingham.html" class="city-link">
+                            <circle cx="480" cy="500" r="16" fill="var(--tea-green)" stroke="var(--white)" stroke-width="3" class="city-marker" data-city="birmingham"/>
+                            <text x="480" y="485" text-anchor="middle" fill="var(--eerie-black)" font-size="13" font-weight="700">Birmingham</text>
+                        </a>
+                        
+                        <!-- Leeds -->
+                        <a href="leeds.html" xlink:href="leeds.html" class="city-link">
+                            <circle cx="480" cy="420" r="15" fill="var(--tea-green)" stroke="var(--white)" stroke-width="3" class="city-marker" data-city="leeds"/>
+                            <text x="480" y="405" text-anchor="middle" fill="var(--eerie-black)" font-size="12" font-weight="700">Leeds</text>
+                        </a>
+                        
+                        <!-- Liverpool -->
+                        <a href="liverpool.html" xlink:href="liverpool.html" class="city-link">
+                            <circle cx="420" cy="440" r="15" fill="var(--tea-green)" stroke="var(--white)" stroke-width="3" class="city-marker" data-city="liverpool"/>
+                            <text x="420" y="425" text-anchor="middle" fill="var(--eerie-black)" font-size="12" font-weight="700">Liverpool</text>
+                        </a>
+                        
+                        <!-- Bristol -->
+                        <a href="bristol.html" xlink:href="bristol.html" class="city-link">
+                            <circle cx="400" cy="600" r="15" fill="var(--tea-green)" stroke="var(--white)" stroke-width="3" class="city-marker" data-city="bristol"/>
+                            <text x="400" y="585" text-anchor="middle" fill="var(--eerie-black)" font-size="12" font-weight="700">Bristol</text>
+                        </a>
+                        
+                        <!-- Sheffield -->
+                        <a href="sheffield.html" xlink:href="sheffield.html" class="city-link">
+                            <circle cx="490" cy="470" r="14" fill="var(--tea-green)" stroke="var(--white)" stroke-width="3" class="city-marker" data-city="sheffield"/>
+                            <text x="490" y="455" text-anchor="middle" fill="var(--eerie-black)" font-size="11" font-weight="700">Sheffield</text>
+                        </a>
+                        
+                        <!-- Edinburgh -->
+                        <a href="edinburgh.html" xlink:href="edinburgh.html" class="city-link">
+                            <circle cx="480" cy="250" r="16" fill="var(--tea-green)" stroke="var(--white)" stroke-width="3" class="city-marker" data-city="edinburgh"/>
+                            <text x="480" y="235" text-anchor="middle" fill="var(--eerie-black)" font-size="13" font-weight="700">Edinburgh</text>
+                        </a>
+                        
+                        <!-- Glasgow -->
+                        <a href="glasgow.html" xlink:href="glasgow.html" class="city-link">
+                            <circle cx="430" cy="280" r="16" fill="var(--tea-green)" stroke="var(--white)" stroke-width="3" class="city-marker" data-city="glasgow"/>
+                            <text x="430" y="265" text-anchor="middle" fill="var(--eerie-black)" font-size="13" font-weight="700">Glasgow</text>
+                        </a>
+                        
+                        <!-- Newcastle -->
+                        <a href="newcastle.html" xlink:href="newcastle.html" class="city-link">
+                            <circle cx="490" cy="380" r="15" fill="var(--tea-green)" stroke="var(--white)" stroke-width="3" class="city-marker" data-city="newcastle"/>
+                            <text x="490" y="365" text-anchor="middle" fill="var(--eerie-black)" font-size="12" font-weight="700">Newcastle</text>
+                        </a>
+                        
+                        <!-- Nottingham -->
+                        <a href="nottingham.html" xlink:href="nottingham.html" class="city-link">
+                            <circle cx="500" cy="490" r="14" fill="var(--tea-green)" stroke="var(--white)" stroke-width="3" class="city-marker" data-city="nottingham"/>
+                            <text x="500" y="475" text-anchor="middle" fill="var(--eerie-black)" font-size="11" font-weight="700">Nottingham</text>
+                        </a>
+                        
+                        <!-- Leicester -->
+                        <a href="leicester.html" xlink:href="leicester.html" class="city-link">
+                            <circle cx="510" cy="510" r="14" fill="var(--tea-green)" stroke="var(--white)" stroke-width="3" class="city-marker" data-city="leicester"/>
+                            <text x="510" y="495" text-anchor="middle" fill="var(--eerie-black)" font-size="11" font-weight="700">Leicester</text>
+                        </a>
+                    </svg>
+                </div>
+
+                <!-- Cities Grid -->
+                <h2 class="section-title" style="margin-top: 4rem;">Select Your City</h2>
+                <div class="cities-grid">
+                    <a href="london.html" class="city-card">
+                        <div class="city-card-icon">L</div>
+                        <h3>London</h3>
+                        <p>Business rates relief across Greater London</p>
+                        <div class="city-card-arrow">→</div>
+                    </a>
+                    
+                    <a href="manchester.html" class="city-card">
+                        <div class="city-card-icon">M</div>
+                        <h3>Manchester</h3>
+                        <p>Serving Greater Manchester property owners</p>
+                        <div class="city-card-arrow">→</div>
+                    </a>
+                    
+                    <a href="birmingham.html" class="city-card">
+                        <div class="city-card-icon">B</div>
+                        <h3>Birmingham</h3>
+                        <p>West Midlands commercial property solutions</p>
+                        <div class="city-card-arrow">→</div>
+                    </a>
+                    
+                    <a href="leeds.html" class="city-card">
+                        <div class="city-card-icon">L</div>
+                        <h3>Leeds</h3>
+                        <p>West Yorkshire business rates relief</p>
+                        <div class="city-card-arrow">→</div>
+                    </a>
+                    
+                    <a href="liverpool.html" class="city-card">
+                        <div class="city-card-icon">L</div>
+                        <h3>Liverpool</h3>
+                        <p>Merseyside property rate solutions</p>
+                        <div class="city-card-arrow">→</div>
+                    </a>
+                    
+                    <a href="bristol.html" class="city-card">
+                        <div class="city-card-icon">B</div>
+                        <h3>Bristol</h3>
+                        <p>South West commercial property services</p>
+                        <div class="city-card-arrow">→</div>
+                    </a>
+                    
+                    <a href="sheffield.html" class="city-card">
+                        <div class="city-card-icon">S</div>
+                        <h3>Sheffield</h3>
+                        <p>South Yorkshire property solutions</p>
+                        <div class="city-card-arrow">→</div>
+                    </a>
+                    
+                    <a href="edinburgh.html" class="city-card">
+                        <div class="city-card-icon">E</div>
+                        <h3>Edinburgh</h3>
+                        <p>Scotland's capital city services</p>
+                        <div class="city-card-arrow">→</div>
+                    </a>
+                    
+                    <a href="glasgow.html" class="city-card">
+                        <div class="city-card-icon">G</div>
+                        <h3>Glasgow</h3>
+                        <p>Scotland's largest city solutions</p>
+                        <div class="city-card-arrow">→</div>
+                    </a>
+                    
+                    <a href="newcastle.html" class="city-card">
+                        <div class="city-card-icon">N</div>
+                        <h3>Newcastle</h3>
+                        <p>North East property rate relief</p>
+                        <div class="city-card-arrow">→</div>
+                    </a>
+                    
+                    <a href="nottingham.html" class="city-card">
+                        <div class="city-card-icon">N</div>
+                        <h3>Nottingham</h3>
+                        <p>East Midlands commercial solutions</p>
+                        <div class="city-card-arrow">→</div>
+                    </a>
+                    
+                    <a href="leicester.html" class="city-card">
+                        <div class="city-card-icon">L</div>
+                        <h3>Leicester</h3>
+                        <p>East Midlands property services</p>
+                        <div class="city-card-arrow">→</div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="final-cta">
+            <div class="container">
+                <h2 class="final-cta-title">Don't See Your City Listed?</h2>
+                <p class="final-cta-subtitle">We serve property owners across the UK. Contact us to discuss how VacatAd can help reduce your business rates, regardless of location.</p>
+                <div class="final-cta-buttons">
+                    <a href="../contact.html" class="cta-button primary">Contact Us</a>
+                    <a href="tel:03330900443" class="cta-button secondary"><span class="phone-icon">📞</span>0333 090 0443</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>VacatAd</h4>
+                    <p>Technology-first beneficial occupation resetting relief periods for vacant commercial property.</p>
+                    <div class="footer-contact">
+                        <p><strong>Email:</strong> <a href="mailto:hello@vacatad.com">hello@vacatad.com</a></p>
+                        <p><strong>Phone:</strong> <a href="tel:03330900443">0333 090 0443</a></p>
+                    </div>
+                    <div class="footer-social">
+                        <a href="https://x.com/vacatad" aria-label="VacatAd on X (Twitter)" target="_blank" rel="noopener" class="social-link x">
+                            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
+                                <path d="M4 4L20 20M20 4L4 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </a>
+                        <a href="https://www.linkedin.com/company/vacatad/" aria-label="VacatAd on LinkedIn" target="_blank" rel="noopener" class="social-link linkedin">
+                            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
+                                <rect x="3" y="9" width="4" height="12" fill="currentColor"/>
+                                <circle cx="5" cy="5" r="2" fill="currentColor"/>
+                                <path d="M16 9a5 5 0 0 1 5 5v7h-4v-7a1 1 0 0 0-1-1 1 1 0 0 0-1 1v7h-4v-7a5 5 0 0 1 5-5z" fill="currentColor"/>
+                            </svg>
+                        </a>
+                        <a href="https://www.facebook.com/vacatad" aria-label="VacatAd on Facebook" target="_blank" rel="noopener" class="social-link facebook">
+                            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
+                                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" fill="currentColor"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="../index.html">Home</a></li>
+                        <li><a href="../index.html#how-we-work">How We Work</a></li>
+                        <li><a href="../index.html#why-vacatad">Why VacatAd</a></li>
+                        <li><a href="../contact.html">Contact</a></li>
+                        <li><a href="index.html">UK Cities</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="../privacy.html">Privacy Policy</a></li>
+                        <li><a href="../terms.html">Terms of Service</a></li>
+                        <li><a href="../gdpr.html">GDPR Policy</a></li>
+                        <li><a href="../faqs.html">FAQs</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Get Started</h4>
+                    <a href="../contact.html#calculator" class="footer-cta">Calculate Your Savings</a>
+                    <p class="footer-tagline">Rapid setup. Real compliance. Proven outcomes.</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 VacatAd Ltd. All rights reserved. | Registered in England and Wales | Company No. 15484974</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="../js/analytics-config.js"></script>
+    <script src="../js/script.js"></script>
+    <script>
+        // Add hover effects to map markers
+        document.querySelectorAll('.city-marker').forEach(marker => {
+            marker.addEventListener('mouseenter', function() {
+                this.setAttribute('r', '15');
+                this.style.fill = 'var(--blue-accent)';
+            });
+            marker.addEventListener('mouseleave', function() {
+                this.setAttribute('r', this.parentElement.href.baseVal.includes('london') ? '12' : 
+                    this.parentElement.href.baseVal.includes('manchester') || this.parentElement.href.baseVal.includes('birmingham') || 
+                    this.parentElement.href.baseVal.includes('edinburgh') || this.parentElement.href.baseVal.includes('glasgow') ? '10' : '9');
+                this.style.fill = 'var(--tea-green)';
+            });
+        });
+    </script>
+</body>
+</html>
+

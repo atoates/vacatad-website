@@ -152,6 +152,12 @@ const STATIC_PAGES = [
         lastmod: '2025-10-15',
         changefreq: 'monthly',
         priority: 0.7
+    },
+    {
+        loc: '/city/',
+        lastmod: '2025-10-15',
+        changefreq: 'monthly',
+        priority: 0.8
     }
 ];
 

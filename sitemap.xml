@@ -133,6 +133,12 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://vacatad.com/city/</loc>
+    <lastmod>2025-10-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://vacatad.com/blog/posts/from-empty-units-to-community-hubs-the-social-value-of-vacatad.html</loc>
     <lastmod>2025-08-13</lastmod>
     <changefreq>monthly</changefreq>
