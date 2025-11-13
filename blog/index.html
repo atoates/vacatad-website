@@ -731,10 +731,11 @@ Year: 2025
                     post.dateISO = parseDate(post.date);
                     // Make a safe URL for images (encode spaces and special chars)
                     try {
-                        post.imageUrl = encodeURI(post.image.replace('../', ''));
+                        // Images are now in posts/{slug}/image1.ext format
+                        post.imageUrl = encodeURI(post.image);
                     } catch (e) {
                         // Fallback to raw replacement if something unexpected
-                        post.imageUrl = post.image.replace('../', '');
+                        post.imageUrl = post.image;
                     }
                 });
                 
@@ -762,7 +763,7 @@ Year: 2025
             
             grid.innerHTML = posts.map(post => `
                 <article class="blog-card ${post.featured ? 'featured' : ''}">
-                    <a href="posts/${post.slug}.html">
+                    <a href="posts/${post.slug}/">
                         <img src="${post.imageUrl}" alt="${post.imageAlt}" class="blog-card-image" loading="lazy" width="800" height="600">
                     </a>
                     <div class="blog-card-content">
@@ -773,12 +774,12 @@ Year: 2025
                             <span>•</span>
                             <span>${post.readTime}</span>
                         </div>
-                        <h3><a href="posts/${post.slug}.html">${post.title}</a></h3>
+                        <h3><a href="posts/${post.slug}/">${post.title}</a></h3>
                         <p class="blog-excerpt">${post.excerpt}</p>
                         <div class="blog-tags">
                             ${post.tags.map(tag => `<span class="blog-tag">${tag}</span>`).join('')}
                         </div>
-                        <a href="posts/${post.slug}.html" class="read-more">
+                        <a href="posts/${post.slug}/" class="read-more">
                             Read More →
                         </a>
                     </div>
