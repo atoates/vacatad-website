@@ -106,25 +106,21 @@ Year: 2025
         }
         
         .cities-hero .hero-subtitle {
-            font-size: clamp(1.2rem, 2.5vw, 1.6rem);
-            color: var(--tea-green);
+            font-size: clamp(1rem, 2vw, 1.3rem);
+            color: var(--white);
             margin-bottom: 0;
-            max-width: 800px;
+            max-width: 900px;
             margin-left: auto;
             margin-right: auto;
-            font-weight: 500;
+            font-weight: 400;
             text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+            line-height: 1.6;
         }
         
         .cities-content {
             padding: 0;
         }
         
-        .coverage-section {
-            background: rgba(219, 244, 204, 0.5);
-            padding: 4rem 0 2rem 0;
-            margin-top: 0;
-        }
         
         .cities-map-layout {
             display: grid;
@@ -240,9 +236,6 @@ Year: 2025
                 min-height: 32.5vh;
             }
             
-            .coverage-section {
-                padding: 3rem 0 1.5rem 0;
-            }
         }
     </style>
 </head>
@@ -290,19 +283,16 @@ Year: 2025
 
     <!-- Main Content -->
     <main id="main-content">
+        <!-- Cities Hero Section -->
+        <section class="cities-hero">
+            <div class="container">
+                <h1>Serving Property Owners Nationwide</h1>
+                <p class="hero-subtitle">VacatAd provides business rates relief services across major UK cities. Our technology-first approach works for property owners in London, Manchester, Birmingham, and cities throughout England, Scotland, and Wales. Select your city below to learn more about our local services.</p>
+            </div>
+        </section>
+
         <!-- Cities Content -->
         <section class="cities-content">
-            <div class="coverage-section">
-                <div class="container">
-                    <div class="coverage-intro">
-                        <h1 class="section-title" style="font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 1rem;">Serving Property Owners Nationwide</h1>
-                        <p class="section-subtitle" style="font-size: clamp(1rem, 2vw, 1.2rem);">
-                            VacatAd provides business rates relief services across major UK cities. Our technology-first approach works for property owners in London, Manchester, Birmingham, and cities throughout England, Scotland, and Wales. Select your city below to learn more about our local services.
-                        </p>
-                    </div>
-                </div>
-            </div>
-            
             <div class="container">
 
                 <!-- Cities and Map Layout -->
