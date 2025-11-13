@@ -1,0 +1,586 @@
+<!--
+Title: Router Dashboard | VacatAd Client Portal
+Meta Description: Access your exclusive VacatAd Router Dashboard to monitor your property's active router status, network health, and real-time beneficial occupation data.
+Author: VacatAd Ltd
+Year: 2025
+-->
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Access your exclusive VacatAd Router Dashboard to monitor your property's active router status, network health, and real-time beneficial occupation data.">
+    <meta name="keywords" content="router dashboard, property monitoring, real-time status, network health, beneficial occupation, client portal">
+    <meta name="author" content="VacatAd Ltd">
+    <meta name="robots" content="index, follow">
+    
+    <title>Router Dashboard | VacatAd Client Portal</title>
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://vacatad.com/router-dashboard.html">
+    
+    <!-- Performance Optimizations -->
+    <link rel="preconnect" href="https://routerlogger-frontend-production.up.railway.app">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/styles.css?v=20251015">
+    
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#232523">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicons/favicon-16x16.png">
+    <link rel="icon" type="image/webp" sizes="32x32" href="assets/favicons/favicon-32x32.webp">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/favicons/apple-touch-icon.png">
+    <link rel="icon" href="assets/favicons/favicon.ico" sizes="any">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://vacatad.com/router-dashboard.html">
+    <meta property="og:title" content="Router Dashboard | VacatAd Client Portal">
+    <meta property="og:description" content="Monitor your property's active router status and network health in real-time with VacatAd's exclusive client dashboard.">
+    <meta property="og:image" content="https://vacatad.com/blog/images/dashboard.webp">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://vacatad.com/router-dashboard.html">
+    <meta property="twitter:title" content="Router Dashboard | VacatAd Client Portal">
+    <meta property="twitter:description" content="Monitor your property's active router status and network health in real-time with VacatAd's exclusive client dashboard.">
+    <meta property="twitter:image" content="https://vacatad.com/blog/images/dashboard.webp">
+    
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DEZQKBTTFH"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-DEZQKBTTFH', {
+            'send_page_view': true,
+            'cookie_flags': 'SameSite=None;Secure'
+        });
+    </script>
+    
+    <style>
+        .dashboard-hero {
+            background: linear-gradient(135deg, rgba(35, 37, 35, 0.95), rgba(35, 37, 35, 0.98)), 
+                        url('../assets/images/footer-background.webp');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            padding: 140px 0 80px;
+            text-align: center;
+            color: var(--white);
+            position: relative;
+        }
+        
+        .dashboard-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(219, 244, 204, 0.1), rgba(109, 206, 209, 0.1));
+            z-index: 1;
+        }
+        
+        .dashboard-hero .container {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .dashboard-hero h1 {
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            margin-bottom: 1.5rem;
+            color: var(--white);
+            font-weight: 700;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+        }
+        
+        .dashboard-hero .hero-subtitle {
+            font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+            color: var(--tea-green);
+            margin-bottom: 2rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            font-weight: 500;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .dashboard-hero .exclusive-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--tea-green), rgba(219, 244, 204, 0.8));
+            color: var(--eerie-black);
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(219, 244, 204, 0.3);
+        }
+        
+        .dashboard-content {
+            padding: var(--section-padding) 0;
+            background-color: var(--white);
+        }
+        
+        .dashboard-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        
+        .dashboard-feature {
+            background: var(--seasalt);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            border: 2px solid transparent;
+            transition: var(--transition);
+        }
+        
+        .dashboard-feature:hover {
+            border-color: var(--tea-green);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(35, 37, 35, 0.1);
+        }
+        
+        .dashboard-feature-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--tea-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            color: var(--eerie-black);
+        }
+        
+        .dashboard-feature h3 {
+            color: var(--eerie-black);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+        
+        .dashboard-feature p {
+            color: var(--grey-text);
+            line-height: 1.6;
+        }
+        
+        .dashboard-preview {
+            background: var(--seasalt);
+            padding: 3rem;
+            border-radius: var(--border-radius);
+            margin: 3rem 0;
+            text-align: center;
+        }
+        
+        .dashboard-preview h2 {
+            color: var(--eerie-black);
+            margin-bottom: 2rem;
+            font-size: 2rem;
+        }
+        
+        .dashboard-preview img {
+            width: 100%;
+            max-width: 1200px;
+            height: auto;
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 40px rgba(35, 37, 35, 0.15);
+            margin-bottom: 2rem;
+        }
+        
+        .dashboard-preview p {
+            color: var(--grey-text);
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+        }
+        
+        .dashboard-cta {
+            background: var(--eerie-black);
+            padding: var(--section-padding) 0;
+            text-align: center;
+            color: var(--white);
+        }
+        
+        .dashboard-cta h2 {
+            color: var(--white);
+            margin-bottom: 1rem;
+            font-size: clamp(2rem, 4vw, 2.5rem);
+        }
+        
+        .dashboard-cta p {
+            color: var(--tea-green);
+            font-size: 1.2rem;
+            margin-bottom: 2.5rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .login-button-large {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 18px 40px;
+            background: var(--tea-green);
+            color: var(--eerie-black);
+            border-radius: 50px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 1rem;
+            text-decoration: none;
+            border: 2px solid var(--tea-green);
+            transition: var(--transition);
+            box-shadow: 0 8px 24px rgba(219, 244, 204, 0.4);
+        }
+        
+        .login-button-large:hover {
+            background: transparent;
+            color: var(--tea-green);
+            border-color: var(--tea-green);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(219, 244, 204, 0.5);
+        }
+        
+        .login-button-large svg {
+            width: 20px;
+            height: 20px;
+        }
+        
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 3rem 0;
+        }
+        
+        .benefit-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1.5rem;
+            background: var(--white);
+            border-left: 4px solid var(--tea-green);
+            border-radius: var(--border-radius);
+        }
+        
+        .benefit-icon {
+            color: var(--tea-green);
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+        
+        .benefit-item h4 {
+            color: var(--eerie-black);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .benefit-item p {
+            color: var(--grey-text);
+            font-size: 0.95rem;
+            margin: 0;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-hero {
+                padding: 120px 0 60px;
+            }
+            
+            .dashboard-features {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-preview {
+                padding: 2rem 1.5rem;
+            }
+            
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <a href="index.html">
+                        <img src="assets/images/asset-8.webp" alt="VacatAd Logo" class="logo-icon" width="223" height="191">
+                        <span class="logo-text">VacatAd</span>
+                    </a>
+                </div>
+                <ul class="nav-menu" id="primary-navigation">
+                    <li class="nav-item">
+                        <a href="index.html" class="nav-link">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="index.html#why-vacatad" class="nav-link">Why VacatAd</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="index.html#how-we-work" class="nav-link">How We Work</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="blog/index.html" class="nav-link">Blog</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="faqs.html" class="nav-link">FAQs</a>
+                    </li>
+                </ul>
+                <div class="cta-nav">
+                    <a href="contact.html" class="cta-button-nav">Get in touch</a>
+                </div>
+                <button class="nav-toggle" id="mobile-menu" aria-label="Toggle menu" aria-controls="primary-navigation" aria-expanded="false">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content">
+        <!-- Dashboard Hero Section -->
+        <section class="dashboard-hero">
+            <div class="container">
+                <span class="exclusive-badge">Exclusive Client Portal</span>
+                <h1>Real-Time Property Monitoring at Your Fingertips</h1>
+                <p class="hero-subtitle">
+                    Access your exclusive VacatAd Router Dashboard and monitor your property's active router status, network health, and beneficial occupation data—all in real-time.
+                </p>
+                <a href="https://routerlogger-frontend-production.up.railway.app/login" target="_blank" rel="noopener" class="login-button-large">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+                        <polyline points="10 17 15 12 10 7"></polyline>
+                        <line x1="15" y1="12" x2="3" y2="12"></line>
+                    </svg>
+                    Access Dashboard
+                </a>
+            </div>
+        </section>
+
+        <!-- Dashboard Content -->
+        <section class="dashboard-content">
+            <div class="container">
+                <h2 class="section-title">Complete Visibility Into Your Property's Technology</h2>
+                <p class="section-subtitle">
+                    Your exclusive dashboard provides comprehensive insights into router performance, network health, and real-time occupation status—giving you complete confidence that your property is actively monitored and compliant.
+                </p>
+
+                <!-- Dashboard Features -->
+                <div class="dashboard-features">
+                    <div class="dashboard-feature">
+                        <div class="dashboard-feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                        </div>
+                        <h3>Real-Time Status</h3>
+                        <p>Monitor your router's online status, network health, and data usage in real-time. Know instantly if your property's beneficial occupation technology is active and performing optimally.</p>
+                    </div>
+
+                    <div class="dashboard-feature">
+                        <div class="dashboard-feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 3h18v18H3z"></path>
+                                <path d="M9 9h6v6H9z"></path>
+                            </svg>
+                        </div>
+                        <h3>Network Analytics</h3>
+                        <p>Access detailed analytics including network usage patterns, data consumption trends, and operator distribution. Understand exactly how your property's technology is being utilized.</p>
+                    </div>
+
+                    <div class="dashboard-feature">
+                        <div class="dashboard-feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 11l3 3L22 4"></path>
+                                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                            </svg>
+                        </div>
+                        <h3>Compliance Evidence</h3>
+                        <p>Generate comprehensive reports and evidence of continuous beneficial occupation. All data is automatically logged and available for local authority compliance verification.</p>
+                    </div>
+
+                    <div class="dashboard-feature">
+                        <div class="dashboard-feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                                <line x1="8" y1="21" x2="16" y2="21"></line>
+                                <line x1="12" y1="17" x2="12" y2="21"></line>
+                            </svg>
+                        </div>
+                        <h3>24/7 Monitoring</h3>
+                        <p>Your dashboard auto-refreshes with the latest data, ensuring you always have up-to-date information about your property's router status and network performance.</p>
+                    </div>
+                </div>
+
+                <!-- Dashboard Preview -->
+                <div class="dashboard-preview">
+                    <h2>See Your Property's Status at a Glance</h2>
+                    <img src="blog/images/dashboard.webp" alt="VacatAd Router Dashboard showing real-time network monitoring, router status, and analytics" loading="lazy">
+                    <p>
+                        Our advanced dashboard provides a comprehensive view of your property's router network. Monitor network health percentages, track 24-hour data usage, view router status across your portfolio, and analyze usage patterns through interactive heatmaps and charts.
+                    </p>
+                </div>
+
+                <!-- Key Benefits -->
+                <div class="benefits-grid">
+                    <div class="benefit-item">
+                        <div class="benefit-icon">✓</div>
+                        <div>
+                            <h4>Instant Peace of Mind</h4>
+                            <p>Know immediately if your router is online and your property is actively monitored.</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">✓</div>
+                        <div>
+                            <h4>Portfolio Overview</h4>
+                            <p>Monitor multiple properties from a single dashboard with clear status indicators.</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">✓</div>
+                        <div>
+                            <h4>Historical Data</h4>
+                            <p>Access usage trends and patterns to understand your property's occupation history.</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">✓</div>
+                        <div>
+                            <h4>Export Reports</h4>
+                            <p>Download compliance evidence and status reports for your records or authorities.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Local Authority Notice -->
+        <section class="dashboard-content" style="background-color: var(--seasalt); padding: 3rem 0;">
+            <div class="container">
+                <div style="max-width: 800px; margin: 0 auto; background: var(--white); padding: 2.5rem; border-radius: var(--border-radius); border-left: 4px solid var(--tea-green); box-shadow: 0 4px 12px rgba(35, 37, 35, 0.1);">
+                    <div style="display: flex; align-items: flex-start; gap: 1.5rem;">
+                        <div style="flex-shrink: 0;">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--tea-green)" stroke-width="2" style="color: var(--tea-green);">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14,2 14,8 20,8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                                <polyline points="9,9 12,12 16,8"></polyline>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 style="color: var(--eerie-black); margin-bottom: 1rem; font-size: 1.3rem;">Local Authority Verification</h3>
+                            <p style="color: var(--grey-text); line-height: 1.7; margin-bottom: 0;">
+                                If you are a local authority wishing to verify occupancy or request compliance documentation for a property, please contact our legal team at <a href="mailto:legal@vacatad.com" style="color: var(--blue-accent); font-weight: 600; text-decoration: underline;">legal@vacatad.com</a>. We provide comprehensive evidence of beneficial occupation and are committed to full transparency with local authorities.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dashboard CTA Section -->
+        <section class="dashboard-cta">
+            <div class="container">
+                <h2>Ready to Access Your Dashboard?</h2>
+                <p>Log in to view real-time router status and network analytics for your properties</p>
+                <a href="https://routerlogger-frontend-production.up.railway.app/login" target="_blank" rel="noopener" class="login-button-large">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+                        <polyline points="10 17 15 12 10 7"></polyline>
+                        <line x1="15" y1="12" x2="3" y2="12"></line>
+                    </svg>
+                    Access Dashboard Now
+                </a>
+                <p style="margin-top: 2rem; color: #bdc3c7; font-size: 0.9rem;">
+                    Don't have access? <a href="contact.html" style="color: var(--tea-green); text-decoration: underline;">Contact us</a> to set up your client portal.
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>VacatAd</h4>
+                    <p>Technology-first beneficial occupation resetting relief periods for vacant commercial property.</p>
+                    <div class="footer-contact">
+                        <p><strong>Email:</strong> <a href="mailto:hello@vacatad.com">hello@vacatad.com</a></p>
+                        <p><strong>Phone:</strong> <a href="tel:03330900443">0333 090 0443</a></p>
+                    </div>
+                    <div class="footer-social">
+                        <a href="https://x.com/vacatad" aria-label="VacatAd on X (Twitter)" target="_blank" rel="noopener" class="social-link x">
+                            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
+                                <path d="M4 4L20 20M20 4L4 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </a>
+                        <a href="https://www.linkedin.com/company/vacatad/" aria-label="VacatAd on LinkedIn" target="_blank" rel="noopener" class="social-link linkedin">
+                            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
+                                <rect x="3" y="9" width="4" height="12" fill="currentColor"/>
+                                <circle cx="5" cy="5" r="2" fill="currentColor"/>
+                                <path d="M16 9a5 5 0 0 1 5 5v7h-4v-7a1 1 0 0 0-1-1 1 1 0 0 0-1 1v7h-4v-7a5 5 0 0 1 5-5z" fill="currentColor"/>
+                            </svg>
+                        </a>
+                        <a href="https://www.facebook.com/vacatad" aria-label="VacatAd on Facebook" target="_blank" rel="noopener" class="social-link facebook">
+                            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
+                                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" fill="currentColor"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="index.html#how-we-work">How We Work</a></li>
+                        <li><a href="index.html#why-vacatad">Why VacatAd</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="router-dashboard.html">Dashboard</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                        <li><a href="terms.html">Terms of Service</a></li>
+                        <li><a href="gdpr.html">GDPR Policy</a></li>
+                        <li><a href="faqs.html">FAQs</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Get Started</h4>
+                    <a href="contact.html#calculator" class="footer-cta">Calculate Your Savings</a>
+                    <p class="footer-tagline">Rapid setup. Real compliance. Proven outcomes.</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 VacatAd Ltd. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="js/analytics-config.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>
+

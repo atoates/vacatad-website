@@ -74,6 +74,12 @@ const STATIC_PAGES = [
         lastmod: '2025-10-24',
         changefreq: 'yearly',
         priority: 0.3
+    },
+    {
+        loc: '/router-dashboard.html',
+        lastmod: '2025-10-15',
+        changefreq: 'monthly',
+        priority: 0.8
     }
 ];
 

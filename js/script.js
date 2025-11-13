@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', function() {
     initCTATracking();
     initFAQs();
     initScrollProgress();
-    initParallaxEffects();
 });
 
 // Navigation functionality
@@ -339,128 +338,123 @@ function showNotification(message, type = 'info') {
 
 // Scroll effects and animations
 function initScrollEffects() {
-    // Intersection Observer for fade-in animations
+    // Check for reduced motion preference
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) {
+        return; // Skip all animations if user prefers reduced motion
+    }
+    
+    // Optimized Intersection Observer - triggers earlier for smoother experience
     const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
+        threshold: [0, 0.1, 0.2],
+        rootMargin: '0px 0px 150px 0px' // Trigger 150px before element enters viewport
     };
     
+    // Main observer for fade-in animations
     const observer = new IntersectionObserver(function(entries) {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('animate-in');
+                // Unobserve after animation to improve performance
+                observer.unobserve(entry.target);
             }
         });
     }, observerOptions);
     
     // Enhanced animation types - different effects for different elements
-    // Note: .legal-section removed to ensure legal content is immediately visible
-    const fadeUpElements = document.querySelectorAll('.feature-card, .process-step, .result-item, .tech-item, .contact-info, .contact-form, .blog-card, .faq-item, .client-logo');
+    const fadeUpElements = document.querySelectorAll('.feature-card, .process-step, .result-item, .tech-item, .contact-info, .contact-form, .blog-card, .faq-item, .client-logo, .dashboard-feature, .benefit-item');
     fadeUpElements.forEach((el, index) => {
         el.style.opacity = '0';
-        el.style.transform = 'translateY(30px)';
-        el.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
+        el.style.transform = 'translateY(20px)';
+        el.style.transition = `opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1) ${Math.min(index * 0.05, 0.3)}s, transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) ${Math.min(index * 0.05, 0.3)}s`;
         el.classList.add('fade-up');
         observer.observe(el);
     });
     
-    // Fade in from left
-    const fadeLeftElements = document.querySelectorAll('.why-text, .hero-title, .section-header');
+    // Fade in from left - removed hero-title to avoid conflicts
+    const fadeLeftElements = document.querySelectorAll('.why-text, .section-header');
     fadeLeftElements.forEach((el, index) => {
         el.style.opacity = '0';
-        el.style.transform = 'translateX(-30px)';
-        el.style.transition = `opacity 0.8s ease ${index * 0.15}s, transform 0.8s ease ${index * 0.15}s`;
+        el.style.transform = 'translateX(-20px)';
+        el.style.transition = `opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1) ${index * 0.1}s, transform 0.6s cubic-bezier(0.4, 0, 0.2, 1) ${index * 0.1}s`;
         el.classList.add('fade-left');
         observer.observe(el);
     });
     
-    // Fade in from right
-    const fadeRightElements = document.querySelectorAll('.hero-description');
+    // Fade in from right - removed hero-description to avoid conflicts
+    const fadeRightElements = document.querySelectorAll('.why-image');
     fadeRightElements.forEach((el, index) => {
         el.style.opacity = '0';
-        el.style.transform = 'translateX(30px)';
-        el.style.transition = `opacity 0.8s ease ${index * 0.15}s, transform 0.8s ease ${index * 0.15}s`;
+        el.style.transform = 'translateX(20px)';
+        el.style.transition = `opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1) ${index * 0.1}s, transform 0.6s cubic-bezier(0.4, 0, 0.2, 1) ${index * 0.1}s`;
         el.classList.add('fade-right');
         observer.observe(el);
     });
     
-    // Special scroll-based fade for sticky blue image (no movement, just fade)
+    // Simplified sticky image fade - no scroll listener, just intersection
     const stickyImage = document.querySelector('.why-image picture img');
     if (stickyImage) {
         stickyImage.style.opacity = '0';
-        stickyImage.style.transition = 'opacity 1.2s ease';
+        stickyImage.style.transition = 'opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
         
         const stickyObserver = new IntersectionObserver(function(entries) {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    // Gradually fade in based on scroll progress
-                    const fadeInOnScroll = () => {
-                        const rect = entry.target.getBoundingClientRect();
-                        const windowHeight = window.innerHeight;
-                        const elementTop = rect.top;
-                        const elementHeight = rect.height;
-                        
-                        // Calculate opacity based on position (0 to 1) - no transform
-                        let opacity = 0;
-                        if (elementTop < windowHeight && elementTop + elementHeight > 0) {
-                            const visibleHeight = Math.min(windowHeight - elementTop, elementHeight);
-                            opacity = Math.min(visibleHeight / (elementHeight * 0.5), 1);
-                        }
-                        
-                        stickyImage.style.opacity = opacity;
-                    };
-                    
-                    // Initial fade
-                    fadeInOnScroll();
-                    
-                    // Update on scroll
-                    window.addEventListener('scroll', throttle(fadeInOnScroll, 16));
+                    stickyImage.style.opacity = '1';
+                    stickyObserver.unobserve(entry.target);
                 }
             });
-        }, { threshold: 0.1 });
+        }, { threshold: 0.1, rootMargin: '0px 0px 100px 0px' });
         
         stickyObserver.observe(stickyImage);
     }
     
-    // Add section reveal for features-grid (hero to first section transition)
+    // Features grid - simplified
     const featuresGrid = document.querySelector('.features-grid');
     if (featuresGrid) {
         featuresGrid.style.opacity = '0';
-        featuresGrid.style.transform = 'translateY(40px)';
-        featuresGrid.style.transition = 'opacity 1s ease, transform 1s ease';
+        featuresGrid.style.transform = 'translateY(20px)';
+        featuresGrid.style.transition = 'opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
         
         const featuresObserver = new IntersectionObserver(function(entries) {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.style.opacity = '1';
                     entry.target.style.transform = 'translateY(0)';
+                    featuresObserver.unobserve(entry.target);
                 }
             });
-        }, { threshold: 0.1 });
+        }, { threshold: 0.1, rootMargin: '0px 0px 100px 0px' });
         
         featuresObserver.observe(featuresGrid);
     }
     
-    // Scale in effect for CTAs and buttons
-    const scaleElements = document.querySelectorAll('.cta-button, .cta-group, .footer-cta');
-    scaleElements.forEach((el, index) => {
-        el.style.opacity = '0';
-        el.style.transform = 'scale(0.9)';
-        el.style.transition = `opacity 0.5s ease ${index * 0.1}s, transform 0.5s ease ${index * 0.1}s`;
-        el.classList.add('scale-in');
-        observer.observe(el);
-    });
+    // Scale in effect for CTAs - removed to avoid button flicker
+    // CTAs should be visible immediately for better UX
     
-    // Parallax effect for hero sections
+    // Optimized parallax effect using requestAnimationFrame
+    let ticking = false;
     const heroSections = document.querySelectorAll('.hero, .blog-hero');
-    window.addEventListener('scroll', throttle(function() {
+    
+    function updateParallax() {
         const scrolled = window.pageYOffset;
         heroSections.forEach(hero => {
-            if (scrolled < window.innerHeight) {
-                hero.style.transform = `translateY(${scrolled * 0.5}px)`;
+            if (scrolled < window.innerHeight * 1.5) {
+                const parallaxValue = scrolled * 0.3;
+                hero.style.transform = `translateY(${parallaxValue}px)`;
             }
         });
-    }, 16));
+        ticking = false;
+    }
+    
+    if (heroSections.length > 0) {
+        window.addEventListener('scroll', function() {
+            if (!ticking) {
+                window.requestAnimationFrame(updateParallax);
+                ticking = true;
+            }
+        }, { passive: true });
+    }
     
     // Counter animation for stats
     const statNumbers = document.querySelectorAll('.stat-number, .result-value');
@@ -469,9 +463,10 @@ function initScrollEffects() {
             if (entry.isIntersecting && !entry.target.classList.contains('counted')) {
                 entry.target.classList.add('counted');
                 animateCounter(entry.target);
+                statsObserver.unobserve(entry.target);
             }
         });
-    }, { threshold: 0.5 });
+    }, { threshold: 0.3, rootMargin: '0px 0px 50px 0px' });
     
     statNumbers.forEach(stat => statsObserver.observe(stat));
     
@@ -487,9 +482,11 @@ function initScrollEffects() {
             box-shadow: 0 2px 20px rgba(35, 37, 35, 0.15) !important;
         }
         
-        /* Smooth scroll behavior for all elements */
-        .fade-up, .fade-left, .fade-right, .scale-in {
-            will-change: transform, opacity;
+        /* Optimized will-change - only apply when animating */
+        .fade-up.animate-in,
+        .fade-left.animate-in,
+        .fade-right.animate-in {
+            will-change: auto;
         }
         
         /* Reduce motion for users who prefer it */
@@ -649,65 +646,9 @@ function initScrollProgress() {
     }, 16));
 }
 
-// Parallax effects for hero and image sections
-function initParallaxEffects() {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        return; // Respect user preference for reduced motion
-    }
-    
-    const parallaxElements = document.querySelectorAll('.why-image img, .hero-container');
-    
-    if (parallaxElements.length === 0) return;
-    
-    window.addEventListener('scroll', throttle(function() {
-        const scrolled = window.pageYOffset;
-        
-        parallaxElements.forEach((element, index) => {
-            const rect = element.getBoundingClientRect();
-            const elementTop = rect.top + scrolled;
-            const elementHeight = rect.height;
-            
-            // Only apply parallax when element is in viewport
-            if (scrolled + window.innerHeight > elementTop && scrolled < elementTop + elementHeight) {
-                const speed = 0.3 + (index * 0.1); // Different speeds for variety
-                const yPos = -(scrolled - elementTop) * speed;
-                element.style.transform = `translateY(${yPos}px)`;
-            }
-        });
-    }, 16));
-}
+// Parallax effects consolidated into initScrollEffects to avoid conflicts and improve performance
 
-// Smooth reveal for sections as they enter viewport
-function initSectionReveal() {
-    const sections = document.querySelectorAll('section:not(.hero)');
-    
-    const revealObserver = new IntersectionObserver(function(entries) {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-                revealObserver.unobserve(entry.target);
-            }
-        });
-    }, {
-        threshold: 0.15,
-        rootMargin: '0px 0px -100px 0px'
-    });
-    
-    sections.forEach(section => {
-        section.style.opacity = '0';
-        section.style.transform = 'translateY(20px)';
-        section.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
-        revealObserver.observe(section);
-    });
-}
-
-// Call section reveal on load
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initSectionReveal);
-} else {
-    initSectionReveal();
-}
+// Removed section reveal - handled by main scroll effects to avoid conflicts
 
 // Export functions for potential external use
 window.VacatAdWebsite = {
