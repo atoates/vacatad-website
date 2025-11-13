@@ -122,11 +122,11 @@ Year: 2025
         .uk-map-container {
             max-width: 1000px;
             margin: 3rem auto;
-            background: var(--white);
+            background: var(--eerie-black);
             border-radius: var(--border-radius);
             padding: 2.5rem;
             box-shadow: 0 8px 24px rgba(35, 37, 35, 0.15);
-            border: 1px solid #e8e9ea;
+            border: 1px solid #2a2c2a;
         }
         
         .uk-map-image {
@@ -139,8 +139,8 @@ Year: 2025
         
         .cities-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.25rem;
             margin: 3rem 0;
         }
         
@@ -148,7 +148,7 @@ Year: 2025
             background: var(--white);
             border: 2px solid #e8e9ea;
             border-radius: var(--border-radius);
-            padding: 2rem;
+            padding: 1.25rem;
             text-align: center;
             transition: var(--transition);
             text-decoration: none;
@@ -157,41 +157,41 @@ Year: 2025
         }
         
         .city-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 30px rgba(35, 37, 35, 0.15);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(35, 37, 35, 0.15);
             border-color: var(--tea-green);
         }
         
         .city-card-icon {
-            width: 60px;
-            height: 60px;
+            width: 45px;
+            height: 45px;
             background: var(--tea-green);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 1.5rem;
+            margin: 0 auto 1rem;
             color: var(--eerie-black);
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             font-weight: 700;
         }
         
         .city-card h3 {
             color: var(--eerie-black);
-            margin-bottom: 0.5rem;
-            font-size: 1.5rem;
+            margin-bottom: 0.4rem;
+            font-size: 1.2rem;
         }
         
         .city-card p {
             color: var(--grey-text);
-            font-size: 0.95rem;
+            font-size: 0.85rem;
             margin: 0;
         }
         
         .city-card-arrow {
-            margin-top: 1rem;
+            margin-top: 0.75rem;
             color: var(--tea-green);
-            font-size: 1.2rem;
+            font-size: 1rem;
             transition: transform 0.3s ease;
         }
         
@@ -286,7 +286,7 @@ Year: 2025
 
                 <!-- UK Map Image -->
                 <div class="uk-map-container">
-                    <img src="../assets/images/Locations_map.webp" alt="UK Map showing VacatAd service locations across major cities" class="uk-map-image" loading="lazy" width="1484" height="1382">
+                    <img src="../assets/images/map.webp" alt="UK Map showing VacatAd service locations across major cities" class="uk-map-image" loading="lazy">
                 </div>
 
                 <!-- Cities Grid -->
