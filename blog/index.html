@@ -1,11 +1,12 @@
-<!--
+<!DOCTYPE html>
+<html lang="en-GB">
+    <!--
 Title: Blog | VacatAd
 Meta Description: Expert insights on business rates, empty property relief, and commercial property management. Stay informed with VacatAd's latest guides and tips.
 Author: VacatAd Ltd
 Year: 2025
 -->
-<!DOCTYPE html>
-<html lang="en-GB">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -478,7 +479,7 @@ Year: 2025
             <div class="nav-container">
                 <div class="nav-logo">
                     <a href="../index.html">
-                        <img src="../assets/images/asset-8.webp" alt="VacatAd Logo" class="logo-icon" width="223" height="191">
+                        <img src="../assets/images/asset-8.webp" alt="VacatAd Logo" class="logo-icon" width="223" height="191" loading="lazy">
                         <span class="logo-text">VacatAd</span>
                     </a>
                 </div>
@@ -515,7 +516,7 @@ Year: 2025
     <main id="main-content">
         <!-- Hero Section -->
         <section class="blog-hero">
-            <img src="../assets/images/footer-background.webp" alt="VacatAd Blog" class="hero-banner">
+            <img src="../assets/images/footer-background.webp" alt="VacatAd Blog" class="hero-banner" loading="lazy" width="1920" height="1080">
             <div class="container hero-overlay">
                 <h1>VacatAd Blog</h1>
                 <p>Expert insights on business rates, empty property relief, and commercial property management.</p>
@@ -759,7 +760,7 @@ Year: 2025
             grid.innerHTML = posts.map(post => `
                 <article class="blog-card ${post.featured ? 'featured' : ''}">
                     <a href="posts/${post.slug}.html">
-                        <img src="${post.imageUrl}" alt="${post.imageAlt}" class="blog-card-image" loading="lazy">
+                        <img src="${post.imageUrl}" alt="${post.imageAlt}" class="blog-card-image" loading="lazy" width="800" height="600">
                     </a>
                     <div class="blog-card-content">
                         <div class="blog-meta">
