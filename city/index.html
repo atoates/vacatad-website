@@ -127,10 +127,10 @@ Year: 2025
             align-items: start;
         }
         
-        .cities-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1.25rem;
+        .cities-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
         }
         
         .uk-map-container {
@@ -146,58 +146,65 @@ Year: 2025
             object-fit: contain;
         }
         
-        .city-card {
+        .city-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 1.5rem;
             background: var(--white);
-            border: 2px solid #e8e9ea;
+            border: 1px solid #e8e9ea;
             border-radius: var(--border-radius);
-            padding: 1.25rem;
-            text-align: center;
-            transition: var(--transition);
             text-decoration: none;
-            display: block;
             color: inherit;
+            transition: var(--transition);
         }
         
-        .city-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 20px rgba(35, 37, 35, 0.15);
+        .city-item:hover {
             border-color: var(--tea-green);
+            background: var(--seasalt);
+            transform: translateX(4px);
         }
         
-        .city-card-icon {
-            width: 45px;
-            height: 45px;
+        .city-item-content {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .city-item-icon {
+            width: 40px;
+            height: 40px;
             background: var(--tea-green);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 1rem;
             color: var(--eerie-black);
-            font-size: 1.2rem;
+            font-size: 1rem;
             font-weight: 700;
+            flex-shrink: 0;
         }
         
-        .city-card h3 {
+        .city-item-text h3 {
             color: var(--eerie-black);
-            margin-bottom: 0.4rem;
-            font-size: 1.2rem;
+            margin: 0 0 0.25rem 0;
+            font-size: 1.1rem;
         }
         
-        .city-card p {
+        .city-item-text p {
             color: var(--grey-text);
             font-size: 0.85rem;
             margin: 0;
         }
         
-        .city-card-arrow {
-            margin-top: 0.75rem;
+        .city-item-arrow {
             color: var(--tea-green);
-            font-size: 1rem;
+            font-size: 1.2rem;
+            flex-shrink: 0;
             transition: transform 0.3s ease;
         }
         
-        .city-card:hover .city-card-arrow {
+        .city-item:hover .city-item-arrow {
             transform: translateX(5px);
         }
         
@@ -212,21 +219,12 @@ Year: 2025
                 grid-template-columns: 1fr;
                 gap: 2rem;
             }
-            
-            .cities-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
         }
         
         @media (max-width: 768px) {
             .cities-hero {
                 padding: 140px 0 60px;
                 min-height: 50vh;
-            }
-            
-            .cities-grid {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
             }
         }
     </style>
@@ -295,99 +293,147 @@ Year: 2025
 
                 <!-- Cities and Map Layout -->
                 <div class="cities-map-layout">
-                    <!-- Cities Grid -->
-                    <div>
-                        <h2 class="section-title" style="margin-top: 0; margin-bottom: 2rem;">Select Your City</h2>
-                        <div class="cities-grid">
-                    <a href="london.html" class="city-card">
-                        <div class="city-card-icon">L</div>
-                        <h3>London</h3>
-                        <p>Business rates relief across Greater London</p>
-                        <div class="city-card-arrow">→</div>
-                    </a>
-                    
-                    <a href="manchester.html" class="city-card">
-                        <div class="city-card-icon">M</div>
-                        <h3>Manchester</h3>
-                        <p>Serving Greater Manchester property owners</p>
-                        <div class="city-card-arrow">→</div>
-                    </a>
-                    
-                    <a href="birmingham.html" class="city-card">
-                        <div class="city-card-icon">B</div>
-                        <h3>Birmingham</h3>
-                        <p>West Midlands commercial property solutions</p>
-                        <div class="city-card-arrow">→</div>
-                    </a>
-                    
-                    <a href="leeds.html" class="city-card">
-                        <div class="city-card-icon">L</div>
-                        <h3>Leeds</h3>
-                        <p>West Yorkshire business rates relief</p>
-                        <div class="city-card-arrow">→</div>
-                    </a>
-                    
-                    <a href="liverpool.html" class="city-card">
-                        <div class="city-card-icon">L</div>
-                        <h3>Liverpool</h3>
-                        <p>Merseyside property rate solutions</p>
-                        <div class="city-card-arrow">→</div>
-                    </a>
-                    
-                    <a href="bristol.html" class="city-card">
-                        <div class="city-card-icon">B</div>
-                        <h3>Bristol</h3>
-                        <p>South West commercial property services</p>
-                        <div class="city-card-arrow">→</div>
-                    </a>
-                    
-                    <a href="sheffield.html" class="city-card">
-                        <div class="city-card-icon">S</div>
-                        <h3>Sheffield</h3>
-                        <p>South Yorkshire property solutions</p>
-                        <div class="city-card-arrow">→</div>
-                    </a>
-                    
-                    <a href="edinburgh.html" class="city-card">
-                        <div class="city-card-icon">E</div>
-                        <h3>Edinburgh</h3>
-                        <p>Scotland's capital city services</p>
-                        <div class="city-card-arrow">→</div>
-                    </a>
-                    
-                    <a href="glasgow.html" class="city-card">
-                        <div class="city-card-icon">G</div>
-                        <h3>Glasgow</h3>
-                        <p>Scotland's largest city solutions</p>
-                        <div class="city-card-arrow">→</div>
-                    </a>
-                    
-                    <a href="newcastle.html" class="city-card">
-                        <div class="city-card-icon">N</div>
-                        <h3>Newcastle</h3>
-                        <p>North East property rate relief</p>
-                        <div class="city-card-arrow">→</div>
-                    </a>
-                    
-                    <a href="nottingham.html" class="city-card">
-                        <div class="city-card-icon">N</div>
-                        <h3>Nottingham</h3>
-                        <p>East Midlands commercial solutions</p>
-                        <div class="city-card-arrow">→</div>
-                    </a>
-                    
-                    <a href="leicester.html" class="city-card">
-                        <div class="city-card-icon">L</div>
-                        <h3>Leicester</h3>
-                        <p>East Midlands property services</p>
-                        <div class="city-card-arrow">→</div>
-                    </a>
-                        </div>
-                    </div>
-                    
                     <!-- UK Map Image -->
                     <div class="uk-map-container">
                         <img src="../assets/images/map.webp" alt="UK Map showing VacatAd service locations across major cities" class="uk-map-image" loading="lazy">
+                    </div>
+                    
+                    <!-- Cities List -->
+                    <div>
+                        <h2 class="section-title" style="margin-top: 0; margin-bottom: 2rem;">Select Your City</h2>
+                        <div class="cities-list">
+                            <a href="london.html" class="city-item">
+                                <div class="city-item-content">
+                                    <div class="city-item-icon">L</div>
+                                    <div class="city-item-text">
+                                        <h3>London</h3>
+                                        <p>Business rates relief across Greater London</p>
+                                    </div>
+                                </div>
+                                <div class="city-item-arrow">→</div>
+                            </a>
+                            
+                            <a href="manchester.html" class="city-item">
+                                <div class="city-item-content">
+                                    <div class="city-item-icon">M</div>
+                                    <div class="city-item-text">
+                                        <h3>Manchester</h3>
+                                        <p>Serving Greater Manchester property owners</p>
+                                    </div>
+                                </div>
+                                <div class="city-item-arrow">→</div>
+                            </a>
+                            
+                            <a href="birmingham.html" class="city-item">
+                                <div class="city-item-content">
+                                    <div class="city-item-icon">B</div>
+                                    <div class="city-item-text">
+                                        <h3>Birmingham</h3>
+                                        <p>West Midlands commercial property solutions</p>
+                                    </div>
+                                </div>
+                                <div class="city-item-arrow">→</div>
+                            </a>
+                            
+                            <a href="leeds.html" class="city-item">
+                                <div class="city-item-content">
+                                    <div class="city-item-icon">L</div>
+                                    <div class="city-item-text">
+                                        <h3>Leeds</h3>
+                                        <p>West Yorkshire business rates relief</p>
+                                    </div>
+                                </div>
+                                <div class="city-item-arrow">→</div>
+                            </a>
+                            
+                            <a href="liverpool.html" class="city-item">
+                                <div class="city-item-content">
+                                    <div class="city-item-icon">L</div>
+                                    <div class="city-item-text">
+                                        <h3>Liverpool</h3>
+                                        <p>Merseyside property rate solutions</p>
+                                    </div>
+                                </div>
+                                <div class="city-item-arrow">→</div>
+                            </a>
+                            
+                            <a href="bristol.html" class="city-item">
+                                <div class="city-item-content">
+                                    <div class="city-item-icon">B</div>
+                                    <div class="city-item-text">
+                                        <h3>Bristol</h3>
+                                        <p>South West commercial property services</p>
+                                    </div>
+                                </div>
+                                <div class="city-item-arrow">→</div>
+                            </a>
+                            
+                            <a href="sheffield.html" class="city-item">
+                                <div class="city-item-content">
+                                    <div class="city-item-icon">S</div>
+                                    <div class="city-item-text">
+                                        <h3>Sheffield</h3>
+                                        <p>South Yorkshire property solutions</p>
+                                    </div>
+                                </div>
+                                <div class="city-item-arrow">→</div>
+                            </a>
+                            
+                            <a href="edinburgh.html" class="city-item">
+                                <div class="city-item-content">
+                                    <div class="city-item-icon">E</div>
+                                    <div class="city-item-text">
+                                        <h3>Edinburgh</h3>
+                                        <p>Scotland's capital city services</p>
+                                    </div>
+                                </div>
+                                <div class="city-item-arrow">→</div>
+                            </a>
+                            
+                            <a href="glasgow.html" class="city-item">
+                                <div class="city-item-content">
+                                    <div class="city-item-icon">G</div>
+                                    <div class="city-item-text">
+                                        <h3>Glasgow</h3>
+                                        <p>Scotland's largest city solutions</p>
+                                    </div>
+                                </div>
+                                <div class="city-item-arrow">→</div>
+                            </a>
+                            
+                            <a href="newcastle.html" class="city-item">
+                                <div class="city-item-content">
+                                    <div class="city-item-icon">N</div>
+                                    <div class="city-item-text">
+                                        <h3>Newcastle</h3>
+                                        <p>North East property rate relief</p>
+                                    </div>
+                                </div>
+                                <div class="city-item-arrow">→</div>
+                            </a>
+                            
+                            <a href="nottingham.html" class="city-item">
+                                <div class="city-item-content">
+                                    <div class="city-item-icon">N</div>
+                                    <div class="city-item-text">
+                                        <h3>Nottingham</h3>
+                                        <p>East Midlands commercial solutions</p>
+                                    </div>
+                                </div>
+                                <div class="city-item-arrow">→</div>
+                            </a>
+                            
+                            <a href="leicester.html" class="city-item">
+                                <div class="city-item-content">
+                                    <div class="city-item-icon">L</div>
+                                    <div class="city-item-text">
+                                        <h3>Leicester</h3>
+                                        <p>East Midlands property services</p>
+                                    </div>
+                                </div>
+                                <div class="city-item-arrow">→</div>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
