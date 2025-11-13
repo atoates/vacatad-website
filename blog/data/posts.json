@@ -1,5 +1,26 @@
 [
   {
+    "id": 21,
+    "title": "High Court's 2025 Ruling Reshapes Business Rates Mitigation Landscape",
+    "slug": "high-courts-2025-ruling-reshapes-business-rates-mitigation-landscape",
+    "excerpt": "The UK High Court's recent decision marks a turning point for commercial landlords trying to reduce empty rates on vacant properties. The court cracked down on artificial tax-avoidance ploys while upholding mitigation methods that involve genuine use of the property.",
+    "author": {
+      "name": "VacatAd Team",
+      "role": "Property Solutions Experts"
+    },
+    "date": "Sep 25, 2025",
+    "readTime": "15 min read",
+    "tags": [
+      "Legal Updates",
+      "Business Rates",
+      "Compliance",
+      "High Court Ruling"
+    ],
+    "featured": true,
+    "image": "../images/High_Court_2025_Ruling.webp",
+    "imageAlt": "High Court's 2025 Ruling Reshapes Business Rates Mitigation Landscape"
+  },
+  {
     "id": 20,
     "title": "From Empty Units to Community Hubs: The Social Value of VacatAd",
     "slug": "from-empty-units-to-community-hubs-the-social-value-of-vacatad",
@@ -17,7 +38,7 @@
       "High Street Regeneration"
     ],
     "featured": true,
-    "image": "../images/Blog banner - navigating the void (New LinkedIn Banner).webp",
+    "image": "../images/community_hubs.webp",
     "imageAlt": "From Empty Units to Community Hubs: The Social Value of VacatAd"
   },
   {
