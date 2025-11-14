@@ -152,35 +152,14 @@ Year: 2025
             color: var(--tea-green);
         }
         
-        .post-content img {
-            width: 100%;
-            height: auto;
-            margin: 2rem 0;
-            border-radius: 8px;
-        }
-        
-        .image-placeholder {
-            width: 100%;
-            height: 400px;
-            background: #f0f0f0;
-            border: 2px dashed #ccc;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #999;
-            font-size: 1rem;
-            margin: 2rem 0;
-            border-radius: 8px;
-        }
-        
         .image-inline {
             float: left;
-            width: 300px;
-            max-width: 40%;
+            width: clamp(280px, 42%, 460px);
             height: auto;
-            margin: 0 1.5rem 1rem 0;
-            border-radius: 8px;
+            margin: 0 2.5rem 1.5rem 0;
+            border-radius: 12px;
             clear: left;
+            display: block;
         }
         
         .image-inline-right {
@@ -191,6 +170,16 @@ Year: 2025
             margin: 0 0 1rem 1.5rem;
             border-radius: 8px;
             clear: right;
+        }
+        
+        .post-content p {
+            line-height: 1.8;
+            margin-bottom: 1.8rem;
+        }
+        
+        .image-inline + h3,
+        .image-inline + p {
+            margin-top: 0.25rem;
         }
         
         .image-inline-placeholder {
@@ -461,7 +450,7 @@ Year: 2025
             <div class="nav-container">
                 <div class="nav-logo">
                     <a href="../../../../../index.html">
-                        <img src="../../../assets/images/asset-8.webp" alt="VacatAd Logo" class="logo-icon" width="223" height="191" loading="lazy">
+                        <img src="../../../assets/images/asset-8.webp" alt="VacatAd Logo" class="logo-icon" width="223" height="223" loading="lazy">
                         <span class="logo-text">VacatAd</span>
                     </a>
                 </div>
@@ -708,7 +697,7 @@ Year: 2025
 
                 <!-- Author -->
                 <div class="post-author">
-                    <div class="author-avatar"><img src="../../../assets/images/asset-8.webp" alt="VacatAd Logo" style="width: 100%; height: 100%; object-fit: contain; padding: 5px;" loading="lazy" width="223" height="191"></div>
+                    <div class="author-avatar"><img src="../../../assets/images/asset-8.webp" alt="VacatAd Logo" style="width: 100%; height: 100%; object-fit: contain; padding: 5px;" loading="lazy" width="223" height="223"></div>
                     <div class="author-info">
                         <h4>VacatAd Team</h4>
                         <p>Experts in business rates relief and beneficial occupation solutions for commercial property owners across the UK.</p>
@@ -758,6 +747,24 @@ Year: 2025
                         <li><a href="../../../contact.html">Contact</a></li>
                         <li><a href="../../../index.html">Blog</a></li>
                         <li><a href="../../the-team.html">The Team</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>City Guides</h4>
+                    <ul>
+                        <li><a href="/city/london.html">London</a></li>
+                        <li><a href="/city/manchester.html">Manchester</a></li>
+                        <li><a href="/city/birmingham.html">Birmingham</a></li>
+                        <li><a href="/city/leeds.html">Leeds</a></li>
+                        <li><a href="/city/liverpool.html">Liverpool</a></li>
+                        <li><a href="/city/bristol.html">Bristol</a></li>
+                        <li><a href="/city/sheffield.html">Sheffield</a></li>
+                        <li><a href="/city/edinburgh.html">Edinburgh</a></li>
+                        <li><a href="/city/glasgow.html">Glasgow</a></li>
+                        <li><a href="/city/newcastle.html">Newcastle</a></li>
+                        <li><a href="/city/nottingham.html">Nottingham</a></li>
+                        <li><a href="/city/leicester.html">Leicester</a></li>
+                        <li><a href="/city/">All Cities</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
