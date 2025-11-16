@@ -136,16 +136,8 @@ const STATIC_PAGES = [
         priority: 0.7
     },
     {
-        loc: '/city/edinburgh.html',
-        lastmod: '2025-10-15',
-        changefreq: 'monthly',
-        priority: 0.7
     },
     {
-        loc: '/city/glasgow.html',
-        lastmod: '2025-10-15',
-        changefreq: 'monthly',
-        priority: 0.7
     },
     {
         loc: '/city/newcastle.html',

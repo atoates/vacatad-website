@@ -115,16 +115,16 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://vacatad.com/city/edinburgh.html</loc>
-    <lastmod>2025-10-15</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <loc>https://vacatad.comundefined</loc>
+    <lastmod>undefined</lastmod>
+    <changefreq>undefined</changefreq>
+    <priority>undefined</priority>
   </url>
   <url>
-    <loc>https://vacatad.com/city/glasgow.html</loc>
-    <lastmod>2025-10-15</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <loc>https://vacatad.comundefined</loc>
+    <lastmod>undefined</lastmod>
+    <changefreq>undefined</changefreq>
+    <priority>undefined</priority>
   </url>
   <url>
     <loc>https://vacatad.com/city/newcastle.html</loc>
@@ -149,6 +149,18 @@
     <lastmod>2025-10-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vacatad.com/blog/posts/business-rates-forward-look-what-the-latest-updates-mean-for-your-business.html</loc>
+    <lastmod>2025-10-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vacatad.com/blog/posts/high-courts-2025-ruling-reshapes-business-rates-mitigation-landscape.html</loc>
+    <lastmod>2025-09-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://vacatad.com/blog/posts/from-empty-units-to-community-hubs-the-social-value-of-vacatad.html</loc>
