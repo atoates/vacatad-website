@@ -10,6 +10,11 @@ Year: 2025
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Security Headers -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.jotform.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com; frame-src https://www.jotform.com https://www.pipedrive.com;">
+    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+
     <meta name="description" content="VacatAd provides business rates relief services across major UK cities. Find your local service area and reduce empty property costs with our technology-first solution.">
     <meta name="keywords" content="business rates relief UK, empty property rates, commercial property rates, vacant property relief, UK cities">
     <meta name="author" content="VacatAd Ltd">
@@ -299,7 +304,7 @@ Year: 2025
                 <div class="cities-map-layout">
                     <!-- UK Map Image -->
                     <div class="uk-map-container">
-                        <img src="../assets/images/map.webp" alt="UK Map showing VacatAd service locations across major cities" class="uk-map-image" loading="lazy">
+                        <img src="../assets/images/map.webp" alt="UK Map showing VacatAd service locations across major cities" class="uk-map-image" loading="lazy" width="800" height="600">
                     </div>
                     
                     <!-- Cities List -->
