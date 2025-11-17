@@ -708,7 +708,7 @@ img {
 /* Process Flow Caption Section */
 .process-flow {
     padding: var(--section-padding) 0;
-    background-image: url('../assets/images/warehouse red beam.png');
+    background-image: url('../assets/images/local.webp');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -1202,7 +1202,10 @@ img {
 }
 
 .local-banner {
-    background-image: url('../assets/images/warehouse red beam.png');
+    background-image: url('../assets/images/local.webp');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .affiliate-banner {
