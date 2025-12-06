@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Meta tags will be updated dynamically -->
+    <title id="page-title">Blog Post | VacatAd</title>
+    
+    <link rel="stylesheet" href="../css/styles.css?v=20251015">
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+    
+    <style>
+        .article-hero {
+            position: relative;
+            height: 400px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            overflow: hidden;
+        }
+        .article-hero img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+        }
+        .article-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+        .article-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+            background: white;
+            position: relative;
+            z-index: 3;
+        }
+        .article-meta {
+            color: #666;
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+        }
+        .article-body {
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+        .article-body img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 2rem 0;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 2rem;
+            color: var(--eerie-black);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .back-link:hover {
+            color: var(--tea-green);
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <a href="../index.html">
+                        <img src="../assets/images/asset-8.webp" alt="VacatAd Logo" class="logo-icon" width="50">
+                        <span class="logo-text">VacatAd</span>
+                    </a>
+                </div>
+                <ul class="nav-menu" id="primary-navigation">
+                    <li class="nav-item"><a href="../index.html" class="nav-link">Home</a></li>
+                    <li class="nav-item"><a href="index.html" class="nav-link active">Blog</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main id="main-content">
+        <div id="article-container">
+            <div class="container" style="padding: 4rem 0; text-align: center;">
+                Loading article...
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 VacatAd Ltd. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const slug = urlParams.get('slug');
+
+        async function loadArticle() {
+            if (!slug) {
+                document.getElementById('article-container').innerHTML = '<div class="container">Article not found.</div>';
+                return;
+            }
+
+            try {
+                const res = await fetch('data/posts.json');
+                const posts = await res.json();
+                const post = posts.find(p => p.slug === slug);
+
+                if (!post) {
+                    document.getElementById('article-container').innerHTML = '<div class="container">Article not found.</div>';
+                    return;
+                }
+
+                document.title = `${post.title} | VacatAd Blog`;
+                
+                // Render
+                const html = `
+                    <section class="article-hero">
+                        <img src="${post.image}" alt="${post.title}">
+                        <div class="article-overlay">
+                            <h1>${post.title}</h1>
+                            <div class="article-meta">
+                                <span>${post.date}</span> • <span>${post.readTime}</span> • <span>By ${post.author?.name}</span>
+                            </div>
+                        </div>
+                    </section>
+                    <div class="article-content">
+                        <a href="index.html" class="back-link">← Back to Blog</a>
+                        <div class="article-body">
+                            ${post.content || '<p>Content not available.</p>'}
+                        </div>
+                    </div>
+                `;
+                document.getElementById('article-container').innerHTML = html;
+
+            } catch (e) {
+                console.error(e);
+                document.getElementById('article-container').innerHTML = '<div class="container">Error loading article.</div>';
+            }
+        }
+
+        loadArticle();
+    </script>
+</body>
+</html>
+

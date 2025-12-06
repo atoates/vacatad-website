@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CMS Dashboard</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <style>
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .post-list { display: grid; gap: 10px; }
+        .post-card { padding: 15px; border: 1px solid #ccc; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; }
+        #editor-view { display: none; }
+        #quill-editor { height: 400px; background: white; color: black; }
+        .tag-container { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px; }
+        .tag { background: #eee; padding: 2px 8px; border-radius: 4px; font-size: 0.8em; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Blog CMS</h1>
+            <div>
+                <span id="user-display"></span>
+                <button onclick="logout()" class="secondary outline">Logout</button>
+            </div>
+        </div>
+
+        <!-- List View -->
+        <div id="list-view">
+            <button onclick="createNewPost()">+ New Post</button>
+            <hr>
+            <div id="posts-container" class="post-list">Loading...</div>
+        </div>
+
+        <!-- Editor View -->
+        <div id="editor-view">
+            <div class="grid">
+                <div>
+                    <label>Title <input type="text" id="post-title"></label>
+                    <label>Slug <input type="text" id="post-slug"></label>
+                    <label>Date <input type="date" id="post-date"></label>
+                    <label>Excerpt <textarea id="post-excerpt" rows="3"></textarea></label>
+                    <label>Image URL <input type="text" id="post-image"></label>
+                    <label>Tags (comma separated) <input type="text" id="post-tags"></label>
+                    <label>
+                        <input type="checkbox" id="post-featured"> Featured
+                    </label>
+                </div>
+                <div>
+                    <label>Author Name <input type="text" id="post-author-name" value="VacatAd Team"></label>
+                    <label>Author Role <input type="text" id="post-author-role" value="Property Solutions Experts"></label>
+                    <label>Read Time <input type="text" id="post-readtime" placeholder="e.g. 5 min read"></label>
+                </div>
+            </div>
+            
+            <label>Content</label>
+            <div id="quill-editor"></div>
+            
+            <div style="margin-top: 20px;">
+                <button onclick="savePost()">Save Post</button>
+                <button onclick="cancelEdit()" class="secondary">Cancel</button>
+                <button onclick="deletePost()" class="contrast outline" id="btn-delete">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <script>
+        // Configuration
+        const REPO_OWNER = 'atoates';
+        const REPO_NAME = 'vacatad-website';
+        const FILE_PATH = 'blog/data/posts.json';
+        const BRANCH = 'main';
+
+        let posts = [];
+        let currentSha = '';
+        let currentEditingId = null;
+        let quill;
+
+        // Auth Check
+        const token = localStorage.getItem('githubToken');
+        if (!token) window.location.href = 'login.html';
+        document.getElementById('user-display').textContent = localStorage.getItem('githubUser');
+
+        // Initialize Quill
+        document.addEventListener('DOMContentLoaded', () => {
+            quill = new Quill('#quill-editor', {
+                theme: 'snow',
+                modules: {
+                    toolbar: [
+                        [{ 'header': [1, 2, 3, false] }],
+                        ['bold', 'italic', 'underline', 'strike'],
+                        ['link', 'image', 'video'],
+                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                        ['clean']
+                    ]
+                }
+            });
+            fetchPosts();
+        });
+
+        async function fetchPosts() {
+            try {
+                const res = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                
+                if (!res.ok) throw new Error('Failed to fetch');
+                
+                const data = await res.json();
+                currentSha = data.sha;
+                
+                // Decode content
+                const content = new TextDecoder().decode(
+                    Uint8Array.from(atob(data.content), c => c.charCodeAt(0))
+                );
+                
+                // Handle existing structure (Array) vs proposed (Object with "blog" key)
+                // The existing file is an Array.
+                const json = JSON.parse(content);
+                posts = Array.isArray(json) ? json : (json.blog || []);
+                
+                renderList();
+            } catch (err) {
+                console.error(err);
+                alert('Error fetching posts. Check console.');
+            }
+        }
+
+        function renderList() {
+            const container = document.getElementById('posts-container');
+            container.innerHTML = '';
+            
+            // Sort by date descending
+            const sortedPosts = [...posts].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            sortedPosts.forEach(post => {
+                const card = document.createElement('div');
+                card.className = 'post-card';
+                card.innerHTML = `
+                    <div>
+                        <strong>${post.title}</strong><br>
+                        <small>${post.date} • ${post.author?.name || 'Unknown'}</small>
+                    </div>
+                    <button class="outline" onclick="editPost(${post.id})">Edit</button>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function createNewPost() {
+            currentEditingId = null;
+            document.getElementById('list-view').style.display = 'none';
+            document.getElementById('editor-view').style.display = 'block';
+            document.getElementById('btn-delete').style.display = 'none';
+            
+            // Clear form
+            document.getElementById('post-title').value = '';
+            document.getElementById('post-slug').value = '';
+            document.getElementById('post-date').value = new Date().toISOString().split('T')[0];
+            document.getElementById('post-excerpt').value = '';
+            document.getElementById('post-image').value = '';
+            document.getElementById('post-tags').value = '';
+            document.getElementById('post-featured').checked = false;
+            document.getElementById('post-author-name').value = 'VacatAd Team';
+            document.getElementById('post-author-role').value = 'Property Solutions Experts';
+            document.getElementById('post-readtime').value = '5 min read';
+            quill.root.innerHTML = '';
+        }
+
+        function editPost(id) {
+            const post = posts.find(p => p.id === id);
+            if (!post) return;
+
+            currentEditingId = id;
+            document.getElementById('list-view').style.display = 'none';
+            document.getElementById('editor-view').style.display = 'block';
+            document.getElementById('btn-delete').style.display = 'inline-block';
+
+            // Fill form
+            document.getElementById('post-title').value = post.title || '';
+            document.getElementById('post-slug').value = post.slug || '';
+            // Handle date format (might be "Oct 2, 2025" or ISO)
+            // Try to convert to YYYY-MM-DD for input[type=date]
+            try {
+                const d = new Date(post.date);
+                if (!isNaN(d)) {
+                    document.getElementById('post-date').value = d.toISOString().split('T')[0];
+                } else {
+                    document.getElementById('post-date').value = post.date; 
+                }
+            } catch(e) {
+                document.getElementById('post-date').value = post.date;
+            }
+            
+            document.getElementById('post-excerpt').value = post.excerpt || '';
+            document.getElementById('post-image').value = post.image || '';
+            document.getElementById('post-tags').value = (post.tags || []).join(', ');
+            document.getElementById('post-featured').checked = !!post.featured;
+            document.getElementById('post-author-name').value = post.author?.name || 'VacatAd Team';
+            document.getElementById('post-author-role').value = post.author?.role || 'Property Solutions Experts';
+            document.getElementById('post-readtime').value = post.readTime || '';
+            
+            quill.root.innerHTML = post.content || '<p>No content available in JSON (likely in static file)</p>';
+        }
+
+        function cancelEdit() {
+            document.getElementById('list-view').style.display = 'block';
+            document.getElementById('editor-view').style.display = 'none';
+        }
+
+        async function savePost() {
+            const title = document.getElementById('post-title').value;
+            if (!title) return alert('Title is required');
+
+            const newPost = {
+                id: currentEditingId || Date.now(), // Simple ID generation
+                title: title,
+                slug: document.getElementById('post-slug').value || slugify(title),
+                date: document.getElementById('post-date').value, // Store as YYYY-MM-DD
+                excerpt: document.getElementById('post-excerpt').value,
+                image: document.getElementById('post-image').value,
+                imageAlt: title, // Default alt to title
+                tags: document.getElementById('post-tags').value.split(',').map(t => t.trim()).filter(t => t),
+                featured: document.getElementById('post-featured').checked,
+                author: {
+                    name: document.getElementById('post-author-name').value,
+                    role: document.getElementById('post-author-role').value
+                },
+                readTime: document.getElementById('post-readtime').value,
+                content: quill.root.innerHTML
+            };
+
+            // Update posts array
+            if (currentEditingId) {
+                const index = posts.findIndex(p => p.id === currentEditingId);
+                if (index !== -1) posts[index] = { ...posts[index], ...newPost };
+            } else {
+                posts.unshift(newPost);
+            }
+
+            await pushToGithub(`Update post: ${title}`);
+        }
+
+        async function deletePost() {
+            if (!confirm('Are you sure you want to delete this post?')) return;
+            
+            posts = posts.filter(p => p.id !== currentEditingId);
+            await pushToGithub(`Delete post ${currentEditingId}`);
+        }
+
+        async function pushToGithub(message) {
+            try {
+                // Encode content
+                // Important: Maintain the array structure for existing compatibility
+                const contentString = JSON.stringify(posts, null, 2);
+                const contentEncoded = btoa(unescape(encodeURIComponent(contentString)));
+
+                const res = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`, {
+                    method: 'PUT',
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        content: contentEncoded,
+                        sha: currentSha,
+                        branch: BRANCH
+                    })
+                });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    currentSha = data.content.sha; // Update SHA for subsequent edits
+                    alert('Saved successfully!');
+                    cancelEdit();
+                    renderList();
+                } else {
+                    const err = await res.json();
+                    alert('Error saving: ' + err.message);
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Network error saving post');
+            }
+        }
+
+        function slugify(text) {
+            return text.toString().toLowerCase()
+                .replace(/\s+/g, '-')           // Replace spaces with -
+                .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
+                .replace(/\-\-+/g, '-')         // Replace multiple - with single -
+                .replace(/^-+/, '')             // Trim - from start of text
+                .replace(/-+$/, '');            // Trim - from end of text
+        }
+        
+        function logout() {
+            localStorage.removeItem('githubToken');
+            localStorage.removeItem('githubUser');
+            window.location.reload();
+        }
+    </script>
+</body>
+</html>
+

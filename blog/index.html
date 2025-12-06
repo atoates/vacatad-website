@@ -794,9 +794,13 @@ Year: 2025
             
             grid.innerHTML = posts.map(post => {
                 const folderName = post.folderName || post.slug;
+                // Check if the post has full content in JSON (new CMS posts)
+                // or relies on static files (legacy posts)
+                const postLink = post.content ? `article.html?slug=${post.slug}` : `posts/${folderName}/`;
+                
                 return `
                 <article class="blog-card ${post.featured ? 'featured' : ''}">
-                    <a href="posts/${folderName}/">
+                    <a href="${postLink}">
                         <img src="${post.imageUrl}" alt="${post.imageAlt}" class="blog-card-image" loading="lazy" width="800" height="600">
                     </a>
                     <div class="blog-card-content">
@@ -807,12 +811,12 @@ Year: 2025
                             <span>•</span>
                             <span>${post.readTime}</span>
                         </div>
-                        <h3><a href="posts/${folderName}/">${post.title}</a></h3>
+                        <h3><a href="${postLink}">${post.title}</a></h3>
                         <p class="blog-excerpt">${post.excerpt}</p>
                         <div class="blog-tags">
                             ${post.tags.map(tag => `<span class="blog-tag">${tag}</span>`).join('')}
                         </div>
-                        <a href="posts/${folderName}/" class="read-more">
+                        <a href="${postLink}" class="read-more">
                             Read More →
                         </a>
                     </div>

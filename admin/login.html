@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CMS Login</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <style>
+        body { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+        article { width: 100%; max-width: 400px; }
+    </style>
+</head>
+<body>
+    <article>
+        <h2>CMS Login</h2>
+        <form id="loginForm">
+            <label for="token">GitHub Personal Access Token</label>
+            <input type="password" id="token" name="token" placeholder="ghp_..." required>
+            <small>Token needs "repo" scope.</small>
+            <button type="submit">Login</button>
+        </form>
+    </article>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const token = document.getElementById('token').value;
+            
+            try {
+                const res = await fetch('https://api.github.com/user', {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                
+                if (res.ok) {
+                    const user = await res.json();
+                    localStorage.setItem('githubToken', token);
+                    localStorage.setItem('githubUser', user.login);
+                    window.location.href = 'index.html';
+                } else {
+                    alert('Invalid Token');
+                }
+            } catch (err) {
+                alert('Error connecting to GitHub');
+            }
+        });
+    </script>
+</body>
+</html>
+
