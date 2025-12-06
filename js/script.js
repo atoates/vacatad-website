@@ -364,9 +364,7 @@ function initScrollEffects() {
     // Enhanced animation types - different effects for different elements
     const fadeUpElements = document.querySelectorAll('.feature-card, .process-step, .result-item, .tech-item, .contact-info, .contact-form, .blog-card, .faq-item, .client-logo, .dashboard-feature, .benefit-item');
     fadeUpElements.forEach((el, index) => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(20px)';
-        el.style.transition = `opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1) ${Math.min(index * 0.05, 0.3)}s, transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) ${Math.min(index * 0.05, 0.3)}s`;
+        // Styles moved to CSS
         el.classList.add('fade-up');
         observer.observe(el);
     });
@@ -374,9 +372,7 @@ function initScrollEffects() {
     // Fade in from left - removed hero-title to avoid conflicts
     const fadeLeftElements = document.querySelectorAll('.why-text, .section-header');
     fadeLeftElements.forEach((el, index) => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateX(-20px)';
-        el.style.transition = `opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1) ${index * 0.1}s, transform 0.6s cubic-bezier(0.4, 0, 0.2, 1) ${index * 0.1}s`;
+        // Styles moved to CSS
         el.classList.add('fade-left');
         observer.observe(el);
     });
@@ -384,9 +380,7 @@ function initScrollEffects() {
     // Fade in from right - removed hero-description to avoid conflicts
     const fadeRightElements = document.querySelectorAll('.why-image');
     fadeRightElements.forEach((el, index) => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateX(20px)';
-        el.style.transition = `opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1) ${index * 0.1}s, transform 0.6s cubic-bezier(0.4, 0, 0.2, 1) ${index * 0.1}s`;
+        // Styles moved to CSS
         el.classList.add('fade-right');
         observer.observe(el);
     });
@@ -394,9 +388,7 @@ function initScrollEffects() {
     // Simplified sticky image fade - no scroll listener, just intersection
     const stickyImage = document.querySelector('.why-image picture img');
     if (stickyImage) {
-        stickyImage.style.opacity = '0';
-        stickyImage.style.transition = 'opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
-        
+        // Styles moved to CSS
         const stickyObserver = new IntersectionObserver(function(entries) {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -412,10 +404,7 @@ function initScrollEffects() {
     // Features grid - simplified
     const featuresGrid = document.querySelector('.features-grid');
     if (featuresGrid) {
-        featuresGrid.style.opacity = '0';
-        featuresGrid.style.transform = 'translateY(20px)';
-        featuresGrid.style.transition = 'opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
-        
+        // Styles moved to CSS
         const featuresObserver = new IntersectionObserver(function(entries) {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -428,9 +417,6 @@ function initScrollEffects() {
         
         featuresObserver.observe(featuresGrid);
     }
-    
-    // Scale in effect for CTAs - removed to avoid button flicker
-    // CTAs should be visible immediately for better UX
     
     // Optimized parallax effect using requestAnimationFrame
     let ticking = false;
@@ -470,35 +456,75 @@ function initScrollEffects() {
     
     statNumbers.forEach(stat => statsObserver.observe(stat));
     
-    // Add CSS for animations
-    const style = document.createElement('style');
-    style.textContent = `
-        .animate-in {
-            opacity: 1 !important;
-            transform: translateY(0) translateX(0) scale(1) !important;
-        }
+    // Initialize Back to Top Button
+    initBackToTop();
+    
+    // Initialize Scroll Down Indicator
+    initScrollDownIndicator();
+}
+
+// Back to Top Button Functionality
+function initBackToTop() {
+    // Create button if it doesn't exist
+    if (!document.querySelector('.back-to-top')) {
+        const btn = document.createElement('div');
+        btn.className = 'back-to-top';
+        btn.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>';
+        btn.setAttribute('aria-label', 'Back to top');
+        btn.setAttribute('role', 'button');
+        document.body.appendChild(btn);
         
-        .scrolled {
-            box-shadow: 0 2px 20px rgba(35, 37, 35, 0.15) !important;
-        }
+        btn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
         
-        /* Optimized will-change - only apply when animating */
-        .fade-up.animate-in,
-        .fade-left.animate-in,
-        .fade-right.animate-in {
-            will-change: auto;
-        }
-        
-        /* Reduce motion for users who prefer it */
-        @media (prefers-reduced-motion: reduce) {
-            .fade-up, .fade-left, .fade-right, .scale-in {
-                transition: none !important;
-                opacity: 1 !important;
-                transform: none !important;
+        // Show/Hide logic
+        window.addEventListener('scroll', throttle(() => {
+            if (window.pageYOffset > 500) {
+                btn.classList.add('visible');
+            } else {
+                btn.classList.remove('visible');
             }
+        }, 100));
+    }
+}
+
+// Scroll Down Indicator Functionality
+function initScrollDownIndicator() {
+    // Only on homepage
+    if (window.location.pathname !== '/' && window.location.pathname !== '/index.html' && !window.location.pathname.endsWith('/')) {
+        return;
+    }
+    
+    // Create indicator if it doesn't exist
+    if (!document.querySelector('.scroll-down-indicator')) {
+        const indicator = document.createElement('div');
+        indicator.className = 'scroll-down-indicator';
+        indicator.innerHTML = '<div class="mouse"><div class="wheel"></div></div><div class="arrow"></div>';
+        indicator.setAttribute('aria-hidden', 'true');
+        
+        // Append to hero section if possible, otherwise body
+        const hero = document.querySelector('.hero');
+        if (hero) {
+            hero.appendChild(indicator);
+        } else {
+            document.body.appendChild(indicator);
         }
-    `;
-    document.head.appendChild(style);
+        
+        // Hide on scroll
+        window.addEventListener('scroll', throttle(() => {
+            if (window.pageYOffset > 100) {
+                indicator.style.opacity = '0';
+                indicator.style.pointerEvents = 'none';
+            } else {
+                indicator.style.opacity = '0.7';
+                indicator.style.pointerEvents = 'auto';
+            }
+        }, 100));
+    }
 }
 
 // Animate counter for statistics
@@ -599,16 +625,17 @@ function initFAQs() {
 }
 
 // Utility function to throttle events
-function throttle(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
+function throttle(func, limit) {
+    let inThrottle;
+    return function() {
+        const args = arguments;
+        const context = this;
+        if (!inThrottle) {
+            func.apply(context, args);
+            inThrottle = true;
+            setTimeout(() => inThrottle = false, limit);
+        }
+    }
 }
 
 // Utility function to debounce events
