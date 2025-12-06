@@ -568,60 +568,148 @@ function initLazyLoading() {
 // FAQ functionality
 function initFAQs() {
     const faqItems = document.querySelectorAll('.faq-item');
-    
+    const searchInput = document.getElementById('faq-search-input');
+    const navLinks = document.querySelectorAll('.faq-nav-link');
+    const categories = document.querySelectorAll('.faq-category');
+
+    // 1. Accordion Functionality
     faqItems.forEach(item => {
         const question = item.querySelector('.faq-question');
         const answer = item.querySelector('.faq-answer');
         
         if (question && answer) {
-            // Setup ARIA relationships
+            // Setup ARIA
             const qId = question.id || `faq-q-${Math.random().toString(36).slice(2, 8)}`;
             const aId = answer.id || `faq-a-${Math.random().toString(36).slice(2, 8)}`;
             question.id = qId;
             answer.id = aId;
             question.setAttribute('aria-controls', aId);
             question.setAttribute('aria-expanded', 'false');
-            // If not a native button, make it keyboard accessible
-            if (question.tagName.toLowerCase() !== 'button' && question.getAttribute('role') !== 'button') {
-                question.setAttribute('role', 'button');
-                if (!question.hasAttribute('tabindex')) question.setAttribute('tabindex', '0');
-            }
             answer.setAttribute('role', 'region');
             answer.setAttribute('aria-labelledby', qId);
 
-            const openItem = (el) => {
-                el.classList.add('open');
-                const q = el.querySelector('.faq-question');
-                if (q) q.setAttribute('aria-expanded', 'true');
-            };
-            const closeItem = (el) => {
-                el.classList.remove('open');
-                const q = el.querySelector('.faq-question');
-                if (q) q.setAttribute('aria-expanded', 'false');
-            };
-
-            // Initialize closed state
-            closeItem(item);
-
             question.addEventListener('click', () => {
-                const isOpen = item.classList.contains('open');
-                // Close all FAQs
-                faqItems.forEach(closeItem);
-                // Open clicked if not already open
-                if (!isOpen) {
-                    openItem(item);
-                }
-            });
+                const isActive = item.classList.contains('active');
+                
+                // Close all other items
+                faqItems.forEach(otherItem => {
+                    if (otherItem !== item) {
+                        otherItem.classList.remove('active');
+                        const otherAnswer = otherItem.querySelector('.faq-answer');
+                        const otherQuestion = otherItem.querySelector('.faq-question');
+                        if (otherAnswer) otherAnswer.style.maxHeight = null;
+                        if (otherQuestion) otherQuestion.setAttribute('aria-expanded', 'false');
+                    }
+                });
 
-            // Keyboard interaction: Enter/Space toggles
-            question.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    question.click();
+                // Toggle current item
+                if (isActive) {
+                    item.classList.remove('active');
+                    answer.style.maxHeight = null;
+                    question.setAttribute('aria-expanded', 'false');
+                } else {
+                    item.classList.add('active');
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    question.setAttribute('aria-expanded', 'true');
                 }
             });
         }
     });
+
+    // 2. Search Functionality
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase().trim();
+
+            faqItems.forEach(item => {
+                const questionText = item.querySelector('.faq-question').textContent.toLowerCase();
+                const answerText = item.querySelector('.faq-answer').textContent.toLowerCase();
+                const matches = questionText.includes(searchTerm) || answerText.includes(searchTerm);
+
+                if (matches) {
+                    item.style.display = 'block';
+                    // If searching, expand matches to show context
+                    if (searchTerm.length > 2) {
+                        item.classList.add('active');
+                        const answer = item.querySelector('.faq-answer');
+                        const question = item.querySelector('.faq-question');
+                        answer.style.maxHeight = answer.scrollHeight + "px";
+                        question.setAttribute('aria-expanded', 'true');
+                    } else {
+                        // Collapse if search is cleared/short
+                        item.classList.remove('active');
+                        const answer = item.querySelector('.faq-answer');
+                        const question = item.querySelector('.faq-question');
+                        answer.style.maxHeight = null;
+                        question.setAttribute('aria-expanded', 'false');
+                    }
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            // Hide empty categories
+            categories.forEach(category => {
+                const visibleItems = category.querySelectorAll('.faq-item[style="display: block;"]');
+                // If we haven't set display: block explicitly yet (initial state), check if any are NOT display: none
+                const hasVisible = Array.from(category.querySelectorAll('.faq-item')).some(el => el.style.display !== 'none');
+                
+                if (hasVisible) {
+                    category.style.display = 'block';
+                } else {
+                    category.style.display = 'none';
+                }
+            });
+        });
+    }
+
+    // 3. Sidebar ScrollSpy
+    if (navLinks.length > 0 && categories.length > 0) {
+        const observerOptions = {
+            root: null,
+            rootMargin: '-20% 0px -70% 0px', // Active when element is near top
+            threshold: 0
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // Remove active from all links
+                    navLinks.forEach(link => link.classList.remove('active'));
+                    
+                    // Add active to corresponding link
+                    const id = entry.target.getAttribute('id');
+                    const activeLink = document.querySelector(`.faq-nav-link[href="#${id}"]`);
+                    if (activeLink) {
+                        activeLink.classList.add('active');
+                    }
+                }
+            });
+        }, observerOptions);
+
+        categories.forEach(category => observer.observe(category));
+
+        // Smooth scroll for sidebar links
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                
+                if (targetSection) {
+                    // Account for sticky header
+                    const headerOffset = 100;
+                    const elementPosition = targetSection.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: "smooth"
+                    });
+                }
+            });
+        });
+    }
 }
 
 // Utility function to throttle events

@@ -166,6 +166,15 @@ Year: 2025
                 <p class="faq-subtitle">
                     Everything you need to know about VacatAd's business rates relief services
                 </p>
+                
+                <!-- Search Bar -->
+                <div class="faq-search-container">
+                    <div class="search-wrapper">
+                        <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                        <input type="text" id="faq-search-input" placeholder="Search for answers..." aria-label="Search FAQs">
+                    </div>
+                </div>
+
                 <div class="faq-cta">
                     <a href="contact.html#calculator" class="cta-button primary">Calculate Your Savings</a>
                 </div>
@@ -175,12 +184,26 @@ Year: 2025
         <!-- FAQ Content -->
         <section class="faq-content">
             <div class="container">
-                <div class="faq-grid">
-                    <!-- Business Rates Basics -->
-                    <div class="faq-category">
-                        <h2 class="category-title">Business Rates Basics</h2>
-                        
-                        <div class="faq-item">
+                <div class="faq-layout">
+                    <!-- Sidebar Navigation -->
+                    <aside class="faq-sidebar">
+                        <nav class="faq-nav">
+                            <ul>
+                                <li><a href="#basics" class="faq-nav-link active">Business Rates Basics</a></li>
+                                <li><a href="#services" class="faq-nav-link">VacatAd Services</a></li>
+                                <li><a href="#process" class="faq-nav-link">Process & Implementation</a></li>
+                                <li><a href="#legal" class="faq-nav-link">Legal & Compliance</a></li>
+                            </ul>
+                        </nav>
+                    </aside>
+
+                    <!-- Main Content -->
+                    <div class="faq-main-content">
+                        <!-- Business Rates Basics -->
+                        <div id="basics" class="faq-category">
+                            <h2 class="category-title">Business Rates Basics</h2>
+                            
+                            <div class="faq-item">
                             <button class="faq-question">
                                 <span>What exactly are business rates in the UK?</span>
                                 <span class="faq-icon">+</span>
@@ -212,7 +235,7 @@ Year: 2025
                     </div>
 
                     <!-- VacatAd Services -->
-                    <div class="faq-category">
+                    <div id="services" class="faq-category">
                         <h2 class="category-title">VacatAd Services</h2>
 
                         <div class="faq-item">
@@ -257,7 +280,7 @@ Year: 2025
                     </div>
 
                     <!-- Process & Implementation -->
-                    <div class="faq-category">
+                    <div id="process" class="faq-category">
                         <h2 class="category-title">Process & Implementation</h2>
 
                         <div class="faq-item">
@@ -302,7 +325,7 @@ Year: 2025
                     </div>
 
                     <!-- Legal & Compliance -->
-                    <div class="faq-category">
+                    <div id="legal" class="faq-category">
                         <h2 class="category-title">Legal & Compliance</h2>
 
                         <div class="faq-item">
@@ -336,8 +359,9 @@ Year: 2025
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Contact CTA -->
+            <!-- Contact CTA -->
                 <div class="faq-contact">
                     <div class="faq-contact-content">
                         <h2>Still Have Questions?</h2>

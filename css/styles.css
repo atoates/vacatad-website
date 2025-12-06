@@ -2414,3 +2414,221 @@ img.lazy-loaded {
 .delay-300 { transition-delay: 0.3s; }
 .delay-400 { transition-delay: 0.4s; }
 
+
+/* ======================================== */
+/* Modern FAQ Page Styles                   */
+/* ======================================== */
+
+/* Search Bar */
+.faq-search-container {
+    max-width: 600px;
+    margin: 2rem auto 0;
+    position: relative;
+    z-index: 10;
+}
+
+.search-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-icon {
+    position: absolute;
+    left: 20px;
+    color: var(--grey-text);
+    pointer-events: none;
+}
+
+#faq-search-input {
+    width: 100%;
+    padding: 1.2rem 1.2rem 1.2rem 3.5rem;
+    border: none;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    transition: all 0.3s ease;
+    background: white;
+}
+
+#faq-search-input:focus {
+    outline: none;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.2);
+    transform: translateY(-2px);
+}
+
+/* FAQ Layout */
+.faq-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 4rem;
+    align-items: start;
+}
+
+/* Sidebar Navigation */
+.faq-sidebar {
+    position: sticky;
+    top: 120px; /* Adjust based on header height */
+    padding: 2rem;
+    background: var(--seasalt);
+    border-radius: 16px;
+    border: 1px solid #e2e5e7;
+}
+
+.faq-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.faq-nav li {
+    margin-bottom: 0.5rem;
+}
+
+.faq-nav-link {
+    display: block;
+    padding: 0.8rem 1rem;
+    color: var(--grey-text);
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border-left: 3px solid transparent;
+}
+
+.faq-nav-link:hover {
+    background: rgba(0,0,0,0.05);
+    color: var(--eerie-black);
+}
+
+.faq-nav-link.active {
+    background: white;
+    color: var(--eerie-black);
+    border-left-color: var(--tea-green);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    font-weight: 600;
+}
+
+/* Main Content Area */
+.faq-main-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+}
+
+.faq-category {
+    scroll-margin-top: 120px; /* Offset for sticky header */
+}
+
+.category-title {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--tea-green);
+    display: inline-block;
+}
+
+/* Modern FAQ Item Card */
+.faq-item {
+    background: white;
+    border: 1px solid #e2e5e7;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.faq-item:hover {
+    border-color: var(--tea-green);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.faq-item.active {
+    border-color: var(--tea-green);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+}
+
+.faq-question {
+    width: 100%;
+    text-align: left;
+    padding: 1.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--eerie-black);
+    transition: color 0.2s ease;
+}
+
+.faq-question:hover {
+    color: var(--blue-accent);
+}
+
+.faq-icon {
+    font-size: 1.5rem;
+    font-weight: 300;
+    transition: transform 0.3s ease;
+    color: var(--tea-green);
+    /* Use a darker color for visibility if needed, or keep tea-green if background is white */
+    color: #88c999; 
+}
+
+.faq-item.active .faq-icon {
+    transform: rotate(45deg);
+}
+
+.faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.4s ease;
+    padding: 0 1.5rem;
+    opacity: 0;
+}
+
+.faq-item.active .faq-answer {
+    padding: 0 1.5rem 1.5rem;
+    opacity: 1;
+    /* max-height is set via JS */
+}
+
+/* Highlight for search results */
+.highlight {
+    background-color: rgba(219, 244, 204, 0.5); /* Tea green with opacity */
+    padding: 0 2px;
+    border-radius: 2px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 900px) {
+    .faq-layout {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .faq-sidebar {
+        position: static;
+        padding: 1rem;
+        overflow-x: auto;
+    }
+
+    .faq-nav ul {
+        display: flex;
+        gap: 1rem;
+        white-space: nowrap;
+    }
+
+    .faq-nav-link {
+        border-left: none;
+        border-bottom: 3px solid transparent;
+        padding: 0.5rem 1rem;
+    }
+
+    .faq-nav-link.active {
+        border-left-color: transparent;
+        border-bottom-color: var(--tea-green);
+    }
+}

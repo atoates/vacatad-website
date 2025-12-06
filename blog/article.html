@@ -33,17 +33,17 @@
         .article-overlay {
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.6);
+            background: rgba(0,0,0,0.3);
             z-index: 2;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-end;
             align-items: center;
-            padding: 2rem;
+            padding: 2rem 2rem 4rem 2rem;
         }
         .article-overlay h1 {
             color: white;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
             margin-bottom: 1rem;
         }
         .article-content {
@@ -55,9 +55,11 @@
             z-index: 3;
         }
         .article-meta {
-            color: #666;
-            margin-bottom: 2rem;
-            font-size: 0.9rem;
+            color: white;
+            margin-bottom: 0;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.8);
         }
         .article-body {
             line-height: 1.8;
@@ -78,6 +80,21 @@
         }
         .back-link:hover {
             color: var(--tea-green);
+        }
+        
+        @media (max-width: 768px) {
+            .article-hero {
+                height: 300px;
+            }
+            .article-overlay {
+                padding: 1.5rem;
+            }
+            .article-overlay h1 {
+                font-size: 1.8rem;
+            }
+            .article-content {
+                padding: 2rem 1rem;
+            }
         }
     </style>
 </head>
