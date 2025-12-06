@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Meta tags will be updated dynamically -->
     <title id="page-title">Blog Post | VacatAd</title>
+    <link rel="canonical" id="canonical-link" href="">
     
     <link rel="stylesheet" href="../css/styles.css?v=20251015">
     <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
@@ -128,6 +129,10 @@
                 }
 
                 document.title = `${post.title} | VacatAd Blog`;
+                
+                // Set Canonical URL
+                const canonicalUrl = `https://vacatad.com/blog/article.html?slug=${slug}`;
+                document.getElementById('canonical-link').href = canonicalUrl;
                 
                 // Render
                 const html = `
