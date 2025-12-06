@@ -209,7 +209,7 @@ function generateSitemap() {
         console.log(`Found ${posts.length} blog posts`);
 
         posts.forEach(post => {
-            const postUrl = `/blog/posts/${post.slug}.html`;
+            const postUrl = `/blog/article.html?slug=${post.slug}`;
             const lastmod = parsePostDate(post.date);
             
             xml += '  <url>\n';
