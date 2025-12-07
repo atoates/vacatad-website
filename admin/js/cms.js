@@ -270,25 +270,31 @@ const App = {
     },
 
     async loadPosts() {
-        const container = document.getElementById('post-list');
+        const container = document.getElementById('view-list');
         container.innerHTML = '<p>Loading posts...</p>';
         
         try {
             const data = await GitHub.get(CONFIG.postsPath);
             State.postsSha = data.sha;
-            State.posts = JSON.parse(GitHub.decodeContent(data.content));
+            const json = JSON.parse(GitHub.decodeContent(data.content));
+            State.posts = Array.isArray(json) ? json : (json.blog || []);
             
             this.renderList();
         } catch (e) {
             console.error(e);
-            container.innerHTML = '<p>Error loading posts.</p>';
+            container.innerHTML = '<p>Error loading posts. Check console for details.</p>';
         }
     },
 
     renderList() {
-        const container = document.getElementById('post-list');
+        const container = document.getElementById('view-list');
         container.innerHTML = '';
         
+        if (!State.posts || State.posts.length === 0) {
+            container.innerHTML = '<p>No posts found.</p>';
+            return;
+        }
+
         const sorted = [...State.posts].sort((a, b) => new Date(b.date) - new Date(a.date));
         
         sorted.forEach(post => {
