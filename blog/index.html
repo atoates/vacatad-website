@@ -657,13 +657,53 @@ Year: 2025
 
         // Parse date string like "Aug 14, 2025" to ISO format "2025-08-14"
         function parseDate(dateString) {
+            if (!dateString) return '';
+            
+            // Handle ISO format (YYYY-MM-DD)
+            if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
+                return dateString;
+            }
+
             const monthMap = {
                 'Jan': '01', 'Feb': '02', 'Mar': '03', 'Apr': '04',
                 'May': '05', 'Jun': '06', 'Jul': '07', 'Aug': '08',
                 'Sep': '09', 'Oct': '10', 'Nov': '11', 'Dec': '12'
             };
-            const [month, day, year] = dateString.split(/[\s,]+/);
-            return `${year}-${monthMap[month]}-${day.padStart(2, '0')}`;
+            
+            try {
+                const parts = dateString.split(/[\s,]+/);
+                if (parts.length >= 3) {
+                    const month = parts[0];
+                    const day = parts[1];
+                    const year = parts[2];
+                    
+                    if (monthMap[month]) {
+                        return `${year}-${monthMap[month]}-${day.padStart(2, '0')}`;
+                    }
+                }
+                
+                // Fallback: try standard Date parsing
+                const d = new Date(dateString);
+                if (!isNaN(d)) {
+                    return d.toISOString().split('T')[0];
+                }
+            } catch (e) {
+                console.warn('Date parsing failed for:', dateString);
+            }
+            
+            return dateString;
+        }
+
+        // Format date for display (ensure consistency)
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            
+            // If it's YYYY-MM-DD, convert to "Oct 2, 2025" format
+            if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
+                const d = new Date(dateString);
+                return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+            }
+            return dateString;
         }
 
         async function loadPosts() {
@@ -731,7 +771,7 @@ Year: 2025
                         <div class="blog-meta">
                             <span class="blog-category">By ${post.author.name}</span>
                             <span>•</span>
-                            <span>${post.date}</span>
+                            <span>${formatDate(post.date)}</span>
                             <span>•</span>
                             <span>${post.readTime}</span>
                         </div>
