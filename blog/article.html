@@ -229,6 +229,15 @@
                 }
                 navHtml += '</div>';
 
+                // Author Bio
+                const authorBio = `
+                    <div class="author-info" style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid #eee;">
+                        <h4 style="margin-bottom: 0.5rem;">${post.author?.name || 'VacatAd Team'}</h4>
+                        <p style="color: #666; margin-bottom: 0.5rem;">${post.author?.role || 'Property Solutions Experts'}</p>
+                        <p>Experts in business rates relief and beneficial occupation solutions for commercial property owners across the UK.</p>
+                    </div>
+                `;
+
                 // Render
                 const html = `
                     <section class="article-hero">
@@ -245,6 +254,7 @@
                         <div class="article-body">
                             ${post.content || '<p>Content not available.</p>'}
                         </div>
+                        ${authorBio}
                         ${navHtml}
                     </div>
                 `;

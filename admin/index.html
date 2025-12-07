@@ -13,6 +13,32 @@
         .post-card { padding: 15px; border: 1px solid #ccc; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; }
         #editor-view { display: none; }
         #quill-editor { height: 400px; background: white; color: black; }
+        
+        /* Quill Overrides for Pico CSS */
+        .ql-toolbar {
+            background-color: #f0f0f0 !important;
+            border-color: #ccc !important;
+        }
+        .ql-container {
+            background-color: white !important;
+            color: black !important;
+            border-color: #ccc !important;
+            font-family: sans-serif; /* Ensure readable font */
+        }
+        .ql-editor {
+            color: black !important;
+            min-height: 100%;
+        }
+        /* Force text color in editor to be black regardless of theme */
+        .ql-editor p, .ql-editor h1, .ql-editor h2, .ql-editor h3, .ql-editor h4, .ql-editor ul, .ql-editor ol, .ql-editor li, .ql-editor blockquote {
+            color: black !important;
+        }
+        /* Fix toolbar dropdowns and buttons */
+        .ql-picker { color: black !important; }
+        .ql-stroke { stroke: black !important; }
+        .ql-fill { fill: black !important; }
+        .ql-picker-options { background-color: white !important; }
+        
         .tag-container { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px; }
         .tag { background: #eee; padding: 2px 8px; border-radius: 4px; font-size: 0.8em; }
     </style>
