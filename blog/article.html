@@ -5,7 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Meta tags will be updated dynamically -->
     <title id="page-title">Blog Post | VacatAd</title>
+    <meta name="description" content="VacatAd Blog - Expert insights on business rates and empty property relief." id="meta-description">
     <link rel="canonical" id="canonical-link" href="">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="" id="og-url">
+    <meta property="og:title" content="Blog Post | VacatAd" id="og-title">
+    <meta property="og:description" content="VacatAd Blog - Expert insights on business rates and empty property relief." id="og-description">
+    <meta property="og:image" content="" id="og-image">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="" id="twitter-url">
+    <meta property="twitter:title" content="Blog Post | VacatAd" id="twitter-title">
+    <meta property="twitter:description" content="VacatAd Blog - Expert insights on business rates and empty property relief." id="twitter-description">
+    <meta property="twitter:image" content="" id="twitter-image">
     
     <link rel="stylesheet" href="../css/styles.css?v=20251015">
     <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
@@ -200,11 +215,28 @@
                 const newerPost = currentIndex > 0 ? posts[currentIndex - 1] : null;
                 const olderPost = currentIndex < posts.length - 1 ? posts[currentIndex + 1] : null;
 
+                // Update Page Title
                 document.title = `${post.title} | VacatAd Blog`;
                 
+                // Update Meta Description
+                const metaDesc = post.excerpt || post.title + ' - Read more on VacatAd Blog.';
+                document.getElementById('meta-description').setAttribute('content', metaDesc);
+
                 // Set Canonical URL
                 const canonicalUrl = `https://vacatad.com/blog/article.html?slug=${slug}`;
                 document.getElementById('canonical-link').href = canonicalUrl;
+
+                // Update Open Graph Tags
+                document.getElementById('og-title').setAttribute('content', post.title);
+                document.getElementById('og-description').setAttribute('content', metaDesc);
+                document.getElementById('og-url').setAttribute('content', canonicalUrl);
+                document.getElementById('og-image').setAttribute('content', post.image);
+
+                // Update Twitter Tags
+                document.getElementById('twitter-title').setAttribute('content', post.title);
+                document.getElementById('twitter-description').setAttribute('content', metaDesc);
+                document.getElementById('twitter-url').setAttribute('content', canonicalUrl);
+                document.getElementById('twitter-image').setAttribute('content', post.image);
                 
                 // Build Navigation HTML
                 let navHtml = '<div class="article-navigation">';
