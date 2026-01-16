@@ -2651,17 +2651,21 @@ img.lazy-loaded {
 
 /* Blog Hero */
 .blog-hero {
-    margin: 20px 0 40px 0;
-    width: 100%;
-    max-width: 100vw;
-    margin-left: calc(-50vw + 50%);
-    margin-right: calc(-50vw + 50%);
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    width: 100vw;
+    margin-top: 20px;
+    margin-bottom: 40px;
 }
 
 .blog-hero .hero-image {
     width: 100%;
     height: 400px;
     object-fit: cover;
+    object-position: center;
     display: block;
 }
 
