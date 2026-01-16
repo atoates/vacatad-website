@@ -181,6 +181,23 @@
     </header>
 
     <main id="main-content">
+        <!-- Breadcrumb Navigation -->
+        <nav class="breadcrumb" aria-label="Breadcrumb" style="padding: 1rem 2rem; background: var(--seasalt); font-size: 0.9rem;">
+            <div class="container" style="max-width: 800px; margin: 0 auto;">
+                <ol style="list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                    <li style="display: flex; align-items: center;">
+                        <a href="../index.html" style="color: var(--grey-text); text-decoration: none;">Home</a>
+                        <span style="margin: 0 0.5rem; color: var(--grey-text);">/</span>
+                    </li>
+                    <li style="display: flex; align-items: center;">
+                        <a href="index.html" style="color: var(--grey-text); text-decoration: none;">Blog</a>
+                        <span style="margin: 0 0.5rem; color: var(--grey-text);">/</span>
+                    </li>
+                    <li style="color: var(--eerie-black); font-weight: 600;" aria-current="page" id="breadcrumb-title">Article</li>
+                </ol>
+            </div>
+        </nav>
+
         <div id="article-container">
             <div class="container" style="padding: 4rem 0; text-align: center;">
                 Loading article...
@@ -217,7 +234,10 @@
 
                 // Update Page Title
                 document.title = `${post.title} | VacatAd Blog`;
-                
+
+                // Update Breadcrumb
+                document.getElementById('breadcrumb-title').textContent = post.title;
+
                 // Update Meta Description
                 const metaDesc = post.excerpt || post.title + ' - Read more on VacatAd Blog.';
                 document.getElementById('meta-description').setAttribute('content', metaDesc);
@@ -237,7 +257,74 @@
                 document.getElementById('twitter-description').setAttribute('content', metaDesc);
                 document.getElementById('twitter-url').setAttribute('content', canonicalUrl);
                 document.getElementById('twitter-image').setAttribute('content', post.image);
-                
+
+                // Add Article Schema (JSON-LD)
+                const existingSchema = document.querySelector('script[type="application/ld+json"]');
+                if (existingSchema) existingSchema.remove();
+
+                const articleSchema = {
+                    "@context": "https://schema.org",
+                    "@type": "BlogPosting",
+                    "headline": post.title,
+                    "description": metaDesc,
+                    "image": post.image,
+                    "datePublished": post.date,
+                    "dateModified": post.date,
+                    "author": {
+                        "@type": "Organization",
+                        "name": post.author?.name || "VacatAd Team",
+                        "url": "https://vacatad.com"
+                    },
+                    "publisher": {
+                        "@type": "Organization",
+                        "name": "VacatAd Ltd",
+                        "logo": {
+                            "@type": "ImageObject",
+                            "url": "https://vacatad.com/assets/images/asset-8.webp"
+                        }
+                    },
+                    "mainEntityOfPage": {
+                        "@type": "WebPage",
+                        "@id": canonicalUrl
+                    }
+                };
+
+                const schemaScript = document.createElement('script');
+                schemaScript.type = 'application/ld+json';
+                schemaScript.textContent = JSON.stringify(articleSchema);
+                document.head.appendChild(schemaScript);
+
+                // Add Breadcrumb Schema (JSON-LD)
+                const breadcrumbSchema = {
+                    "@context": "https://schema.org",
+                    "@type": "BreadcrumbList",
+                    "itemListElement": [
+                        {
+                            "@type": "ListItem",
+                            "position": 1,
+                            "name": "Home",
+                            "item": "https://vacatad.com/"
+                        },
+                        {
+                            "@type": "ListItem",
+                            "position": 2,
+                            "name": "Blog",
+                            "item": "https://vacatad.com/blog/"
+                        },
+                        {
+                            "@type": "ListItem",
+                            "position": 3,
+                            "name": post.title,
+                            "item": canonicalUrl
+                        }
+                    ]
+                };
+
+                const breadcrumbScript = document.createElement('script');
+                breadcrumbScript.type = 'application/ld+json';
+                breadcrumbScript.textContent = JSON.stringify(breadcrumbSchema);
+                document.head.appendChild(breadcrumbScript);
+
                 // Build Navigation HTML
                 let navHtml = '<div class="article-navigation">';
                 if (olderPost) {
