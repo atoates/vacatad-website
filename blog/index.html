@@ -758,9 +758,8 @@ Year: 2025
             
             grid.innerHTML = posts.map(post => {
                 const folderName = post.folderName || post.slug;
-                // Check if the post has full content in JSON (new CMS posts)
-                // or relies on static files (legacy posts)
-                const postLink = post.content ? `article.html?slug=${post.slug}` : `posts/${folderName}/`;
+                // All posts now use standalone HTML files
+                const postLink = `posts/${folderName}/`;
                 
                 return `
                 <article class="blog-card ${post.featured ? 'featured' : ''}">
