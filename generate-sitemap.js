@@ -209,7 +209,9 @@ function generateSitemap() {
         console.log(`Found ${posts.length} blog posts`);
 
         posts.forEach(post => {
-            const postUrl = `/blog/article.html?slug=${post.slug}`;
+            // Extract folder name from image path (posts/YY-MM-DD-slug/hero.jpg -> YY-MM-DD-slug)
+            const folderName = post.image.split('/')[1];
+            const postUrl = `/blog/posts/${folderName}/`;
             const lastmod = parsePostDate(post.date);
             
             xml += '  <url>\n';
