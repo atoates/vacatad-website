@@ -1,5 +1,71 @@
 [
   {
+    "id": 1741766400000,
+    "title": "The April Reset: Your Complete Guide to the Biggest Rates Overhaul in a Decade",
+    "slug": "the-april-reset-your-complete-guide-to-the-biggest-rates-overhaul-in-a-decade",
+    "date": "Mar 12, 2026",
+    "excerpt": "With just weeks until the most significant business rates overhaul in a decade, here is your definitive guide to the new five-tier multiplier system, the confirmed rates (38.2p to 50.8p), transitional relief, and a step-by-step countdown checklist for April 2026.",
+    "image": "posts/26-03-12-the-april-reset-your-complete-guide-to-the-biggest-rates-overhaul-in-a-decade/hero.jpg",
+    "imageAlt": "Business documents and April 2026 calendar representing the rates deadline countdown",
+    "tags": [
+      "Business Rates",
+      "Revaluation 2026",
+      "Tax Reform",
+      "Compliance",
+      "Relief Schemes"
+    ],
+    "featured": true,
+    "author": {
+      "name": "VacatAd Team",
+      "role": "Property Solutions Experts"
+    },
+    "readTime": "16 min read"
+  },
+  {
+    "id": 1739923200000,
+    "title": "The Vacant Properties Bill: Could Councils Force Open Your Empty Units?",
+    "slug": "the-vacant-properties-bill-could-councils-force-open-your-empty-units",
+    "date": "Feb 19, 2026",
+    "excerpt": "A new Private Members' Bill proposes giving local authorities the power to place charities and small businesses in vacant commercial properties — potentially rent-free and without landlord consent. We analyse the Vacant Commercial Properties (Temporary Use) Bill and what it means for property owners.",
+    "image": "posts/26-02-19-the-vacant-properties-bill-could-councils-force-open-your-empty-units/hero.jpg",
+    "imageAlt": "Padlocked vacant commercial property on a UK high street with a To Let sign",
+    "tags": [
+      "Legislation",
+      "Vacant Property",
+      "Government Policy",
+      "Landlord Guide",
+      "High Street"
+    ],
+    "featured": true,
+    "author": {
+      "name": "VacatAd Team",
+      "role": "Property Solutions Experts"
+    },
+    "readTime": "12 min read"
+  },
+  {
+    "id": 1737504000000,
+    "title": "2026 Revaluation Unveiled: What the Draft Values Reveal About Your Rates Bill",
+    "slug": "2026-revaluation-unveiled-what-the-draft-values-reveal-about-your-rates-bill",
+    "date": "Jan 22, 2026",
+    "excerpt": "The VOA has published draft 2026 rateable values revealing a 19.2% national increase across 2.13 million properties — from £70.8bn to £84.4bn. We break down the regional winners and losers, the sector-by-sector impact, the £4.3 billion support package, and the critical steps you must take before March 31.",
+    "image": "posts/26-01-22-2026-revaluation-unveiled-what-the-draft-values-reveal-about-your-rates-bill/hero.jpg",
+    "imageAlt": "London skyline at dawn reflecting the scale of the 2026 business rates revaluation",
+    "tags": [
+      "Business Rates",
+      "Revaluation 2026",
+      "VOA",
+      "Property Strategy",
+      "Tax Planning"
+    ],
+    "featured": true,
+    "author": {
+      "name": "VacatAd Team",
+      "role": "Property Solutions Experts"
+    },
+    "readTime": "14 min read"
+  },
+  {
     "id": 1736294400000,
     "title": "2026 Budget Predictions: What Commercial Landlords Should Expect for Business Rates Reform",
     "slug": "2026-budget-predictions-what-commercial-landlords-should-expect-for-business-rates-reform",
