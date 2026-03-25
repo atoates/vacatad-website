@@ -6,6 +6,7 @@
     <!-- Meta tags will be updated dynamically -->
     <title id="page-title">Blog Post | VacatAd</title>
     <meta name="description" content="VacatAd Blog - Expert insights on business rates and empty property relief." id="meta-description">
+    <meta name="robots" content="noindex, follow">
     <link rel="canonical" id="canonical-link" href="">
     
     <!-- Open Graph / Facebook -->
@@ -242,21 +243,25 @@
                 const metaDesc = post.excerpt || post.title + ' - Read more on VacatAd Blog.';
                 document.getElementById('meta-description').setAttribute('content', metaDesc);
 
-                // Set Canonical URL
-                const canonicalUrl = `https://vacatad.com/blog/article.html?slug=${slug}`;
+                const folderMatch = (post.image || '').match(/posts\/([^/]+)\//);
+                const folderName = folderMatch ? folderMatch[1] : post.slug;
+                const canonicalUrl = `https://vacatad.com/blog/posts/${folderName}/`;
                 document.getElementById('canonical-link').href = canonicalUrl;
 
                 // Update Open Graph Tags
                 document.getElementById('og-title').setAttribute('content', post.title);
                 document.getElementById('og-description').setAttribute('content', metaDesc);
                 document.getElementById('og-url').setAttribute('content', canonicalUrl);
-                document.getElementById('og-image').setAttribute('content', post.image);
+                const socialImage = post.image && post.image.startsWith('http')
+                    ? post.image
+                    : `https://vacatad.com/blog/${post.image}`;
+                document.getElementById('og-image').setAttribute('content', socialImage);
 
                 // Update Twitter Tags
                 document.getElementById('twitter-title').setAttribute('content', post.title);
                 document.getElementById('twitter-description').setAttribute('content', metaDesc);
                 document.getElementById('twitter-url').setAttribute('content', canonicalUrl);
-                document.getElementById('twitter-image').setAttribute('content', post.image);
+                document.getElementById('twitter-image').setAttribute('content', socialImage);
 
                 // Add Article Schema (JSON-LD)
                 const existingSchema = document.querySelector('script[type="application/ld+json"]');
@@ -267,7 +272,7 @@
                     "@type": "BlogPosting",
                     "headline": post.title,
                     "description": metaDesc,
-                    "image": post.image,
+                    "image": socialImage,
                     "datePublished": post.date,
                     "dateModified": post.date,
                     "author": {
@@ -329,7 +334,7 @@
                 let navHtml = '<div class="article-navigation">';
                 if (olderPost) {
                     navHtml += `
-                        <a href="article.html?slug=${olderPost.slug}" class="nav-btn prev">
+                        <a href="posts/${((olderPost.image || '').match(/posts\/([^/]+)\//) || [null, olderPost.slug])[1]}/" class="nav-btn prev">
                             <span class="nav-label">← Older</span>
                             <span class="nav-title">${olderPost.title}</span>
                         </a>
@@ -340,7 +345,7 @@
                 
                 if (newerPost) {
                     navHtml += `
-                        <a href="article.html?slug=${newerPost.slug}" class="nav-btn next">
+                        <a href="posts/${((newerPost.image || '').match(/posts\/([^/]+)\//) || [null, newerPost.slug])[1]}/" class="nav-btn next">
                             <span class="nav-label">Newer →</span>
                             <span class="nav-title">${newerPost.title}</span>
                         </a>

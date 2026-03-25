@@ -18,6 +18,7 @@ const path = require('path');
 const SITE_URL = 'https://vacatad.com';
 const OUTPUT_FILE = path.join(__dirname, 'sitemap.xml');
 const BLOG_POSTS_JSON = path.join(__dirname, 'blog/data/posts.json');
+const BLOG_POSTS_DIR = path.join(__dirname, 'blog/posts');
 
 // Static pages with their priorities and change frequencies
 const STATIC_PAGES = [
@@ -76,22 +77,10 @@ const STATIC_PAGES = [
         priority: 0.3
     },
     {
-        loc: '/router-dashboard.html',
-        lastmod: '2025-10-15',
-        changefreq: 'monthly',
-        priority: 0.8
-    },
-    {
         loc: '/how-we-work.html',
         lastmod: '2025-10-15',
         changefreq: 'monthly',
         priority: 0.9
-    },
-    {
-        loc: '/the-team.html',
-        lastmod: '2025-10-15',
-        changefreq: 'monthly',
-        priority: 0.5
     },
     {
         loc: '/city/london.html',
@@ -136,8 +125,22 @@ const STATIC_PAGES = [
         priority: 0.7
     },
     {
+        loc: '/city/cambridge.html',
+        lastmod: '2025-10-15',
+        changefreq: 'monthly',
+        priority: 0.7
     },
     {
+        loc: '/city/oxford.html',
+        lastmod: '2025-10-15',
+        changefreq: 'monthly',
+        priority: 0.7
+    },
+    {
+        loc: '/city/northampton.html',
+        lastmod: '2025-10-15',
+        changefreq: 'monthly',
+        priority: 0.7
     },
     {
         loc: '/city/newcastle.html',
@@ -192,7 +195,7 @@ function generateSitemap() {
     xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
 
     // Add static pages
-    STATIC_PAGES.forEach(page => {
+    STATIC_PAGES.filter(page => page.loc).forEach(page => {
         xml += '  <url>\n';
         xml += `    <loc>${SITE_URL}${page.loc}</loc>\n`;
         xml += `    <lastmod>${page.lastmod}</lastmod>\n`;
@@ -209,8 +212,18 @@ function generateSitemap() {
         console.log(`Found ${posts.length} blog posts`);
 
         posts.forEach(post => {
-            // Extract folder name from image path (posts/YY-MM-DD-slug/hero.jpg -> YY-MM-DD-slug)
-            const folderName = post.image.split('/')[1];
+            const imagePath = post.image || '';
+            const match = imagePath.match(/posts\/([^/]+)\//);
+            const folderName = match ? match[1] : null;
+            if (!folderName) {
+                return;
+            }
+
+            const postFile = path.join(BLOG_POSTS_DIR, folderName, 'index.html');
+            if (!fs.existsSync(postFile)) {
+                return;
+            }
+
             const postUrl = `/blog/posts/${folderName}/`;
             const lastmod = parsePostDate(post.date);
             

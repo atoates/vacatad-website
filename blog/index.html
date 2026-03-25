@@ -404,6 +404,41 @@ Year: 2025
             padding: 4rem 0;
             color: var(--grey-text);
         }
+
+        .blog-fallback-list {
+            padding: 1.5rem;
+            border: 1px solid #e3e8e3;
+            border-radius: 16px;
+            background: #f8faf8;
+        }
+
+        .blog-fallback-list h2 {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            color: var(--eerie-black);
+        }
+
+        .blog-fallback-list ul {
+            margin: 0;
+            padding-left: 1.25rem;
+            columns: 2;
+            column-gap: 2rem;
+        }
+
+        .blog-fallback-list li {
+            break-inside: avoid;
+            margin-bottom: 0.75rem;
+        }
+
+        .blog-fallback-list a {
+            color: var(--eerie-black);
+            text-decoration: none;
+        }
+
+        .blog-fallback-list a:hover {
+            color: var(--tea-green);
+            text-decoration: underline;
+        }
         
         @media (max-width: 768px) {
             .blog-hero {
@@ -462,6 +497,10 @@ Year: 2025
             
             .blog-grid {
                 padding: 2rem 0;
+            }
+
+            .blog-fallback-list ul {
+                columns: 1;
             }
         }
     </style>
@@ -626,7 +665,40 @@ Year: 2025
         <section class="blog-content">
             <div class="container">
                 <div class="blog-grid" id="blog-grid">
-                    <!-- Blog posts will be loaded here via JavaScript -->
+                    <div class="blog-fallback-list">
+                        <h2>Latest Articles</h2>
+                        <ul>
+                            <li><a href="posts/26-03-12-the-april-reset-your-complete-guide-to-the-biggest-rates-overhaul-in-a-decade/">The April Reset: Your Complete Guide to the Biggest Rates Overhaul in a Decade</a></li>
+                            <li><a href="posts/26-02-19-the-vacant-properties-bill-could-councils-force-open-your-empty-units/">The Vacant Properties Bill: Could Councils Force Open Your Empty Units?</a></li>
+                            <li><a href="posts/26-01-22-2026-revaluation-unveiled-what-the-draft-values-reveal-about-your-rates-bill/">2026 Revaluation Unveiled: What the Draft Values Reveal About Your Rates Bill</a></li>
+                            <li><a href="posts/26-01-08-2026-budget-predictions-what-commercial-landlords-should-expect-for-business-rates-reform/">2026 Budget Predictions: What Commercial Landlords Should Expect for Business Rates Reform</a></li>
+                            <li><a href="posts/25-12-18-winter-void-management-why-empty-properties-cost-more-in-q4-and-how-to-protect-your-assets/">Winter Void Management: Why Empty Properties Cost More in Q4 and How to Protect Your Assets</a></li>
+                            <li><a href="posts/25-12-05-end-of-year-business-rates-strategy-maximising-relief-before-april-2026-revaluation/">End of Year Business Rates Strategy: Maximising Relief Before April 2026 Revaluation</a></li>
+                            <li><a href="posts/25-10-22-snail-farms-in-the-office-a-cautionary-tale-for-commercial-landlords/">Snail Farms in the Office: A Cautionary Tale for Commercial Landlords</a></li>
+                            <li><a href="posts/25-10-02-business-rates-forward-look-what-the-latest-updates-mean-for-your-business/">Business Rates \"Forward Look\": What the Latest Updates Mean for Your Business</a></li>
+                            <li><a href="posts/25-09-25-high-courts-2025-ruling-reshapes-business-rates-mitigation-landscape/">High Court's 2025 Ruling Reshapes Business Rates Mitigation Landscape</a></li>
+                            <li><a href="posts/25-08-14-from-empty-units-to-community-hubs-the-social-value-of-vacatad/">From Empty Units to Community Hubs: The Social Value of VacatAd</a></li>
+                            <li><a href="posts/25-07-10-understanding-the-13-week-occupation-rule-how-to-stay-compliant/">Understanding the 13-Week Occupation Rule: How to Stay Compliant</a></li>
+                            <li><a href="posts/25-06-18-why-2025-is-the-year-technology-redefined-business-rates-mitigation/">Why 2025 Is the Year Technology Redefined Business Rates Mitigation</a></li>
+                            <li><a href="posts/25-05-22-beneficial-occupation-explained-what-landlords-need-to-know/">Beneficial Occupation Explained: What Landlords Need to Know</a></li>
+                            <li><a href="posts/25-04-15-the-real-cost-of-vacant-commercial-property-in-2025/">The Real Cost of Vacant Commercial Property in 2025</a></li>
+                            <li><a href="posts/25-04-06-jtg177zcrzd0d1881lzfmwfcrf3xi4/">Vacant and Vulnerable: Securing Empty Commercial Properties in a Post-Pandemic World</a></li>
+                            <li><a href="posts/25-03-26-spring-budget-2025-business-rates-shake-up-and-the-case-for-strategic-occupation/">Spring Budget 2025: Business Rates Shake-Up and the Case for Strategic Occupation</a></li>
+                            <li><a href="posts/25-02-17-in-depth-analysis-legally-reducing-business-rates-on-vacant-property-vacatads-techfirst-solution/">In-depth Analysis: Legally Reducing Business Rates on Vacant Property</a></li>
+                            <li><a href="posts/25-01-15-a-beginners-guide-to-business-rates/">A Beginner's Guide to Business Rates</a></li>
+                            <li><a href="posts/24-11-11-the-uks-business-rates-reform-what-it-means-for-property-owners-and-how-vacatad-can-help/">The UK's Business Rates Reform: What It Means for Property Owners</a></li>
+                            <li><a href="posts/24-09-10-legal-grey-areas-and-innovative-solutions-in-business-rates-mitigation-a-comparison/">Legal Grey Areas and Innovative Solutions in Business Rates Mitigation</a></li>
+                            <li><a href="posts/24-08-12-securing-your-vacant-properties-how-vacatad-transforms-risks-into-rewards-in-a-post-pandemic-world/">Securing Your Vacant Properties in a Post-Pandemic World</a></li>
+                            <li><a href="posts/24-08-08-adapting-to-new-business-rates-how-vacatad-supports-property-owners/">Adapting to New Business Rates: How VacatAd Supports Property Owners</a></li>
+                            <li><a href="posts/24-07-19-from-burden-to-relief/">From Burden to Relief: Transforming Business Rates Management</a></li>
+                            <li><a href="posts/24-06-11-the-true-cost-of-an-empty-property-a-technological-solution/">The True Cost of an Empty Property: A Technological Solution</a></li>
+                            <li><a href="posts/24-03-28-how-vacatad-aligns-with-government-consultation-findings/">How VacatAd Aligns with Government Consultation Findings</a></li>
+                            <li><a href="posts/24-02-14-revolutionising-empty-property-management-how-vacatad-offers-a-new-perspective/">Revolutionising Empty Property Management: How VacatAd Offers a New Perspective</a></li>
+                            <li><a href="posts/23-12-04-maximising-savings-on-empty-commercial-spaces/">Maximising Savings on Empty Commercial Spaces</a></li>
+                            <li><a href="posts/23-07-07-the-vacatad-edge-transforming-business-rates/">The VacatAd Edge: Transforming Business Rates on Empty Properties</a></li>
+                            <li><a href="posts/23-04-01-navigating-the-void-how-vacatad-revolutionises-rates-relief/">Navigating the Void: How VacatAd Revolutionises Relief for Empty Commercial Properties</a></li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="no-posts" id="no-posts" style="display: none;">
                     <p>No posts found in this category.</p>
