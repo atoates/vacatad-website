@@ -682,16 +682,16 @@ img {
 
 /* Client Logos Section */
 .client-logos {
-    background-color: var(--seasalt);
+    background-color: var(--eerie-black);
     padding: 3.5rem 0;
     overflow: hidden;
-    border-top: 1px solid var(--border-light);
-    border-bottom: 1px solid var(--border-light);
+    border-top: none;
+    border-bottom: none;
 }
 
 .logos-title {
     text-align: center;
-    color: var(--grey-text);
+    color: rgba(255, 255, 255, 0.5);
     font-size: 0.85rem;
     margin-bottom: 2rem;
     font-weight: 500;
@@ -724,9 +724,9 @@ img {
     height: 40px;
     width: auto;
     object-fit: contain;
-    opacity: 0.4;
+    opacity: 0.6;
     transition: opacity 0.3s ease;
-    filter: grayscale(100%);
+    filter: brightness(0) invert(1);
 }
 
 .client-logo:hover {
