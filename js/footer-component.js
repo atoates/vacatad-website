@@ -78,7 +78,7 @@ class VacatAdFooter extends HTMLElement {
                     </div>
                 </div>
                 <div class="footer-bottom">
-                    <p>&copy; 2025 VacatAd Ltd. All rights reserved. | Registered in England and Wales | Company No. 15279357</p>
+                    <p>&copy; 2026 VacatAd Ltd. All rights reserved. | Registered in England and Wales | Company No. 15279357</p>
                 </div>
             </div>
         </footer>
