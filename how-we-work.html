@@ -11,7 +11,7 @@ Year: 2025
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Security Headers -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.jotform.com https://form.jotform.com https://cdn.jotfor.ms; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com; frame-src https://www.jotform.com https://form.jotform.com https://www.pipedrive.com https://vacatadltd.pipedrive.com https://vacatad.pipedrive.com;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.jotform.com https://form.jotform.com https://cdn.jotfor.ms; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com; frame-src https://www.jotform.com https://form.jotform.com https://www.pipedrive.com https://vacatadltd.pipedrive.com https://vacatad.pipedrive.com;">
     <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
 
@@ -30,7 +30,10 @@ Year: 2025
     <link rel="dns-prefetch" href="https://www.google-analytics.com">
     
     <!-- CSS -->
-    <link rel="stylesheet" href="css/styles.css?v=20251015">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link rel="stylesheet" href="css/styles.css?v=20260319">
     
     <!-- Theme Color -->
     <meta name="theme-color" content="#232523">
@@ -102,7 +105,6 @@ Year: 2025
                     </li>
                 </ul>
                 <div class="cta-nav">
-                    <a href="router-dashboard.html" class="cta-button-nav dashboard">Dashboard</a>
                     <a href="contact.html" class="cta-button-nav">Get in touch</a>
                 </div>
                 <button class="nav-toggle" id="mobile-menu" aria-label="Toggle menu" aria-controls="primary-navigation" aria-expanded="false">
