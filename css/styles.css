@@ -747,6 +747,11 @@ img {
     height: 70px;
 }
 
+.client-logo.logo-4urban {
+    filter: none;
+    opacity: 0.85;
+}
+
 @keyframes scroll {
     0% {
         transform: translateX(0);
