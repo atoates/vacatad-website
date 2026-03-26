@@ -289,6 +289,19 @@ Year: 2025
             color: var(--grey-text);
         }
 
+        /* Override global dark process styles on light affiliate sections */
+        .affiliate-section .process-steps::before {
+            background: rgba(35, 37, 35, 0.12);
+        }
+
+        .affiliate-section .process-step h3 {
+            color: var(--eerie-black);
+        }
+
+        .affiliate-section .process-step p {
+            color: var(--grey-text);
+        }
+
         .partner-grid {
             display: grid;
             grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -459,6 +472,10 @@ Year: 2025
             .affiliate-section,
             .affiliate-final {
                 padding: 4rem 0;
+            }
+
+            .affiliate-section .process-step {
+                border-bottom: 1px solid rgba(35, 37, 35, 0.08);
             }
         }
     </style>
