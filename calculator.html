@@ -568,33 +568,52 @@ Year: 2026
                 gtag('event', 'calculator_gate_submit', { event_category: 'Lead', event_label: company });
             }
 
-            // POST to JotForm (fire-and-forget, no-cors)
+            // POST to JotForm via hidden form + iframe (most reliable cross-origin method)
             var nameParts = name.split(' ');
             var firstName = nameParts[0];
             var lastName  = nameParts.slice(1).join(' ');
-            var now       = Date.now();
-            var jfData = new URLSearchParams();
-            // Visible fields
-            jfData.append('q3_name[first]', firstName);
-            jfData.append('q3_name[last]',  lastName);
-            jfData.append('q4_workEmail',   email);
-            jfData.append('q5_company',     company);
-            // Required hidden fields
-            jfData.append('formID',           '260856747152060');
-            jfData.append('simple_spc',       '260856747152060-260856747152060');
-            jfData.append('buildDate',        '1774652465893');
-            jfData.append('uploadServerUrl',  'https://upload.jotform.com/upload');
-            jfData.append('eventObserver',    '1');
-            jfData.append('submitSource',     'embed');
-            jfData.append('event_id',         now + '_260856747152060_vacatad');
-            jfData.append('timeToSubmit',     '10');
-            jfData.append('website',          ''); // honeypot — must be blank
-            fetch('https://submit.jotform.com/submit/260856747152060/', {
-                method: 'POST',
-                mode:   'no-cors',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body:   jfData.toString()
-            }).catch(function () {});
+            (function () {
+                var iframeName = 'jf_submit_' + Date.now();
+                var iframe = document.createElement('iframe');
+                iframe.name = iframe.id = iframeName;
+                iframe.style.display = 'none';
+                document.body.appendChild(iframe);
+
+                var jfForm = document.createElement('form');
+                jfForm.action  = 'https://submit.jotform.com/submit/260856747152060/';
+                jfForm.method  = 'POST';
+                jfForm.target  = iframeName;
+                jfForm.style.display = 'none';
+
+                var jfFields = {
+                    'q3_name[first]': firstName,
+                    'q3_name[last]':  lastName,
+                    'q4_workEmail':   email,
+                    'q5_company':     company,
+                    'formID':         '260856747152060',
+                    'simple_spc':     '260856747152060-260856747152060',
+                    'buildDate':      '1774652465893',
+                    'uploadServerUrl':'https://upload.jotform.com/upload',
+                    'eventObserver':  '1',
+                    'submitSource':   'embed',
+                    'website':        '' // honeypot — must stay blank
+                };
+                Object.keys(jfFields).forEach(function (key) {
+                    var inp = document.createElement('input');
+                    inp.type  = 'hidden';
+                    inp.name  = key;
+                    inp.value = jfFields[key];
+                    jfForm.appendChild(inp);
+                });
+
+                document.body.appendChild(jfForm);
+                jfForm.submit();
+
+                setTimeout(function () {
+                    if (jfForm.parentNode) jfForm.parentNode.removeChild(jfForm);
+                    if (iframe.parentNode) iframe.parentNode.removeChild(iframe);
+                }, 5000);
+            }());
 
             // Also POST to Worker / Turso as backup
             fetch('https://vacatad-voa-lookup.vacatad.workers.dev/api/leads', {
