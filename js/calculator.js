@@ -4,7 +4,8 @@
  */
 
 function getMultiplier(rateableValue, isRHL) {
-  const { multipliers, thresholds } = RATES_CONFIG;
+  var multipliers = RATES_CONFIG.multipliers;
+  var thresholds = RATES_CONFIG.thresholds;
   if (rateableValue >= thresholds.largePropertyFloor) {
     return { multiplier: multipliers.large, label: "Large property (50.8p)" };
   }
@@ -20,8 +21,8 @@ function getMultiplier(rateableValue, isRHL) {
 
 function calculatePreviousBill(oldRV) {
   if (!oldRV || oldRV <= 0) return null;
-  const prev = RATES_CONFIG.previousYear;
-  const multiplier = oldRV < prev.smallBusinessCeiling
+  var prev = RATES_CONFIG.previousYear;
+  var multiplier = oldRV < prev.smallBusinessCeiling
     ? prev.smallBusinessMultiplier
     : prev.standardMultiplier;
   return Math.round(oldRV * multiplier * 100) / 100;
@@ -33,12 +34,13 @@ function calculateBasicBill(rateableValue, multiplier) {
 
 function calculateSBRR(rateableValue, isSoleProperty) {
   if (!isSoleProperty) return { reliefPercent: 0, reliefAmount: 0 };
-  const { fullReliefCeiling, partialReliefCeiling } = RATES_CONFIG.sbrr;
+  var fullReliefCeiling = RATES_CONFIG.sbrr.fullReliefCeiling;
+  var partialReliefCeiling = RATES_CONFIG.sbrr.partialReliefCeiling;
   if (rateableValue <= fullReliefCeiling) {
     return { reliefPercent: 100, reliefAmount: null };
   }
   if (rateableValue < partialReliefCeiling) {
-    const reliefPercent =
+    var reliefPercent =
       ((partialReliefCeiling - rateableValue) /
         (partialReliefCeiling - fullReliefCeiling)) * 100;
     return { reliefPercent: Math.round(reliefPercent * 100) / 100, reliefAmount: null };
@@ -55,8 +57,8 @@ function calculateTransitionalRelief(newBill, previousBill, rateableValue, isLon
   if (!previousBill || previousBill <= 0 || newBill <= previousBill) {
     return { applies: false, cappedBill: newBill };
   }
-  const tr = RATES_CONFIG.transitionalRelief.year1;
-  const smallCeiling = isLondon ? tr.small.rvCeilingLondon : tr.small.rvCeiling;
+  var tr = RATES_CONFIG.transitionalRelief.year1;
+  var smallCeiling = isLondon ? tr.small.rvCeilingLondon : tr.small.rvCeiling;
   var capPercent;
   if (rateableValue <= smallCeiling) {
     capPercent = tr.small.cap;
@@ -81,8 +83,8 @@ function calculateSSBRelief(newBill, previousBill, lostRelief, rateableValue, is
   if (!lostRelief || !previousBill || previousBill <= 0) {
     return { applies: false, cappedBill: newBill };
   }
-  const tr = RATES_CONFIG.transitionalRelief.year1;
-  const smallCeiling = isLondon ? tr.small.rvCeilingLondon : tr.small.rvCeiling;
+  var tr = RATES_CONFIG.transitionalRelief.year1;
+  var smallCeiling = isLondon ? tr.small.rvCeilingLondon : tr.small.rvCeiling;
   var capPercent;
   if (rateableValue <= smallCeiling) {
     capPercent = tr.small.cap;
@@ -111,7 +113,7 @@ function calculateTRSupplement(rateableValue, receivingTR, receivingSSB) {
 }
 
 function calculateVacatAdFee(rateableValue, savingAmount) {
-  const tier = RATES_CONFIG.vacatadFees.find(function(t) { return rateableValue < t.rvCeiling; });
+  var tier = RATES_CONFIG.vacatadFees.find(function(t) { return rateableValue < t.rvCeiling; });
   var feePercent = tier ? tier.feePercent : 10;
   return {
     feePercent: feePercent,
@@ -119,21 +121,18 @@ function calculateVacatAdFee(rateableValue, savingAmount) {
   };
 }
 
-/**
- * VacatAd saving model:
- * - Each cycle: 13 weeks beneficial occupation → 3 months (13 weeks) Empty Property Relief
- * - Per cycle = 26 weeks, of which 13 weeks = no rates (relief period)
- * - 2 full cycles per year (52 weeks) = 26 weeks of relief
- * - Saving = 26/52 = 50% of annual empty rates bill
- */
-function calculateVacatAdSaving(annualBill) {
-  var reliefWeeksPerCycle = 13;
-  var occupationWeeksPerCycle = 13;
-  var cycleLength = reliefWeeksPerCycle + occupationWeeksPerCycle;
-  var cyclesPerYear = Math.floor(52 / cycleLength);
-  var reliefWeeksPerYear = cyclesPerYear * reliefWeeksPerCycle;
-  var savingFraction = reliefWeeksPerYear / 52;
-  return Math.round(annualBill * savingFraction * 100) / 100;
+function calculateVacatAdSaving(annualBill, isIndustrial) {
+  var ep = RATES_CONFIG.emptyProperty;
+  var reliefWeeks = isIndustrial
+    ? ep.industrialReliefWeeksPerYear
+    : ep.standardReliefWeeksPerYear;
+  var savingFraction = reliefWeeks / ep.weeksPerYear;
+  return {
+    saving: Math.round(annualBill * savingFraction * 100) / 100,
+    reliefWeeks: reliefWeeks,
+    weeksPerYear: ep.weeksPerYear,
+    savingFraction: savingFraction,
+  };
 }
 
 function calculateBusinessRates(inputs) {
@@ -179,7 +178,12 @@ function calculateBusinessRates(inputs) {
   result.annualBill = currentBill;
   result.monthlyBill = Math.round((currentBill / 12) * 100) / 100;
 
-  result.potentialAnnualSaving = calculateVacatAdSaving(currentBill);
+  var savingData = calculateVacatAdSaving(currentBill, inputs.isIndustrial);
+  result.potentialAnnualSaving = savingData.saving;
+  result.reliefWeeks = savingData.reliefWeeks;
+  result.weeksPerYear = savingData.weeksPerYear;
+  result.savingFraction = savingData.savingFraction;
+
   result.vacatadFee = calculateVacatAdFee(inputs.rateableValue, result.potentialAnnualSaving);
   result.potentialNetSaving = Math.round((result.potentialAnnualSaving - result.vacatadFee.feeAmount) * 100) / 100;
 
@@ -194,7 +198,6 @@ document.addEventListener("DOMContentLoaded", function () {
   var resultsPanel = document.getElementById("results");
   if (!form || !resultsPanel) return;
 
-  // Progressive disclosure: show pub/venue field when RHL = yes
   var rhlRadios = document.querySelectorAll('input[name="isRHL"]');
   rhlRadios.forEach(function(r) {
     r.addEventListener("change", function () {
@@ -203,7 +206,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  // Show lost-relief field when previous RV is entered
   var prevRVInput = document.getElementById("previousRV");
   if (prevRVInput) {
     prevRVInput.addEventListener("input", function () {
@@ -214,7 +216,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Format currency inputs on blur
   var currencyInputs = document.querySelectorAll('.calc-input-currency input[type="number"]');
   currencyInputs.forEach(function(input) {
     input.addEventListener("focus", function() {
@@ -249,6 +250,7 @@ document.addEventListener("DOMContentLoaded", function () {
       isRHL: getRadio("isRHL"),
       isSoleProperty: getRadio("isSoleProperty"),
       isPubOrVenue: getRadio("isPubOrVenue"),
+      isIndustrial: getRadio("isIndustrial"),
       isLondon: getRadio("isLondon"),
       previousBill: previousBill,
       lostRelief: getRadio("lostRelief"),
@@ -264,6 +266,9 @@ document.addEventListener("DOMContentLoaded", function () {
         event_category: "engagement",
         event_label: "business_rates_2026",
         rv_band: rv < 51000 ? "small" : rv < 500000 ? "standard" : "large",
+        is_rhl: inputs.isRHL,
+        is_industrial: inputs.isIndustrial,
+        cycle_type: inputs.isIndustrial ? "6_month" : "3_month",
         annual_bill: result.annualBill,
       });
     }
@@ -284,14 +289,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function formatCurrency(amount) {
-    return "£" + amount.toLocaleString("en-GB", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  }
-
-  function formatCurrencyShort(amount) {
-    if (amount >= 1000) {
-      return "£" + (amount / 1000).toFixed(1).replace(/\.0$/, "") + "k";
-    }
-    return "£" + Math.round(amount);
+    return "\u00A3" + amount.toLocaleString("en-GB", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
 
   function animateValue(el, start, end, duration) {
@@ -312,25 +310,29 @@ document.addEventListener("DOMContentLoaded", function () {
   function displayResults(result) {
     var s = result.steps;
 
+    // Valuation comparison section
+    var comparisonSection = document.getElementById("section-comparison");
+    if (result.oldRV && result.oldRV > 0) {
+      comparisonSection.style.display = "block";
+      document.getElementById("res-old-rv").textContent = formatCurrency(result.oldRV);
+      document.getElementById("res-new-rv-compare").textContent = formatCurrency(result.inputs.rateableValue);
+
+      var rvChange = result.inputs.rateableValue - result.oldRV;
+      var rvChangePercent = ((rvChange / result.oldRV) * 100).toFixed(1);
+      var prefix = rvChange >= 0 ? "+" : "";
+      var changeEl = document.getElementById("res-rv-change");
+      changeEl.textContent = prefix + formatCurrency(Math.abs(rvChange)) + " (" + prefix + rvChangePercent + "%)";
+      changeEl.className = rvChange >= 0 ? "change-up" : "change-down";
+
+      document.getElementById("res-prev-bill").textContent = formatCurrency(result.previousBillCalc);
+    } else {
+      comparisonSection.style.display = "none";
+    }
+
+    // Bill calculation
     document.getElementById("res-rv").textContent = formatCurrency(result.inputs.rateableValue);
     document.getElementById("res-multiplier").textContent = s.multiplier.label;
     document.getElementById("res-basic").textContent = formatCurrency(s.basicBill);
-
-    // Old bill comparison
-    var comparisonRow = document.getElementById("row-old-bill");
-    if (result.previousBillCalc && result.previousBillCalc > 0) {
-      comparisonRow.style.display = "flex";
-      document.getElementById("res-old-bill").textContent = formatCurrency(result.previousBillCalc);
-      var changePercent = ((result.annualBill - result.previousBillCalc) / result.previousBillCalc * 100).toFixed(1);
-      var changeEl = document.getElementById("res-change");
-      if (changeEl) {
-        var prefix = result.annualBill > result.previousBillCalc ? "+" : "";
-        changeEl.textContent = prefix + changePercent + "%";
-        changeEl.className = result.annualBill > result.previousBillCalc ? "change-up" : "change-down";
-      }
-    } else {
-      comparisonRow.style.display = "none";
-    }
 
     // SBRR
     var rowSBRR = document.getElementById("row-sbrr");
@@ -381,11 +383,19 @@ document.addEventListener("DOMContentLoaded", function () {
       rowSupplement.style.display = "none";
     }
 
-    // Totals with animation
+    // Totals
     animateValue(document.getElementById("res-annual"), 0, result.annualBill, 800);
     animateValue(document.getElementById("res-monthly"), 0, result.monthlyBill, 800);
 
-    // VacatAd savings
+    // VacatAd savings — cycle info
+    var cycleLabel = result.inputs.isIndustrial
+      ? "6 months (industrial)"
+      : "3 months (standard)";
+    var weeksLabel = result.reliefWeeks + " of " + result.weeksPerYear;
+    document.getElementById("res-cycle-type").textContent = cycleLabel;
+    document.getElementById("res-relief-weeks").textContent = weeksLabel;
+
+    // Savings figures
     animateValue(document.getElementById("res-saving"), 0, result.potentialAnnualSaving, 1000);
     document.getElementById("res-fee-percent").textContent = result.vacatadFee.feePercent;
     animateValue(document.getElementById("res-fee-amount"), 0, result.vacatadFee.feeAmount, 800);
@@ -398,7 +408,6 @@ document.addEventListener("DOMContentLoaded", function () {
       resultsPanel.scrollIntoView({ behavior: "smooth", block: "start" });
     }, 100);
 
-    // CTA tracking
     var ctaBtn = document.getElementById("calc-cta-btn");
     if (ctaBtn) {
       ctaBtn.onclick = function() {

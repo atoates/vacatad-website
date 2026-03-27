@@ -27,8 +27,8 @@ Year: 2026
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://www.googletagmanager.com">
 
-    <link rel="stylesheet" href="css/styles.css?v=20260326">
-    <link rel="stylesheet" href="css/calculator.css?v=20260326">
+    <link rel="stylesheet" href="css/styles.css?v=20260327">
+    <link rel="stylesheet" href="css/calculator.css?v=20260327">
 
     <meta name="theme-color" content="#232523">
 
@@ -226,6 +226,16 @@ Year: 2026
                         <p class="calc-hint">Eligible for an additional 15% relief in 2026/27.</p>
                     </div>
 
+                    <!-- Industrial property -->
+                    <div class="calc-field">
+                        <label class="calc-label">Is this an industrial property?</label>
+                        <div class="calc-toggle-group">
+                            <label class="calc-toggle"><input type="radio" name="isIndustrial" value="no" checked><span>No</span></label>
+                            <label class="calc-toggle"><input type="radio" name="isIndustrial" value="yes"><span>Yes</span></label>
+                        </div>
+                        <p class="calc-hint">Warehouses, factories, and industrial premises qualify for a 6-month empty rates exemption instead of 3 months.</p>
+                    </div>
+
                     <!-- Sole property -->
                     <div class="calc-field">
                         <label class="calc-label">Is this the only property the business occupies?</label>
@@ -262,14 +272,31 @@ Year: 2026
 
             <!-- Results -->
             <div id="results" class="calc-results">
-                <!-- Breakdown -->
+                <!-- Valuation comparison (shown only when previousRV entered) -->
+                <div class="calc-breakdown" id="section-comparison" style="display: none;">
+                    <h2>Valuation Comparison</h2>
+                    <div class="calc-row">
+                        <span class="calc-row-label">2023 Rateable Value</span>
+                        <span class="calc-row-value" id="res-old-rv">&mdash;</span>
+                    </div>
+                    <div class="calc-row">
+                        <span class="calc-row-label">2026 Rateable Value</span>
+                        <span class="calc-row-value" id="res-new-rv-compare">&mdash;</span>
+                    </div>
+                    <div class="calc-row">
+                        <span class="calc-row-label">Change in RV</span>
+                        <span class="calc-row-value" id="res-rv-change">&mdash;</span>
+                    </div>
+                    <div class="calc-row calc-row-total">
+                        <span class="calc-row-label">Estimated 2025/26 Bill</span>
+                        <span class="calc-row-value" id="res-prev-bill">&mdash;</span>
+                    </div>
+                </div>
+
+                <!-- Bill calculation -->
                 <div class="calc-breakdown">
                     <h2>Your Estimated Rates 2026/27</h2>
 
-                    <div class="calc-row" id="row-old-bill" style="display: none;">
-                        <span class="calc-row-label">Previous bill (2025/26 est.)</span>
-                        <span class="calc-row-value"><span id="res-old-bill">&mdash;</span> <span id="res-change"></span></span>
-                    </div>
                     <div class="calc-row">
                         <span class="calc-row-label">New rateable value</span>
                         <span class="calc-row-value" id="res-rv">&mdash;</span>
@@ -316,11 +343,21 @@ Year: 2026
                 <div class="calc-savings">
                     <div class="calc-savings-header">
                         <h3>How Much Could VacatAd Save You?</h3>
-                        <p>Our beneficial occupation cycles 13&nbsp;weeks of genuine use with 13&nbsp;weeks of Empty Property Relief &mdash; two full cycles per year, saving you 26&nbsp;weeks of empty rates annually.</p>
+                        <p>Our beneficial occupation model cycles 13&nbsp;weeks of genuine use with your property&rsquo;s Empty Property Relief period &mdash; maximising rates-free weeks every year.</p>
+                    </div>
+                    <div class="calc-savings-detail">
+                        <div class="calc-row" style="border-color: rgba(255,255,255,0.1);">
+                            <span class="calc-row-label" style="color: rgba(255,255,255,0.65);">Empty property relief cycle</span>
+                            <span class="calc-row-value" style="color: rgba(255,255,255,0.9);" id="res-cycle-type">&mdash;</span>
+                        </div>
+                        <div class="calc-row" style="border-color: rgba(255,255,255,0.1);">
+                            <span class="calc-row-label" style="color: rgba(255,255,255,0.65);">Rates-free weeks per year</span>
+                            <span class="calc-row-value" style="color: rgba(255,255,255,0.9);" id="res-relief-weeks">&mdash;</span>
+                        </div>
                     </div>
                     <div class="calc-savings-grid">
                         <div class="calc-savings-stat">
-                            <div class="calc-savings-stat-label">Rates saved per year</div>
+                            <div class="calc-savings-stat-label">Potential annual saving</div>
                             <div class="calc-savings-stat-value green" id="res-saving">&mdash;</div>
                         </div>
                         <div class="calc-savings-stat">
@@ -328,11 +365,11 @@ Year: 2026
                             <div class="calc-savings-stat-value muted" id="res-fee-amount">&mdash;</div>
                         </div>
                         <div class="calc-savings-stat">
-                            <div class="calc-savings-stat-label">Your net saving</div>
+                            <div class="calc-savings-stat-label">Net annual saving</div>
                             <div class="calc-savings-stat-value green" id="res-net-saving">&mdash;</div>
                         </div>
                     </div>
-                    <p style="font-size: 0.85rem; color: rgba(255,255,255,0.5); margin-bottom: 1.25rem;">That&rsquo;s <strong style="color: rgba(255,255,255,0.85);" id="res-monthly-saving">&mdash;</strong> back in your pocket every month.</p>
+                    <p style="font-size: 0.85rem; color: rgba(255,255,255,0.5); margin-bottom: 1.25rem;">Net monthly saving: <strong style="color: rgba(255,255,255,0.85);" id="res-monthly-saving">&mdash;</strong></p>
                     <div class="calc-savings-cta">
                         <a href="contact.html" class="btn-primary" id="calc-cta-btn">Get Your Free Assessment</a>
                         <a href="tel:03330900443" class="btn-secondary">
@@ -394,8 +431,8 @@ Year: 2026
 
     <vacatad-footer base-path="."></vacatad-footer>
 
-    <script src="js/calculator-data.js?v=20260326"></script>
-    <script src="js/calculator.js?v=20260326"></script>
+    <script src="js/calculator-data.js?v=20260327"></script>
+    <script src="js/calculator.js?v=20260327"></script>
     <script src="js/script.js"></script>
     <script src="js/footer-component.js"></script>
 </body>

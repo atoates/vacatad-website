@@ -502,6 +502,24 @@
     line-height: 1.5;
 }
 
+.calc-savings-detail {
+    position: relative;
+    z-index: 1;
+    margin-bottom: 1.25rem;
+    border-radius: 10px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.calc-savings-detail .calc-row {
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+}
+
+.calc-savings-detail .calc-row:last-child {
+    border-bottom: none;
+}
+
 .calc-savings-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);

@@ -69,6 +69,10 @@ const RATES_CONFIG = {
     standardExemptMonths: 3,
     industrialExemptMonths: 6,
     permanentExemptRVCeiling: 2900,
+    occupationWeeks: 13,
+    standardReliefWeeksPerYear: 26,
+    industrialReliefWeeksPerYear: 39,
+    weeksPerYear: 52,
   },
 
   // ── VACATAD FEE TIERS ──
