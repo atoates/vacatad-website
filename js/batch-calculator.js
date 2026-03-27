@@ -516,6 +516,33 @@
 
     doc.save("VacatAd-Portfolio-Report-2026-27.pdf");
 
+    // Log batch report data to backend (fire-and-forget)
+    try {
+      var payload = {
+        email:   gateData ? gateData.email   : "",
+        name:    userName,
+        company: userCompany,
+        total_rv:   totalRV,
+        total_bill:  totalBill,
+        total_net:   totalNet,
+        properties: batchProperties.map(function (item) {
+          return {
+            address:          item.prop.full_address || "",
+            postcode:         item.prop.postcode || "",
+            description_code: item.prop.description_code || "",
+            rv_2026:          item.prop.rv_2026 || 0,
+            annual_bill:      item.result.annualBill || 0,
+            net_saving:       item.result.potentialNetSaving || 0,
+          };
+        }),
+      };
+      fetch(API_URL + "/api/batch-report", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      }).catch(function () { /* silent — don't block user */ });
+    } catch (e) { /* silent */ }
+
     if (typeof gtag === "function") {
       gtag("event", "batch_report_generated", {
         event_category: "engagement",

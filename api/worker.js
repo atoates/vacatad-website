@@ -5,8 +5,10 @@
  * Returns matching properties with both 2023 and 2026 rateable values.
  *
  * Endpoints:
- *   GET /api/lookup?postcode=SW1A+1AA
- *   GET /api/lookup?q=search+term (address search)
+ *   GET  /api/lookup?postcode=SW1A+1AA
+ *   GET  /api/lookup?q=search+term (address search)
+ *   POST /api/leads         — capture lead gate submissions (Turso + JotForm)
+ *   POST /api/batch-report  — log batch PDF report generation data (Turso)
  *
  * Deploy: wrangler deploy
  *
@@ -74,6 +76,10 @@ export default {
 
     if (path === '/api/leads' || path === '/leads') {
       return handleLeads(request, env);
+    }
+
+    if (path === '/api/batch-report' || path === '/batch-report') {
+      return handleBatchReport(request, env);
     }
 
     return jsonResponse({ error: 'Not found' }, 404);
@@ -234,6 +240,86 @@ async function handleLeads(request, env) {
     success: true,
     jotform: jotformResult.status === 'fulfilled' ? 'ok' : jotformResult.reason?.message,
   });
+}
+
+async function handleBatchReport(request, env) {
+  if (request.method !== 'POST') {
+    return jsonResponse({ error: 'Method not allowed' }, 405);
+  }
+
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return jsonResponse({ error: 'Invalid JSON' }, 400);
+  }
+
+  const email   = (body.email   || '').trim().slice(0, 200);
+  const name    = (body.name    || '').trim().slice(0, 200);
+  const company = (body.company || '').trim().slice(0, 200);
+
+  const properties = Array.isArray(body.properties) ? body.properties.slice(0, 200) : [];
+  if (properties.length === 0) {
+    return jsonResponse({ error: 'No properties provided' }, 400);
+  }
+
+  const totalRV   = Number(body.total_rv)   || 0;
+  const totalBill = Number(body.total_bill)  || 0;
+  const totalNet  = Number(body.total_net)   || 0;
+  const createdAt = new Date().toISOString();
+
+  // Serialise properties as JSON text for storage
+  const propertiesJson = JSON.stringify(properties.map(p => ({
+    address:          (p.address || '').slice(0, 300),
+    postcode:         (p.postcode || '').slice(0, 12),
+    description_code: (p.description_code || '').slice(0, 10),
+    rv_2026:          Number(p.rv_2026) || 0,
+    annual_bill:      Number(p.annual_bill) || 0,
+    net_saving:       Number(p.net_saving) || 0,
+  })));
+
+  try {
+    await tursoQuery(
+      env.TURSO_URL,
+      env.TURSO_TOKEN,
+      `CREATE TABLE IF NOT EXISTS batch_reports (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        email TEXT,
+        name TEXT,
+        company TEXT,
+        property_count INTEGER NOT NULL,
+        properties_json TEXT NOT NULL,
+        total_rv REAL,
+        total_bill REAL,
+        total_net_saving REAL,
+        created_at TEXT NOT NULL
+      )`,
+      [],
+    );
+
+    await tursoQuery(
+      env.TURSO_URL,
+      env.TURSO_TOKEN,
+      `INSERT INTO batch_reports (email, name, company, property_count, properties_json, total_rv, total_bill, total_net_saving, created_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        { type: 'text',    value: email },
+        { type: 'text',    value: name },
+        { type: 'text',    value: company },
+        { type: 'integer', value: String(properties.length) },
+        { type: 'text',    value: propertiesJson },
+        { type: 'float',   value: String(totalRV) },
+        { type: 'float',   value: String(totalBill) },
+        { type: 'float',   value: String(totalNet) },
+        { type: 'text',    value: createdAt },
+      ],
+    );
+
+    return jsonResponse({ success: true });
+  } catch (err) {
+    // Log to Turso failed — don't block the PDF download
+    return jsonResponse({ error: 'Database error', detail: err.message }, 500);
+  }
 }
 
 async function tursoQuery(url, token, sql, args) {
