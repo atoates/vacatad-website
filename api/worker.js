@@ -182,24 +182,58 @@ async function handleLeads(request, env) {
 
   const createdAt = new Date().toISOString();
 
-  try {
-    await tursoQuery(env.TURSO_URL, env.TURSO_TOKEN, 'CREATE TABLE IF NOT EXISTS leads (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, email TEXT NOT NULL, company TEXT, page_url TEXT, created_at TEXT NOT NULL)', []);
-    await tursoQuery(
-      env.TURSO_URL,
-      env.TURSO_TOKEN,
-      'INSERT INTO leads (name, email, company, page_url, created_at) VALUES (?, ?, ?, ?, ?)',
-      [
-        { type: 'text', value: name },
-        { type: 'text', value: email },
-        { type: 'text', value: company },
-        { type: 'text', value: pageUrl },
-        { type: 'text', value: createdAt },
-      ],
-    );
-    return jsonResponse({ success: true });
-  } catch (err) {
-    return jsonResponse({ error: 'Database error', detail: err.message }, 500);
+  // Split name into first / last for JotForm
+  const nameParts = name.split(' ');
+  const firstName = nameParts[0];
+  const lastName  = nameParts.slice(1).join(' ');
+
+  // Run Turso insert and JotForm submission in parallel
+  const [tursoResult, jotformResult] = await Promise.allSettled([
+    // 1. Store in Turso
+    (async () => {
+      await tursoQuery(env.TURSO_URL, env.TURSO_TOKEN, 'CREATE TABLE IF NOT EXISTS leads (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, email TEXT NOT NULL, company TEXT, page_url TEXT, created_at TEXT NOT NULL)', []);
+      await tursoQuery(
+        env.TURSO_URL,
+        env.TURSO_TOKEN,
+        'INSERT INTO leads (name, email, company, page_url, created_at) VALUES (?, ?, ?, ?, ?)',
+        [
+          { type: 'text', value: name },
+          { type: 'text', value: email },
+          { type: 'text', value: company },
+          { type: 'text', value: pageUrl },
+          { type: 'text', value: createdAt },
+        ],
+      );
+    })(),
+
+    // 2. Forward to JotForm EU API
+    (async () => {
+      if (!env.JOTFORM_API_KEY) return;
+      const formData = new URLSearchParams();
+      formData.append('submission[3_first]', firstName);
+      formData.append('submission[3_last]',  lastName);
+      formData.append('submission[4]',        email);
+      formData.append('submission[5]',        company);
+      const res = await fetch(
+        `https://eu-api.jotform.com/form/260856747152060/submissions?apiKey=${env.JOTFORM_API_KEY}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: formData.toString(),
+        },
+      );
+      if (!res.ok) throw new Error(`JotForm API error: ${res.status}`);
+    })(),
+  ]);
+
+  if (tursoResult.status === 'rejected') {
+    return jsonResponse({ error: 'Database error', detail: tursoResult.reason?.message }, 500);
   }
+
+  return jsonResponse({
+    success: true,
+    jotform: jotformResult.status === 'fulfilled' ? 'ok' : jotformResult.reason?.message,
+  });
 }
 
 async function tursoQuery(url, token, sql, args) {

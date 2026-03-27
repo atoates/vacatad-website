@@ -568,54 +568,7 @@ Year: 2026
                 gtag('event', 'calculator_gate_submit', { event_category: 'Lead', event_label: company });
             }
 
-            // POST to JotForm via hidden form + iframe (most reliable cross-origin method)
-            var nameParts = name.split(' ');
-            var firstName = nameParts[0];
-            var lastName  = nameParts.slice(1).join(' ');
-            (function () {
-                var iframeName = 'jf_submit_' + Date.now();
-                var iframe = document.createElement('iframe');
-                iframe.name = iframe.id = iframeName;
-                iframe.style.display = 'none';
-                document.body.appendChild(iframe);
-
-                var jfForm = document.createElement('form');
-                jfForm.action  = 'https://submit.jotform.com/submit/260856747152060/';
-                jfForm.method  = 'POST';
-                jfForm.target  = iframeName;
-                jfForm.style.display = 'none';
-
-                var jfFields = {
-                    'q3_name[first]': firstName,
-                    'q3_name[last]':  lastName,
-                    'q4_workEmail':   email,
-                    'q5_company':     company,
-                    'formID':         '260856747152060',
-                    'simple_spc':     '260856747152060-260856747152060',
-                    'buildDate':      '1774652465893',
-                    'uploadServerUrl':'https://upload.jotform.com/upload',
-                    'eventObserver':  '1',
-                    'submitSource':   'embed',
-                    'website':        '' // honeypot — must stay blank
-                };
-                Object.keys(jfFields).forEach(function (key) {
-                    var inp = document.createElement('input');
-                    inp.type  = 'hidden';
-                    inp.name  = key;
-                    inp.value = jfFields[key];
-                    jfForm.appendChild(inp);
-                });
-
-                document.body.appendChild(jfForm);
-                jfForm.submit();
-
-                setTimeout(function () {
-                    if (jfForm.parentNode) jfForm.parentNode.removeChild(jfForm);
-                    if (iframe.parentNode) iframe.parentNode.removeChild(iframe);
-                }, 5000);
-            }());
-
-            // Also POST to Worker / Turso as backup
+            // POST to Worker — Worker stores in Turso and forwards to JotForm EU API
             fetch('https://vacatad-voa-lookup.vacatad.workers.dev/api/leads', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
