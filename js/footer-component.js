@@ -73,7 +73,7 @@ class VacatAdFooter extends HTMLElement {
                     </div>
                     <div class="footer-section">
                         <h4>Get Started</h4>
-                        <a href="${basePath}/contact.html#calculator" class="footer-cta">Calculate Your Savings</a>
+                        <a href="${basePath}/calculator.html" class="footer-cta">Calculate Your Savings</a>
                         <p class="footer-tagline">Rapid setup. Real compliance. Proven outcomes.</p>
                     </div>
                 </div>
