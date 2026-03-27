@@ -572,12 +572,23 @@ Year: 2026
             var nameParts = name.split(' ');
             var firstName = nameParts[0];
             var lastName  = nameParts.slice(1).join(' ');
+            var now       = Date.now();
             var jfData = new URLSearchParams();
+            // Visible fields
             jfData.append('q3_name[first]', firstName);
             jfData.append('q3_name[last]',  lastName);
             jfData.append('q4_workEmail',   email);
             jfData.append('q5_company',     company);
-            jfData.append('simple_spc',     '260856747152060-260856747152060');
+            // Required hidden fields
+            jfData.append('formID',           '260856747152060');
+            jfData.append('simple_spc',       '260856747152060-260856747152060');
+            jfData.append('buildDate',        '1774652465893');
+            jfData.append('uploadServerUrl',  'https://upload.jotform.com/upload');
+            jfData.append('eventObserver',    '1');
+            jfData.append('submitSource',     'embed');
+            jfData.append('event_id',         now + '_260856747152060_vacatad');
+            jfData.append('timeToSubmit',     '10');
+            jfData.append('website',          ''); // honeypot — must be blank
             fetch('https://submit.jotform.com/submit/260856747152060/', {
                 method: 'POST',
                 mode:   'no-cors',
