@@ -33,6 +33,7 @@
 
   var debounceTimer = null;
   var currentRequest = null;
+  var lastResults = null; // Store results for client-side filtering
 
   // Search on button click
   searchBtn.addEventListener("click", function () {
@@ -119,6 +120,40 @@
   }
 
   function showResults(properties) {
+    lastResults = properties;
+
+    // Build filter input (shown when 3+ results)
+    var filterHtml = "";
+    if (properties.length >= 3) {
+      filterHtml =
+        '<div class="calc-results-filter">' +
+          '<input type="text" id="resultsFilter" class="calc-results-filter-input" ' +
+            'placeholder="Filter ' + properties.length + ' results by address or type\u2026" autocomplete="off">' +
+          '<span class="calc-results-count" id="resultsCount">' + properties.length + ' properties</span>' +
+        '</div>';
+    }
+
+    var itemsHtml = buildResultItems(properties);
+
+    resultsContainer.innerHTML = filterHtml + '<div id="resultsListWrap">' + itemsHtml + '</div>';
+    resultsContainer.style.display = "block";
+
+    bindResultClicks(properties);
+
+    // Bind filter input
+    var filterInput = document.getElementById("resultsFilter");
+    if (filterInput) {
+      filterInput.addEventListener("input", function () {
+        filterResults(this.value.trim());
+      });
+      // Prevent the filter input from closing the dropdown
+      filterInput.addEventListener("click", function (e) {
+        e.stopPropagation();
+      });
+    }
+  }
+
+  function buildResultItems(properties) {
     var html = "";
     properties.forEach(function (prop, index) {
       var rv23 = prop.rv_2023 ? "\u00A3" + Number(prop.rv_2023).toLocaleString("en-GB") : "N/A";
@@ -142,11 +177,10 @@
           '</div>' +
         '</button>';
     });
+    return html;
+  }
 
-    resultsContainer.innerHTML = html;
-    resultsContainer.style.display = "block";
-
-    // Bind click events
+  function bindResultClicks(properties) {
     var buttons = resultsContainer.querySelectorAll(".calc-search-result-item");
     buttons.forEach(function (btn) {
       btn.addEventListener("click", function () {
@@ -154,6 +188,79 @@
         selectProperty(properties[idx]);
       });
     });
+  }
+
+  function filterResults(query) {
+    if (!lastResults) return;
+
+    var listWrap = document.getElementById("resultsListWrap");
+    var countEl = document.getElementById("resultsCount");
+    if (!listWrap) return;
+
+    if (!query) {
+      // Show all results
+      listWrap.innerHTML = buildResultItems(lastResults);
+      bindResultClicks(lastResults);
+      if (countEl) countEl.textContent = lastResults.length + " properties";
+      return;
+    }
+
+    var terms = query.toUpperCase().split(/\s+/);
+    var filtered = [];
+    var filteredIndices = [];
+
+    lastResults.forEach(function (prop, index) {
+      var haystack = [
+        prop.full_address || "",
+        prop.firm_name || "",
+        prop.description_text || "",
+        prop.description_code || ""
+      ].join(" ").toUpperCase();
+
+      var matches = terms.every(function (term) {
+        return haystack.indexOf(term) !== -1;
+      });
+
+      if (matches) {
+        filtered.push(prop);
+        filteredIndices.push(index);
+      }
+    });
+
+    if (filtered.length === 0) {
+      listWrap.innerHTML =
+        '<div class="calc-search-empty">No matching properties. Try a different filter.</div>';
+      if (countEl) countEl.textContent = "0 of " + lastResults.length;
+    } else {
+      // Build items but keep original indices for correct property selection
+      var html = "";
+      filtered.forEach(function (prop, i) {
+        var rv23 = prop.rv_2023 ? "\u00A3" + Number(prop.rv_2023).toLocaleString("en-GB") : "N/A";
+        var rv26 = prop.rv_2026 ? "\u00A3" + Number(prop.rv_2026).toLocaleString("en-GB") : "N/A";
+
+        var typeBadge = "";
+        if (prop.is_rhl) {
+          typeBadge = '<span class="calc-search-result-type rhl">RHL</span>';
+        } else if (prop.is_industrial) {
+          typeBadge = '<span class="calc-search-result-type industrial">Industrial</span>';
+        }
+
+        html +=
+          '<button type="button" class="calc-search-result-item" data-index="' + filteredIndices[i] + '">' +
+            '<div class="calc-search-result-address">' + escapeHtml(prop.full_address) + '</div>' +
+            '<div class="calc-search-result-meta">' +
+              '<span>2023: <span class="calc-search-result-rv">' + rv23 + '</span></span>' +
+              '<span>2026: <span class="calc-search-result-rv">' + rv26 + '</span></span>' +
+              '<span>' + escapeHtml(prop.description_text) + '</span>' +
+              typeBadge +
+            '</div>' +
+          '</button>';
+      });
+
+      listWrap.innerHTML = html;
+      bindResultClicks(lastResults);
+      if (countEl) countEl.textContent = filtered.length + " of " + lastResults.length;
+    }
   }
 
   function showEmpty(postcode) {
