@@ -2,65 +2,54 @@
 <html lang="en-GB">
     <!--
 Title: The Team | VacatAd
-Meta Description: Meet the VacatAd team - coming soon.
+Meta Description: Meet the leadership team behind VacatAd — the people driving technology-first business rates relief for commercial property owners across the UK.
 Author: VacatAd Ltd
-Year: 2025
+Year: 2026
 -->
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Security Headers -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.jotform.com https://form.jotform.com https://cdn.jotfor.ms; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com; frame-src https://www.jotform.com https://form.jotform.com https://www.pipedrive.com https://vacatadltd.pipedrive.com https://vacatad.pipedrive.com;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com;">
     <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
 
-    <meta name="description" content="Meet the VacatAd team - coming soon.">
-    <meta name="keywords" content="VacatAd team, about us, company team">
+    <meta name="description" content="Meet the leadership team behind VacatAd — the people driving technology-first business rates relief for commercial property owners across the UK.">
+    <meta name="keywords" content="VacatAd team, leadership, about us, Alistair Oates, Karl Jones, Jordan Jones">
     <meta name="author" content="VacatAd Ltd">
-    <meta name="robots" content="noindex, follow">
-    
+    <meta name="robots" content="index, follow">
+
     <title>The Team | VacatAd</title>
-    
-    <!-- Canonical URL -->
+
     <link rel="canonical" href="https://vacatad.com/the-team.html">
-    
-    <!-- Performance Optimizations -->
-    <link rel="preconnect" href="https://www.googletagmanager.com">
-    <link rel="dns-prefetch" href="https://www.google-analytics.com">
-    
-    <!-- CSS -->
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://www.googletagmanager.com">
 
-    <link rel="stylesheet" href="css/styles.css?v=20260319">
-    
-    <!-- Theme Color -->
+    <link rel="stylesheet" href="css/styles.css?v=20260326">
+
     <meta name="theme-color" content="#232523">
-    
-    <!-- Favicon -->
+
     <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
     <link rel="icon" type="image/png" sizes="32x32" href="assets/favicons/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="assets/favicons/favicon-16x16.png">
     <link rel="icon" type="image/webp" sizes="32x32" href="assets/favicons/favicon-32x32.webp">
     <link rel="apple-touch-icon" sizes="180x180" href="assets/favicons/apple-touch-icon.png">
     <link rel="icon" href="assets/favicons/favicon.ico" sizes="any">
-    
-    <!-- Open Graph / Facebook -->
+
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://vacatad.com/the-team.html">
     <meta property="og:title" content="The Team | VacatAd">
-    <meta property="og:description" content="Meet the VacatAd team - coming soon.">
+    <meta property="og:description" content="Meet the leadership team behind VacatAd — technology-first business rates relief for commercial property owners.">
     <meta property="og:image" content="https://vacatad.com/assets/images/asset-8.webp">
-    
-    <!-- Twitter -->
+
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://vacatad.com/the-team.html">
     <meta property="twitter:title" content="The Team | VacatAd">
-    <meta property="twitter:description" content="Meet the VacatAd team - coming soon.">
+    <meta property="twitter:description" content="Meet the leadership team behind VacatAd — technology-first business rates relief for commercial property owners.">
     <meta property="twitter:image" content="https://vacatad.com/assets/images/asset-8.webp">
-    
-    <!-- Google Analytics 4 -->
+
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-DEZQKBTTFH"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -71,56 +60,203 @@ Year: 2025
             'cookie_flags': 'SameSite=None;Secure'
         });
     </script>
-    
+
     <style>
-        .coming-soon-section {
-            min-height: 60vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 4rem 0;
+        .team-hero {
+            background: linear-gradient(160deg, rgba(26, 28, 26, 0.96) 0%, rgba(26, 28, 26, 0.88) 100%);
+            padding: 7rem 0 5rem;
             text-align: center;
+            position: relative;
+            overflow: hidden;
         }
-        
-        .coming-soon-content {
-            max-width: 600px;
+
+        .team-hero::before {
+            content: '';
+            position: absolute;
+            top: -30%;
+            right: -15%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(219, 244, 204, 0.06) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .team-hero .container { position: relative; z-index: 1; }
+
+        .team-hero h1 {
+            color: var(--white);
+            font-size: clamp(2.25rem, 5vw, 3.5rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .team-hero p {
+            color: rgba(255, 255, 255, 0.65);
+            font-size: 1.1rem;
+            max-width: 52ch;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Team grid */
+        .team-section {
+            padding: var(--section-padding) 0;
+            background: var(--white);
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            max-width: 1100px;
             margin: 0 auto;
         }
-        
-        .coming-soon-icon {
-            width: 120px;
-            height: 120px;
-            margin: 0 auto 2rem;
-            background: var(--tea-green);
-            border-radius: 50%;
+
+        .team-card {
+            background: var(--white);
+            border: 1px solid var(--border-light);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .team-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 16px 48px rgba(26, 28, 26, 0.1);
+        }
+
+        .team-photo-wrap {
+            position: relative;
+            background: var(--eerie-black);
+            overflow: hidden;
+            aspect-ratio: 4 / 5;
+        }
+
+        .team-photo-wrap::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 40%;
+            background: linear-gradient(to top, rgba(26, 28, 26, 0.6) 0%, transparent 100%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .team-photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top center;
+            display: block;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .team-card:hover .team-photo {
+            transform: scale(1.03);
+        }
+
+        .team-name-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 1.25rem 1.5rem;
+            z-index: 2;
+        }
+
+        .team-name-overlay h2 {
+            color: var(--white);
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.2rem;
+            line-height: 1.2;
+        }
+
+        .team-name-overlay .team-role {
+            color: var(--tea-green);
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+        }
+
+        .team-bio {
+            padding: 1.5rem;
+        }
+
+        .team-bio p {
+            color: var(--grey-text);
+            font-size: 0.9rem;
+            line-height: 1.65;
+        }
+
+        /* Values section */
+        .team-values {
+            padding: var(--section-padding) 0;
+            background: var(--seasalt);
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .value-card {
+            background: var(--white);
+            border: 1px solid var(--border-light);
+            border-radius: 14px;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .value-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: var(--tea-green-muted);
             display: flex;
             align-items: center;
             justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 1.3rem;
+        }
+
+        .value-card h3 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
             color: var(--eerie-black);
         }
-        
-        .coming-soon-icon svg {
-            width: 60px;
-            height: 60px;
-        }
-        
-        .coming-soon-content h1 {
-            font-size: clamp(2rem, 5vw, 3.5rem);
-            margin-bottom: 1.5rem;
-            color: var(--eerie-black);
-        }
-        
-        .coming-soon-content p {
-            font-size: 1.2rem;
+
+        .value-card p {
+            font-size: 0.9rem;
             color: var(--grey-text);
-            margin-bottom: 2rem;
-            line-height: 1.8;
+            line-height: 1.6;
+        }
+
+        /* Responsive */
+        @media screen and (max-width: 900px) {
+            .team-grid {
+                grid-template-columns: 1fr;
+                max-width: 420px;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            .team-hero { padding: 6.5rem 0 4rem; }
+
+            .values-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
     <a href="#main-content" class="skip-link">Skip to main content</a>
-    <!-- Header -->
+
     <header class="header">
         <nav class="navbar">
             <div class="nav-container">
@@ -131,27 +267,17 @@ Year: 2025
                     </a>
                 </div>
                 <ul class="nav-menu" id="primary-navigation">
-                    <li class="nav-item">
-                        <a href="index.html" class="nav-link">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="index.html#why-vacatad" class="nav-link">Why VacatAd</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="how-we-work.html" class="nav-link">How We Work</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="blog/index.html" class="nav-link">Blog</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="faqs.html" class="nav-link">FAQs</a>
-                    </li>
+                    <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
+                    <li class="nav-item"><a href="index.html#why-vacatad" class="nav-link">Why VacatAd</a></li>
+                    <li class="nav-item"><a href="how-we-work.html" class="nav-link">How We Work</a></li>
+                    <li class="nav-item"><a href="blog/index.html" class="nav-link">Blog</a></li>
+                    <li class="nav-item"><a href="faqs.html" class="nav-link">FAQs</a></li>
                 </ul>
                 <div class="cta-nav">
                     <a href="calculator.html" class="cta-button-nav calculator" aria-label="Business Rates Calculator"><span class="nav-icon" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"></rect><line x1="8" y1="6" x2="16" y2="6"></line><line x1="8" y1="10" x2="8" y2="10"></line><line x1="12" y1="10" x2="12" y2="10"></line><line x1="16" y1="10" x2="16" y2="10"></line><line x1="8" y1="14" x2="8" y2="14"></line><line x1="12" y1="14" x2="12" y2="14"></line><line x1="16" y1="14" x2="16" y2="14"></line><line x1="8" y1="18" x2="16" y2="18"></line></svg></span>Calculator</a>
                     <a href="contact.html" class="cta-button-nav">Get in touch</a>
                 </div>
-                <button class="nav-toggle" id="mobile-menu" aria-label="Toggle menu" aria-controls="primary-navigation" aria-expanded="false">
+                <button class="nav-toggle" id="mobile-menu" aria-label="Toggle menu" aria-controls="primary-navigation" aria-expanded="false" type="button">
                     <span class="bar"></span>
                     <span class="bar"></span>
                     <span class="bar"></span>
@@ -160,34 +286,110 @@ Year: 2025
         </nav>
     </header>
 
-    <!-- Main Content -->
     <main id="main-content">
-        <section class="coming-soon-section">
+        <!-- Hero -->
+        <section class="team-hero">
             <div class="container">
-                <div class="coming-soon-content">
-                    <div class="coming-soon-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="9" cy="7" r="4"></circle>
-                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                        </svg>
+                <h1>Meet the Team</h1>
+                <p>The people behind VacatAd &mdash; combining deep property expertise with technology-first thinking to deliver compliant business rates relief across the UK.</p>
+            </div>
+        </section>
+
+        <!-- Team Profiles -->
+        <section class="team-section">
+            <div class="container">
+                <div class="team-grid">
+                    <!-- Alistair Oates -->
+                    <div class="team-card">
+                        <div class="team-photo-wrap">
+                            <img src="assets/images/team/alistair-oates.png" alt="Alistair Oates, Managing Director at VacatAd" class="team-photo" width="600" height="750" loading="lazy">
+                            <div class="team-name-overlay">
+                                <h2>Alistair Oates</h2>
+                                <span class="team-role">Managing Director</span>
+                            </div>
+                        </div>
+                        <div class="team-bio">
+                            <p>With a background spanning finance, technology, and property &mdash; from investor relations at HSBC in Hong Kong to managing residential development projects in the UK &mdash; Alistair brings a diverse skill set to VacatAd. Holding an MSc in Building Surveying alongside a BA in Economics, he understands both the commercial and technical sides of the property landscape. His career in digital operations, product development, and data-driven decision making powers VacatAd&rsquo;s technology-first approach to business rates relief.</p>
+                        </div>
                     </div>
-                    <h1>The Team</h1>
-                    <p>We're putting together our team page. Check back soon to meet the people behind VacatAd.</p>
-                    <a href="index.html" class="cta-button primary">Back to Home</a>
+
+                    <!-- Jordan Jones -->
+                    <div class="team-card">
+                        <div class="team-photo-wrap">
+                            <img src="assets/images/team/jordan-jones.png" alt="Jordan Jones, Operations Director at VacatAd" class="team-photo" width="600" height="750" loading="lazy">
+                            <div class="team-name-overlay">
+                                <h2>Jordan Jones</h2>
+                                <span class="team-role">Operations Director</span>
+                            </div>
+                        </div>
+                        <div class="team-bio">
+                            <p>With a background in law and extensive experience in the Central London property market, Jordan is equipped to address the challenges of business rates mitigation head-on. With over 10 years of operational experience and knowledge, he ensures that VacatAd&rsquo;s services are not only effective but also fully compliant, helping property owners navigate the complexities they encounter.</p>
+                        </div>
+                    </div>
+
+                    <!-- Karl Jones -->
+                    <div class="team-card">
+                        <div class="team-photo-wrap">
+                            <img src="assets/images/team/karl-jones.png" alt="Karl Jones, Director of Business Development at VacatAd" class="team-photo" width="600" height="750" loading="lazy">
+                            <div class="team-name-overlay">
+                                <h2>Karl Jones</h2>
+                                <span class="team-role">Director, Business Development</span>
+                            </div>
+                        </div>
+                        <div class="team-bio">
+                            <p>Karl has vast knowledge of the rating industry in the UK and nearly a decade of experience managing portfolios worth over &pound;500 million. Business rates can be a complex worry for many companies, and helping clients make financial savings while reducing time and stress is at the core of what he does. Leading the business development team, Karl ensures that VacatAd&rsquo;s clients&rsquo; needs are met and exceeded, no matter the complexities encountered.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Values -->
+        <section class="team-values">
+            <div class="container">
+                <h2 class="section-title">What Drives Us</h2>
+                <div class="values-grid">
+                    <div class="value-card">
+                        <div class="value-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--eerie-black)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg></div>
+                        <h3>Compliance First</h3>
+                        <p>Every solution we deploy is built on robust legal foundations. We never cut corners on compliance.</p>
+                    </div>
+                    <div class="value-card">
+                        <div class="value-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--eerie-black)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg></div>
+                        <h3>Technology-Driven</h3>
+                        <p>Our platform automates what used to take weeks. Real-time data, transparent reporting, rapid deployment.</p>
+                    </div>
+                    <div class="value-card">
+                        <div class="value-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--eerie-black)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg></div>
+                        <h3>Client Outcomes</h3>
+                        <p>We measure success by one thing: the savings and peace of mind we deliver to every property owner we serve.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <section class="final-cta">
+            <div class="container">
+                <div class="final-cta-content">
+                    <h2 class="final-cta-title">Ready to Work With Us?</h2>
+                    <p class="final-cta-subtitle">Get in touch to discuss how VacatAd can reduce your empty property rates exposure.</p>
+                    <div class="final-cta-buttons">
+                        <a href="contact.html" class="cta-button primary">Get Your Free Assessment</a>
+                        <a href="tel:03330900443" class="cta-button secondary">
+                            <span class="phone-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg></span>
+                            0333 090 0443
+                        </a>
+                    </div>
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- Footer -->
-        <vacatad-footer base-path="."></vacatad-footer>
+    <vacatad-footer base-path="."></vacatad-footer>
 
-    <!-- JavaScript -->
     <script src="js/analytics-config.js"></script>
     <script src="js/script.js"></script>
     <script src="js/footer-component.js"></script>
 </body>
 </html>
-
