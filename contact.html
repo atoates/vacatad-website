@@ -91,7 +91,8 @@ Year: 2025
           <li class="nav-item"><a href="faqs.html" class="nav-link">FAQs</a></li>
         </ul>
         <div class="cta-nav">
-          <a href="contact.html" class="cta-button-nav">Get in touch</a>
+          <a href="calculator.html" class="cta-button-nav calculator" aria-label="Business Rates Calculator"><span class="nav-icon" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"></rect><line x1="8" y1="6" x2="16" y2="6"></line><line x1="8" y1="10" x2="8" y2="10"></line><line x1="12" y1="10" x2="12" y2="10"></line><line x1="16" y1="10" x2="16" y2="10"></line><line x1="8" y1="14" x2="8" y2="14"></line><line x1="12" y1="14" x2="12" y2="14"></line><line x1="16" y1="14" x2="16" y2="14"></line><line x1="8" y1="18" x2="16" y2="18"></line></svg></span>Calculator</a>
+                    <a href="contact.html" class="cta-button-nav">Get in touch</a>
         </div>
         <button class="nav-toggle" id="mobile-menu" aria-label="Toggle menu" aria-controls="primary-navigation" aria-expanded="false">
           <span class="bar"></span>
@@ -114,7 +115,6 @@ Year: 2025
       <div class="container">
         <div class="tabs">
           <button class="tab-link active" data-tab="contact-tab">Contact</button>
-          <button class="tab-link" data-tab="calculator-tab">Rate Saving Calculator</button>
           <button class="tab-link" data-tab="meeting-tab">Book a meeting</button>
         </div>
 
@@ -134,36 +134,10 @@ Year: 2025
             <script src='https://cdn.jotfor.ms/s/umd/latest/for-form-embed-handler.js'></script>
             <script>window.jotformEmbedHandler("iframe[id='JotFormIFrame-250277879809374']", "https://form.jotform.com/")</script>
           </div>
-        </div>
-
-        <div class="tab-content" id="calculator-tab">
-          <div class="embed-wrapper">
-            <iframe
-              id="JotFormIFrame-242852480967064"
-              title="Rates Savings Calculator"
-              onload="window.parent.scrollTo(0,0)"
-              allowtransparency="true"
-              allow="geolocation; microphone; camera; fullscreen; payment"
-              src="https://form.jotform.com/242852480967064"
-              frameborder="0"
-              style="min-width:100%;max-width:100%;height:539px;border:none;"
-              scrolling="no"
-            ></iframe>
-            <script src='https://cdn.jotfor.ms/s/umd/latest/for-form-embed-handler.js'></script>
-            <script>window.jotformEmbedHandler("iframe[id='JotFormIFrame-242852480967064']", "https://form.jotform.com/")</script>
-          </div>
-          <div style="max-width: 800px; margin: 2rem auto; padding: 1.5rem; background-color: var(--seasalt); border-radius: 8px; text-align: center;">
-            <h3 style="color: var(--eerie-black); margin-bottom: 1rem; font-size: 1.25rem;">Important Information</h3>
-            <p style="color: var(--grey-text); line-height: 1.6; margin-bottom: 1rem;">
-              <strong>Please note:</strong> The prices shown in the calculator are estimates only. We offer <strong>introductory discounts</strong> for new clients and pricing can vary based on your specific property requirements.
-            </p>
-            <p style="color: var(--grey-text); line-height: 1.6; margin-bottom: 1.5rem;">
-              To receive an exact quote tailored to your property and to discuss our current promotional offers, please get in touch with our team.
-            </p>
-            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-              <a href="#contact" class="cta-button primary" style="display: inline-block;">Contact Us</a>
-              <a href="tel:03330900443" class="cta-button secondary" style="display: inline-block;">Call: 0333 090 0443</a>
-            </div>
+          <div style="max-width: 800px; margin: 2rem auto 0; padding: 1.5rem; background-color: var(--seasalt); border: 1px solid var(--border-light); border-radius: 10px; text-align: center;">
+            <h3 style="color: var(--eerie-black); margin-bottom: 0.75rem; font-size: 1.15rem;">Need a quick rates estimate first?</h3>
+            <p style="color: var(--grey-text); line-height: 1.6; margin-bottom: 1rem;">Use our new Business Rates Calculator 2026/27, then come back here for your free assessment.</p>
+            <a href="calculator.html" class="cta-button primary" style="display: inline-block;">Open Rate Saving Calculator</a>
           </div>
         </div>
 
@@ -192,11 +166,11 @@ Year: 2025
 
   <script src="js/script.js"></script>
   <script>
-    // Tabs with hash-based deep linking (#contact | #calculator | #meeting)
+    // Tabs with hash-based deep linking (#contact | #meeting)
     document.addEventListener('DOMContentLoaded', () => {
       const links = Array.from(document.querySelectorAll('.tab-link'));
       const panes = Array.from(document.querySelectorAll('.tab-content'));
-      const tabMap = { contact: 'contact-tab', calculator: 'calculator-tab', meeting: 'meeting-tab' };
+      const tabMap = { contact: 'contact-tab', meeting: 'meeting-tab' };
 
       function selectTabByKey(key) {
         const id = tabMap[key] || tabMap.contact;
@@ -218,7 +192,6 @@ Year: 2025
         link.addEventListener('click', () => {
           let key = 'contact';
           if (link.dataset.tab === 'meeting-tab') key = 'meeting';
-          else if (link.dataset.tab === 'calculator-tab') key = 'calculator';
           
           if (window.location.hash !== '#' + key) {
             window.location.hash = key; // triggers hashchange
