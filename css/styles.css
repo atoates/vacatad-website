@@ -244,6 +244,9 @@ img {
 .cta-button-nav {
     background-color: var(--tea-green);
     color: var(--eerie-black);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.38rem;
     padding: 9px 20px;
     border-radius: 50px;
     font-weight: 600;
@@ -257,6 +260,26 @@ img {
     color: var(--tea-green);
     border-color: var(--tea-green);
     transform: translateY(-1px);
+}
+
+.cta-button-nav .nav-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+.cta-button-nav.calculator {
+    background-color: transparent;
+    color: rgba(255, 255, 255, 0.88);
+    border-color: rgba(255, 255, 255, 0.3);
+    padding: 9px 14px;
+}
+
+.cta-button-nav.calculator:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--white);
+    border-color: rgba(255, 255, 255, 0.55);
 }
 
 .cta-button-nav.dashboard {
