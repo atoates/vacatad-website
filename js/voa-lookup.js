@@ -28,6 +28,7 @@
   var rhlRadios = document.querySelectorAll('input[name="isRHL"]');
   var industrialRadios = document.querySelectorAll('input[name="isIndustrial"]');
   var pubVenueRadios = document.querySelectorAll('input[name="isPubOrVenue"]');
+  var londonRadios = document.querySelectorAll('input[name="isLondon"]');
 
   if (!searchInput || !resultsContainer) return;
 
@@ -205,7 +206,7 @@
       return;
     }
 
-    var terms = query.toUpperCase().split(/\s+/);
+    var phrase = query.toUpperCase();
     var filtered = [];
     var filteredIndices = [];
 
@@ -217,9 +218,7 @@
         prop.description_code || ""
       ].join(" ").toUpperCase();
 
-      var matches = terms.every(function (term) {
-        return haystack.indexOf(term) !== -1;
-      });
+      var matches = haystack.indexOf(phrase) !== -1;
 
       if (matches) {
         filtered.push(prop);
@@ -318,6 +317,13 @@
       setRadio(industrialRadios, "no");
     }
 
+    // Auto-detect London
+    if (prop.is_london) {
+      setRadio(londonRadios, "yes");
+    } else {
+      setRadio(londonRadios, "no");
+    }
+
     // Show selected property banner
     if (selectedBanner) {
       selectedAddress.textContent = prop.full_address;
@@ -351,6 +357,7 @@
     setRadio(rhlRadios, "no");
     setRadio(industrialRadios, "no");
     setRadio(pubVenueRadios, "no");
+    setRadio(londonRadios, "no");
 
     var pubGroup = document.getElementById("pubVenueGroup");
     if (pubGroup) pubGroup.style.display = "none";

@@ -88,13 +88,18 @@ async function handleLookup(url, env) {
 
   if (postcode) {
     // Exact postcode match (normalised)
-    const normalised = postcode.replace(/\s+/g, ' ');
+    // UK postcodes always have a 3-char inward code — strip all spaces then reinsert
+    const stripped = postcode.replace(/\s+/g, '');
+    const normalised = stripped.length > 3
+      ? stripped.slice(0, -3) + ' ' + stripped.slice(-3)
+      : stripped;
     sql = `SELECT uarn, full_address, description_code, description_text,
-                  firm_name, postcode, rv_2023, rv_2026
+                  firm_name, postcode, ba_code, rv_2023, rv_2026
            FROM properties
            WHERE postcode = ?
+             AND (rv_2026 >= 9000 OR rv_2023 >= 9000)
            ORDER BY full_address
-           LIMIT 50`;
+           LIMIT 500`;
     args = [{ type: 'text', value: normalised }];
   } else {
     // Address search (partial match)
@@ -131,6 +136,10 @@ async function handleLookup(url, env) {
       obj.is_rhl = RHL_CODES.has(code);
       obj.is_industrial = INDUSTRIAL_CODES.has(code);
       obj.is_pub_venue = PUB_VENUE_CODES.has(code);
+
+      // Auto-detect London (BA codes 5030–5990 are London boroughs)
+      const baNum = parseInt(obj.ba_code, 10) || 0;
+      obj.is_london = baNum >= 5030 && baNum <= 5990;
 
       return obj;
     });
