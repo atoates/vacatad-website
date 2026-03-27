@@ -110,13 +110,30 @@ function calculateTRSupplement(rateableValue, receivingTR, receivingSSB) {
   return rateableValue * RATES_CONFIG.transitionalSupplement.pencePerPound;
 }
 
-function calculateVacatAdFee(rateableValue, annualBill) {
+function calculateVacatAdFee(rateableValue, savingAmount) {
   const tier = RATES_CONFIG.vacatadFees.find(function(t) { return rateableValue < t.rvCeiling; });
   var feePercent = tier ? tier.feePercent : 10;
   return {
     feePercent: feePercent,
-    feeAmount: Math.round(annualBill * (feePercent / 100) * 100) / 100,
+    feeAmount: Math.round(savingAmount * (feePercent / 100) * 100) / 100,
   };
+}
+
+/**
+ * VacatAd saving model:
+ * - Each cycle: 13 weeks beneficial occupation → 3 months (13 weeks) Empty Property Relief
+ * - Per cycle = 26 weeks, of which 13 weeks = no rates (relief period)
+ * - 2 full cycles per year (52 weeks) = 26 weeks of relief
+ * - Saving = 26/52 = 50% of annual empty rates bill
+ */
+function calculateVacatAdSaving(annualBill) {
+  var reliefWeeksPerCycle = 13;
+  var occupationWeeksPerCycle = 13;
+  var cycleLength = reliefWeeksPerCycle + occupationWeeksPerCycle;
+  var cyclesPerYear = Math.floor(52 / cycleLength);
+  var reliefWeeksPerYear = cyclesPerYear * reliefWeeksPerCycle;
+  var savingFraction = reliefWeeksPerYear / 52;
+  return Math.round(annualBill * savingFraction * 100) / 100;
 }
 
 function calculateBusinessRates(inputs) {
@@ -162,9 +179,9 @@ function calculateBusinessRates(inputs) {
   result.annualBill = currentBill;
   result.monthlyBill = Math.round((currentBill / 12) * 100) / 100;
 
-  result.vacatadFee = calculateVacatAdFee(inputs.rateableValue, currentBill);
-  result.potentialAnnualSaving = currentBill;
-  result.potentialNetSaving = Math.round((currentBill - result.vacatadFee.feeAmount) * 100) / 100;
+  result.potentialAnnualSaving = calculateVacatAdSaving(currentBill);
+  result.vacatadFee = calculateVacatAdFee(inputs.rateableValue, result.potentialAnnualSaving);
+  result.potentialNetSaving = Math.round((result.potentialAnnualSaving - result.vacatadFee.feeAmount) * 100) / 100;
 
   return result;
 }
