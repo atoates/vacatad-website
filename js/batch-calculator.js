@@ -428,7 +428,7 @@
       doc.text(stat.label, x + boxW / 2, boxY + 14, { align: "center" });
       doc.setFont("helvetica", "bold");
       doc.setFontSize(13);
-      doc.setTextColor(i === 3 ? [34, 139, 34] : [26, 28, 26]);
+      if (i === 3) { doc.setTextColor(34, 139, 34); } else { doc.setTextColor(26, 28, 26); }
       doc.text(stat.value, x + boxW / 2, boxY + 30, { align: "center" });
     });
 
