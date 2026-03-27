@@ -166,6 +166,12 @@ Year: 2026
                     <span>Transitional relief built in</span>
                     <span>VacatAd savings estimate</span>
                 </div>
+
+                <!-- Mode Tabs — shown after gate, hidden during gate -->
+                <div class="calc-mode-tabs" id="calcModeTabs" style="display:none;">
+                    <button class="calc-mode-tab active" data-mode="single">Single Property</button>
+                    <button class="calc-mode-tab" data-mode="batch">Batch Calculator</button>
+                </div>
             </div>
         </section>
 
@@ -213,12 +219,6 @@ Year: 2026
 
         <!-- Calculator -->
         <div id="calcLayout" class="calc-layout" style="display:none;">
-
-            <!-- Mode Tabs -->
-            <div class="calc-mode-tabs">
-                <button class="calc-mode-tab active" data-mode="single">Single Property</button>
-                <button class="calc-mode-tab" data-mode="batch">Batch Calculator</button>
-            </div>
 
             <!-- ═══ SINGLE MODE ═══ -->
             <div id="singleMode">
@@ -589,10 +589,12 @@ Year: 2026
         var GATE_KEY  = 'vacatad_gate_v1';
         var gateEl    = document.getElementById('calcGate');
         var layoutEl  = document.getElementById('calcLayout');
+        var tabsEl    = document.getElementById('calcModeTabs');
 
         function showCalculator() {
-            gateEl.style.display  = 'none';
+            gateEl.style.display   = 'none';
             layoutEl.style.display = '';
+            if (tabsEl) tabsEl.style.display = '';
             layoutEl.classList.add('calc-layout--entering');
             setTimeout(function () { layoutEl.classList.remove('calc-layout--entering'); }, 400);
         }
