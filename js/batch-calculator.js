@@ -96,7 +96,42 @@
       });
   }
 
+  var lastBatchResults = null; // Store for client-side filtering
+
   function showBatchResults(properties) {
+    lastBatchResults = properties;
+
+    // Build filter input (shown when 3+ results)
+    var filterHtml = "";
+    if (properties.length >= 3) {
+      filterHtml =
+        '<div class="calc-results-filter">' +
+          '<input type="text" id="batchResultsFilter" class="calc-results-filter-input" ' +
+            'placeholder="Filter ' + properties.length + ' results by address or type\u2026" autocomplete="off">' +
+          '<span class="calc-results-count" id="batchResultsCount">' + properties.length + ' properties</span>' +
+        '</div>';
+    }
+
+    var itemsHtml = buildBatchResultItems(properties);
+
+    batchResults.innerHTML = filterHtml + '<div id="batchResultsWrap">' + itemsHtml + '</div>';
+    batchResults.style.display = "block";
+
+    bindBatchResultClicks(properties);
+
+    // Bind filter input
+    var filterInput = document.getElementById("batchResultsFilter");
+    if (filterInput) {
+      filterInput.addEventListener("input", function () {
+        filterBatchResults(this.value.trim());
+      });
+      filterInput.addEventListener("click", function (e) {
+        e.stopPropagation();
+      });
+    }
+  }
+
+  function buildBatchResultItems(properties) {
     var html = "";
     properties.forEach(function (prop, index) {
       var rv23 = prop.rv_2023 ? "\u00A3" + Number(prop.rv_2023).toLocaleString("en-GB") : "N/A";
@@ -118,10 +153,10 @@
           '</div>' +
         '</button>';
     });
+    return html;
+  }
 
-    batchResults.innerHTML = '<div id="batchResultsWrap">' + html + '</div>';
-    batchResults.style.display = "block";
-
+  function bindBatchResultClicks(properties) {
     batchResults.querySelectorAll(".calc-search-result-item:not(.already-added)").forEach(function (btn) {
       btn.addEventListener("click", function () {
         var idx = parseInt(this.getAttribute("data-index"), 10);
@@ -132,6 +167,70 @@
         if (addr) addr.innerHTML += ' <span class="batch-added-badge">Added</span>';
       });
     });
+  }
+
+  function filterBatchResults(query) {
+    if (!lastBatchResults) return;
+
+    var listWrap = document.getElementById("batchResultsWrap");
+    var countEl  = document.getElementById("batchResultsCount");
+    if (!listWrap) return;
+
+    if (!query) {
+      listWrap.innerHTML = buildBatchResultItems(lastBatchResults);
+      bindBatchResultClicks(lastBatchResults);
+      if (countEl) countEl.textContent = lastBatchResults.length + " properties";
+      return;
+    }
+
+    var phrase = query.toUpperCase();
+    var filtered = [];
+    var filteredIndices = [];
+
+    lastBatchResults.forEach(function (prop, index) {
+      var haystack = [
+        prop.full_address || "",
+        prop.firm_name || "",
+        prop.description_text || "",
+        prop.description_code || ""
+      ].join(" ").toUpperCase();
+
+      if (haystack.indexOf(phrase) !== -1) {
+        filtered.push(prop);
+        filteredIndices.push(index);
+      }
+    });
+
+    if (filtered.length === 0) {
+      listWrap.innerHTML = '<div class="calc-search-empty">No matching properties. Try a different filter.</div>';
+      if (countEl) countEl.textContent = "0 of " + lastBatchResults.length;
+    } else {
+      var html = "";
+      filtered.forEach(function (prop, i) {
+        var rv23 = prop.rv_2023 ? "\u00A3" + Number(prop.rv_2023).toLocaleString("en-GB") : "N/A";
+        var rv26 = prop.rv_2026 ? "\u00A3" + Number(prop.rv_2026).toLocaleString("en-GB") : "N/A";
+        var badge = "";
+        if (prop.is_rhl) badge = '<span class="calc-search-result-type rhl">RHL</span>';
+        else if (prop.is_industrial) badge = '<span class="calc-search-result-type industrial">Industrial</span>';
+
+        var added = batchProperties.some(function (bp) { return bp.prop.uarn === prop.uarn; });
+
+        html +=
+          '<button type="button" class="calc-search-result-item' + (added ? ' already-added' : '') + '" data-index="' + filteredIndices[i] + '"' + (added ? ' disabled' : '') + '>' +
+            '<div class="calc-search-result-address">' + esc(prop.full_address) + (added ? ' <span class="batch-added-badge">Added</span>' : '') + '</div>' +
+            '<div class="calc-search-result-meta">' +
+              '<span>2023: <span class="calc-search-result-rv">' + rv23 + '</span></span>' +
+              '<span>2026: <span class="calc-search-result-rv">' + rv26 + '</span></span>' +
+              '<span>' + esc(prop.description_text) + '</span>' +
+              badge +
+            '</div>' +
+          '</button>';
+      });
+
+      listWrap.innerHTML = html;
+      bindBatchResultClicks(lastBatchResults);
+      if (countEl) countEl.textContent = filtered.length + " of " + lastBatchResults.length;
+    }
   }
 
   /* ═══════════════════════════════════════════
