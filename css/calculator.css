@@ -306,6 +306,200 @@
     outline-offset: -2px;
 }
 
+/* ── Postcode Search ── */
+.calc-search-wrap {
+    display: flex;
+    align-items: center;
+    border: 1.5px solid var(--border-light);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    background: var(--white);
+}
+
+.calc-search-wrap:focus-within {
+    border-color: var(--eerie-black);
+    box-shadow: 0 0 0 3px rgba(26, 28, 26, 0.06);
+}
+
+.calc-search-wrap input {
+    flex: 1;
+    border: none;
+    padding: 0.85rem 1rem;
+    font-size: 1.05rem;
+    font-family: var(--font-primary);
+    color: var(--eerie-black);
+    outline: none;
+    background: transparent;
+    min-width: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.calc-search-wrap input::placeholder {
+    color: #b5b8b5;
+    text-transform: none;
+    letter-spacing: normal;
+}
+
+.calc-search-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background: var(--eerie-black);
+    border: none;
+    cursor: pointer;
+    color: var(--white);
+    transition: background 0.2s;
+    flex-shrink: 0;
+}
+
+.calc-search-btn:hover {
+    background: #333;
+}
+
+.calc-search-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.calc-search-results {
+    margin-top: 0.5rem;
+    border: 1.5px solid var(--border-light);
+    border-radius: 10px;
+    overflow: hidden;
+    max-height: 320px;
+    overflow-y: auto;
+    background: var(--white);
+    box-shadow: 0 8px 24px rgba(26, 28, 26, 0.1);
+}
+
+.calc-search-result-item {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 0.75rem 1rem;
+    border: none;
+    border-bottom: 1px solid rgba(228, 231, 228, 0.6);
+    background: transparent;
+    cursor: pointer;
+    font-family: var(--font-primary);
+    transition: background 0.15s;
+}
+
+.calc-search-result-item:last-child {
+    border-bottom: none;
+}
+
+.calc-search-result-item:hover {
+    background: var(--seasalt);
+}
+
+.calc-search-result-address {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--eerie-black);
+    line-height: 1.35;
+}
+
+.calc-search-result-meta {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.25rem;
+    font-size: 0.78rem;
+    color: var(--grey-text);
+}
+
+.calc-search-result-rv {
+    font-weight: 600;
+}
+
+.calc-search-result-type {
+    display: inline-block;
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.calc-search-result-type.rhl {
+    background: rgba(90, 184, 187, 0.12);
+    color: #3a8a8d;
+}
+
+.calc-search-result-type.industrial {
+    background: rgba(180, 130, 60, 0.12);
+    color: #8a6a2a;
+}
+
+.calc-search-loading {
+    padding: 1.25rem;
+    text-align: center;
+    font-size: 0.88rem;
+    color: var(--grey-text);
+}
+
+.calc-search-empty {
+    padding: 1.25rem;
+    text-align: center;
+    font-size: 0.88rem;
+    color: var(--grey-text);
+}
+
+/* Selected property banner */
+.calc-selected-property {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+    background: rgba(219, 244, 204, 0.15);
+    border: 1.5px solid rgba(219, 244, 204, 0.5);
+    border-radius: 10px;
+    animation: calcSlideDown 0.25s ease-out;
+}
+
+.calc-selected-property-info strong {
+    display: block;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--eerie-black);
+    line-height: 1.3;
+}
+
+.calc-selected-property-desc {
+    display: block;
+    font-size: 0.78rem;
+    color: var(--grey-text);
+    margin-top: 0.15rem;
+}
+
+.calc-selected-property-clear {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: rgba(26, 28, 26, 0.08);
+    border-radius: 6px;
+    font-size: 1.1rem;
+    color: var(--grey-text);
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.15s;
+}
+
+.calc-selected-property-clear:hover {
+    background: rgba(217, 64, 64, 0.1);
+    color: #d94040;
+}
+
 /* Conditional field animation */
 .calc-conditional {
     display: none;

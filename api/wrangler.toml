@@ -1,0 +1,9 @@
+name = "vacatad-voa-lookup"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+
+[vars]
+TURSO_URL = "https://voa-combined-atoates.aws-eu-west-1.turso.io"
+
+# TURSO_TOKEN should be set as a secret:
+# wrangler secret put TURSO_TOKEN

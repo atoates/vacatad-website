@@ -82,3 +82,13 @@ CODE_REVIEW.md
 .venv/
 venv/
 env/
+
+# VOA database files (hosted on Turso, not in repo)
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+# Cloudflare Wrangler local cache (may contain account metadata)
+.wrangler/
