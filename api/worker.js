@@ -72,6 +72,10 @@ export default {
       return handleLookup(url, env);
     }
 
+    if (path === '/api/leads' || path === '/leads') {
+      return handleLeads(request, env);
+    }
+
     return jsonResponse({ error: 'Not found' }, 404);
   },
 };
@@ -155,6 +159,49 @@ async function handleLookup(url, env) {
   }
 }
 
+async function handleLeads(request, env) {
+  if (request.method !== 'POST') {
+    return jsonResponse({ error: 'Method not allowed' }, 405);
+  }
+
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return jsonResponse({ error: 'Invalid JSON' }, 400);
+  }
+
+  const name    = (body.name     || '').trim().slice(0, 200);
+  const email   = (body.email    || '').trim().slice(0, 200);
+  const company = (body.company  || '').trim().slice(0, 200);
+  const pageUrl = (body.page_url || '').trim().slice(0, 500);
+
+  if (!name || !email) {
+    return jsonResponse({ error: 'Name and email are required' }, 400);
+  }
+
+  const createdAt = new Date().toISOString();
+
+  try {
+    await tursoQuery(env.TURSO_URL, env.TURSO_TOKEN, 'CREATE TABLE IF NOT EXISTS leads (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, email TEXT NOT NULL, company TEXT, page_url TEXT, created_at TEXT NOT NULL)', []);
+    await tursoQuery(
+      env.TURSO_URL,
+      env.TURSO_TOKEN,
+      'INSERT INTO leads (name, email, company, page_url, created_at) VALUES (?, ?, ?, ?, ?)',
+      [
+        { type: 'text', value: name },
+        { type: 'text', value: email },
+        { type: 'text', value: company },
+        { type: 'text', value: pageUrl },
+        { type: 'text', value: createdAt },
+      ],
+    );
+    return jsonResponse({ success: true });
+  } catch (err) {
+    return jsonResponse({ error: 'Database error', detail: err.message }, 500);
+  }
+}
+
 async function tursoQuery(url, token, sql, args) {
   const response = await fetch(`${url}/v2/pipeline`, {
     method: 'POST',
@@ -190,7 +237,7 @@ function jsonResponse(data, status = 200) {
 function corsHeaders() {
   return {
     'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'GET, OPTIONS',
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',
     'Access-Control-Max-Age': '86400',
   };

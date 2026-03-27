@@ -10,7 +10,7 @@ Year: 2026
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://vacatad-voa-lookup.vacatad.workers.dev;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://vacatad-voa-lookup.vacatad.workers.dev https://submit.jotform.com;">
     <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
 
@@ -169,8 +169,50 @@ Year: 2026
             </div>
         </section>
 
+        <!-- Lead Gate -->
+        <div id="calcGate" class="calc-layout" style="display:none;">
+            <div class="calc-card calc-gate-card">
+                <div class="calc-gate-badge">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="10" y2="10"/><line x1="14" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="10" y2="14"/><line x1="14" y1="14" x2="16" y2="14"/><line x1="8" y1="18" x2="16" y2="18"/></svg>
+                    Free Calculator Access
+                </div>
+                <h2 class="calc-gate-title">Get Instant Access</h2>
+                <p class="calc-gate-subtitle">Join hundreds of property managers and landlords planning for the April&nbsp;2026 revaluation. Enter your details to access the free calculator.</p>
+                <ul class="calc-gate-benefits">
+                    <li>Updated for the 2026 five-tier multiplier system</li>
+                    <li>Transitional relief calculations built in</li>
+                    <li>Instant VacatAd savings estimate</li>
+                </ul>
+                <form id="gateForm" novalidate class="calc-gate-form">
+                    <div class="calc-gate-field">
+                        <label class="calc-label" for="gateName">Your name</label>
+                        <div class="calc-gate-input-wrap">
+                            <input type="text" id="gateName" name="gateName" class="calc-gate-input" placeholder="Jane Smith" autocomplete="name">
+                        </div>
+                        <p class="calc-gate-error" style="display:none;"></p>
+                    </div>
+                    <div class="calc-gate-field">
+                        <label class="calc-label" for="gateEmail">Work email</label>
+                        <div class="calc-gate-input-wrap">
+                            <input type="email" id="gateEmail" name="gateEmail" class="calc-gate-input" placeholder="jane@company.com" autocomplete="email">
+                        </div>
+                        <p class="calc-gate-error" style="display:none;"></p>
+                    </div>
+                    <div class="calc-gate-field">
+                        <label class="calc-label" for="gateCompany">Company</label>
+                        <div class="calc-gate-input-wrap">
+                            <input type="text" id="gateCompany" name="gateCompany" class="calc-gate-input" placeholder="Company name" autocomplete="organization">
+                        </div>
+                        <p class="calc-gate-error" style="display:none;"></p>
+                    </div>
+                    <button type="submit" id="gateSubmit" class="calc-submit">Access the Calculator &rarr;</button>
+                    <p class="calc-gate-privacy">No spam. We may occasionally send useful updates on business rates.</p>
+                </form>
+            </div>
+        </div>
+
         <!-- Calculator -->
-        <div class="calc-layout">
+        <div id="calcLayout" class="calc-layout" style="display:none;">
             <div class="calc-card">
                 <div class="calc-card-header">
                     <h2>Enter Your Property Details</h2>
@@ -464,5 +506,109 @@ Year: 2026
     <script src="js/voa-lookup.js?v=20260327"></script>
     <script src="js/script.js"></script>
     <script src="js/footer-component.js"></script>
+
+    <script>
+    /* ── Calculator Lead Gate ── */
+    (function () {
+        var GATE_KEY  = 'vacatad_gate_v1';
+        var gateEl    = document.getElementById('calcGate');
+        var layoutEl  = document.getElementById('calcLayout');
+
+        function showCalculator() {
+            gateEl.style.display  = 'none';
+            layoutEl.style.display = '';
+            layoutEl.classList.add('calc-layout--entering');
+            setTimeout(function () { layoutEl.classList.remove('calc-layout--entering'); }, 400);
+        }
+
+        // Already submitted — skip gate
+        if (localStorage.getItem(GATE_KEY)) {
+            showCalculator();
+            return;
+        }
+
+        // Show gate
+        gateEl.style.display = '';
+
+        var form      = document.getElementById('gateForm');
+        var submitBtn = document.getElementById('gateSubmit');
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            var name    = document.getElementById('gateName').value.trim();
+            var email   = document.getElementById('gateEmail').value.trim();
+            var company = document.getElementById('gateCompany').value.trim();
+
+            clearErrors();
+            var valid = true;
+
+            if (!name) {
+                showError('gateName', 'Please enter your name.');
+                valid = false;
+            }
+            if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                showError('gateEmail', 'Please enter a valid work email address.');
+                valid = false;
+            }
+            if (!company) {
+                showError('gateCompany', 'Please enter your company name.');
+                valid = false;
+            }
+            if (!valid) return;
+
+            submitBtn.disabled    = true;
+            submitBtn.textContent = 'Please wait\u2026';
+
+            // Persist locally immediately so gate is skipped on return visit
+            localStorage.setItem(GATE_KEY, JSON.stringify({ name: name, email: email, company: company, ts: new Date().toISOString() }));
+
+            // GA event
+            if (typeof gtag === 'function') {
+                gtag('event', 'calculator_gate_submit', { event_category: 'Lead', event_label: company });
+            }
+
+            // POST to JotForm (fire-and-forget, no-cors)
+            var nameParts = name.split(' ');
+            var firstName = nameParts[0];
+            var lastName  = nameParts.slice(1).join(' ');
+            var jfData = new URLSearchParams();
+            jfData.append('q3_name[first]', firstName);
+            jfData.append('q3_name[last]',  lastName);
+            jfData.append('q4_workEmail',   email);
+            jfData.append('q5_company',     company);
+            jfData.append('simple_spc',     '260856747152060-260856747152060');
+            fetch('https://submit.jotform.com/submit/260856747152060/', {
+                method: 'POST',
+                mode:   'no-cors',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body:   jfData.toString()
+            }).catch(function () {});
+
+            // Also POST to Worker / Turso as backup
+            fetch('https://vacatad-voa-lookup.vacatad.workers.dev/api/leads', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: name, email: email, company: company, page_url: window.location.href })
+            }).catch(function () {});
+
+            // Animate out then show calculator
+            gateEl.classList.add('calc-gate--exiting');
+            setTimeout(showCalculator, 280);
+        });
+
+        function clearErrors() {
+            form.querySelectorAll('.calc-gate-error').forEach(function (el) { el.style.display = 'none'; });
+            form.querySelectorAll('.calc-gate-input--error').forEach(function (el) { el.classList.remove('calc-gate-input--error'); });
+        }
+
+        function showError(inputId, message) {
+            var input = document.getElementById(inputId);
+            var errEl = input.parentNode.querySelector('.calc-gate-error');
+            if (errEl) { errEl.textContent = message; errEl.style.display = 'block'; }
+            input.classList.add('calc-gate-input--error');
+        }
+    }());
+    </script>
 </body>
 </html>

@@ -977,3 +977,163 @@
         font-size: 1.15rem;
     }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   LEAD GATE
+   ═══════════════════════════════════════════════════════════════ */
+
+.calc-gate-card {
+    max-width: 520px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.calc-gate-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.35rem 0.9rem;
+    margin-bottom: 1.4rem;
+    background: rgba(90, 184, 187, 0.08);
+    border: 1px solid rgba(90, 184, 187, 0.22);
+    border-radius: 100px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--blue-accent);
+    letter-spacing: 0.02em;
+}
+
+.calc-gate-badge svg {
+    stroke: var(--blue-accent);
+}
+
+.calc-gate-title {
+    font-size: 1.85rem;
+    font-weight: 800;
+    color: var(--eerie-black);
+    margin-bottom: 0.65rem;
+    line-height: 1.1;
+}
+
+.calc-gate-subtitle {
+    color: var(--grey-text);
+    font-size: 1rem;
+    line-height: 1.65;
+    max-width: 44ch;
+    margin: 0 auto 1.75rem;
+}
+
+.calc-gate-benefits {
+    list-style: none;
+    padding: 0.9rem 1.25rem;
+    margin: 0 0 2rem;
+    background: var(--seasalt);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    text-align: left;
+}
+
+.calc-gate-benefits li {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    font-size: 0.9rem;
+    color: var(--eerie-black);
+    font-weight: 500;
+}
+
+.calc-gate-benefits li::before {
+    content: '';
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    background: rgba(90, 184, 187, 0.14);
+    border-radius: 50%;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%235ab8bb' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 10px 10px;
+}
+
+.calc-gate-form {
+    text-align: left;
+}
+
+.calc-gate-field {
+    margin-bottom: 1.1rem;
+}
+
+.calc-gate-input-wrap {
+    position: relative;
+}
+
+.calc-gate-input {
+    width: 100%;
+    padding: 0.78rem 1rem;
+    font-size: 1rem;
+    font-family: inherit;
+    color: var(--eerie-black);
+    background: var(--white);
+    border: 1.5px solid var(--border-light);
+    border-radius: 8px;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    box-sizing: border-box;
+    outline: none;
+    -webkit-appearance: none;
+}
+
+.calc-gate-input::placeholder {
+    color: #b0b5b0;
+}
+
+.calc-gate-input:focus {
+    border-color: var(--blue-accent);
+    box-shadow: 0 0 0 3px rgba(90, 184, 187, 0.15);
+}
+
+.calc-gate-input--error {
+    border-color: #d63031 !important;
+    box-shadow: 0 0 0 3px rgba(214, 48, 49, 0.1) !important;
+}
+
+.calc-gate-error {
+    font-size: 0.82rem;
+    color: #d63031;
+    margin-top: 0.3rem;
+    font-weight: 500;
+}
+
+.calc-gate-form .calc-submit {
+    width: 100%;
+    margin-top: 0.75rem;
+}
+
+.calc-gate-privacy {
+    font-size: 0.8rem;
+    color: var(--grey-text);
+    text-align: center;
+    margin-top: 0.85rem;
+    margin-bottom: 0;
+    line-height: 1.5;
+}
+
+/* Gate / calculator transitions */
+.calc-gate--exiting {
+    animation: gateExit 0.28s ease forwards;
+}
+
+@keyframes gateExit {
+    from { opacity: 1; transform: translateY(0); }
+    to   { opacity: 0; transform: translateY(-10px); }
+}
+
+.calc-layout--entering {
+    animation: calcEnter 0.38s ease forwards;
+}
+
+@keyframes calcEnter {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
