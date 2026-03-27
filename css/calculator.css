@@ -410,7 +410,8 @@
     flex-shrink: 0;
 }
 
-#resultsListWrap {
+#resultsListWrap,
+#batchResultsWrap {
     overflow-y: auto;
     max-height: 340px;
 }
