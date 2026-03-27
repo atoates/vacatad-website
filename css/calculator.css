@@ -1137,3 +1137,277 @@
     from { opacity: 0; transform: translateY(10px); }
     to   { opacity: 1; transform: translateY(0); }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   MODE TABS (Single / Batch)
+   ═══════════════════════════════════════════════════════════════ */
+
+.calc-mode-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 1.25rem;
+    background: var(--seasalt);
+    border-radius: 10px;
+    padding: 4px;
+    border: 1px solid var(--border-light);
+}
+
+.calc-mode-tab {
+    flex: 1;
+    padding: 0.65rem 1rem;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--grey-text);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.calc-mode-tab:hover {
+    color: var(--eerie-black);
+    background: rgba(255, 255, 255, 0.6);
+}
+
+.calc-mode-tab.active {
+    background: var(--white);
+    color: var(--eerie-black);
+    box-shadow: 0 1px 3px rgba(26, 28, 26, 0.08);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   BATCH MODE
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Empty state ── */
+.batch-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+    color: var(--grey-text);
+}
+
+.batch-empty svg {
+    stroke: var(--border-light);
+}
+
+.batch-empty p {
+    font-size: 0.9rem;
+    max-width: 32ch;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* ── Property list ── */
+.batch-property-list {
+    margin-bottom: 1.5rem;
+    max-height: 480px;
+    overflow-y: auto;
+}
+
+.batch-item {
+    border: 1px solid var(--border-light);
+    border-radius: 10px;
+    padding: 0.85rem 1rem;
+    margin-bottom: 0.5rem;
+    background: var(--white);
+    transition: box-shadow 0.15s;
+}
+
+.batch-item:hover {
+    box-shadow: 0 2px 8px rgba(26, 28, 26, 0.06);
+}
+
+.batch-item-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.6rem;
+}
+
+.batch-item-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.batch-item-address {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--eerie-black);
+    line-height: 1.3;
+    word-break: break-word;
+}
+
+.batch-item-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.3rem;
+    flex-wrap: wrap;
+}
+
+.batch-item-desc {
+    font-size: 0.78rem;
+    color: var(--grey-text);
+}
+
+.batch-type-badge {
+    display: inline-block;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0.15rem 0.45rem;
+    border-radius: 4px;
+    line-height: 1;
+}
+
+.batch-type-badge.rhl {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.batch-type-badge.industrial {
+    background: #e3f2fd;
+    color: #1565c0;
+}
+
+.batch-type-badge.london {
+    background: #fce4ec;
+    color: #c62828;
+}
+
+.batch-item-remove {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--grey-text);
+    font-size: 1.3rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+}
+
+.batch-item-remove:hover {
+    background: #fce4ec;
+    color: #c62828;
+}
+
+/* ── Figures row ── */
+.batch-item-figures {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.batch-figure {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+.batch-figure-label {
+    font-size: 0.72rem;
+    color: var(--grey-text);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.batch-figure-value {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--eerie-black);
+}
+
+.batch-figure-green {
+    color: #2e7d32;
+}
+
+/* ── Running totals ── */
+.batch-totals {
+    background: var(--seasalt);
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--border-light);
+}
+
+.batch-totals-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+}
+
+.batch-total-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    text-align: center;
+}
+
+.batch-total-label {
+    font-size: 0.72rem;
+    color: var(--grey-text);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.batch-total-value {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--eerie-black);
+}
+
+.batch-total-highlight .batch-total-value {
+    color: #2e7d32;
+}
+
+/* ── "Added" badge in search results ── */
+.batch-added-badge {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #2e7d32;
+    background: #e8f5e9;
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    margin-left: 0.35rem;
+    vertical-align: middle;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.calc-search-result-item.already-added {
+    opacity: 0.55;
+    cursor: default;
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+    .batch-totals-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .batch-item-figures {
+        gap: 0.75rem;
+    }
+
+    .batch-figure {
+        flex: 1;
+        min-width: 80px;
+    }
+}
