@@ -1,11 +1,33 @@
 [
   {
+    "id": 1775145600000,
+    "title": "Business Rates 101: Everything You Need to Know for 2026/27",
+    "slug": "business-rates-101-everything-you-need-to-know-for-2026",
+    "date": "Mar 28, 2026",
+    "excerpt": "The definitive beginner-friendly guide to UK business rates from April 2026. Covers the new five-tier multiplier system, all available reliefs, empty property rules, the revaluation, and how to reduce your bill.",
+    "image": "posts/26-03-28-business-rates-101-everything-you-need-to-know-for-2026/hero.webp",
+    "imageAlt": "Business Rates 101 guide for 2026/27 showing the five new multiplier tiers and key changes",
+    "tags": [
+      "Business Rates",
+      "Beginners Guide",
+      "Revaluation 2026",
+      "Relief Schemes",
+      "Empty Property Relief"
+    ],
+    "featured": true,
+    "author": {
+      "name": "VacatAd Team",
+      "role": "Property Solutions Experts"
+    },
+    "readTime": "12 min read"
+  },
+  {
     "id": 1774972800000,
     "title": "The Double Squeeze: Why Rising Rates and EPC Rules Are a Perfect Storm for Vacant Property Owners",
     "slug": "the-double-squeeze-why-rising-rates-and-epc-rules-are-a-perfect-storm-for-vacant-property-owners",
     "date": "Mar 26, 2026",
     "excerpt": "Commercial landlords with vacant properties face a perfect storm: the April 2026 business rates overhaul is pushing empty rates bills sharply upward, while approaching MEES deadlines threaten to make 81% of commercial buildings unlettable. We examine both pressures and the strategies that can protect your portfolio.",
-    "image": "posts/26-03-26-the-double-squeeze-why-rising-rates-and-epc-rules-are-a-perfect-storm-for-vacant-property-owners/hero.jpg",
+    "image": "posts/26-03-26-the-double-squeeze-why-rising-rates-and-epc-rules-are-a-perfect-storm-for-vacant-property-owners/hero.webp",
     "imageAlt": "Empty commercial building representing the dual regulatory pressures of rising business rates and EPC requirements on vacant property owners",
     "tags": [
       "Business Rates",
@@ -27,7 +49,7 @@
     "slug": "the-april-reset-your-complete-guide-to-the-biggest-rates-overhaul-in-a-decade",
     "date": "Mar 12, 2026",
     "excerpt": "With just weeks until the most significant business rates overhaul in a decade, here is your definitive guide to the new five-tier multiplier system, the confirmed rates (38.2p to 50.8p), transitional relief, and a step-by-step countdown checklist for April 2026.",
-    "image": "posts/26-03-12-the-april-reset-your-complete-guide-to-the-biggest-rates-overhaul-in-a-decade/hero.jpg",
+    "image": "posts/26-03-12-the-april-reset-your-complete-guide-to-the-biggest-rates-overhaul-in-a-decade/hero.webp",
     "imageAlt": "Business documents and April 2026 calendar representing the rates deadline countdown",
     "tags": [
       "Business Rates",
@@ -49,7 +71,7 @@
     "slug": "the-vacant-properties-bill-could-councils-force-open-your-empty-units",
     "date": "Feb 19, 2026",
     "excerpt": "A new Private Members' Bill proposes giving local authorities the power to place charities and small businesses in vacant commercial properties — potentially rent-free and without landlord consent. We analyse the Vacant Commercial Properties (Temporary Use) Bill and what it means for property owners.",
-    "image": "posts/26-02-19-the-vacant-properties-bill-could-councils-force-open-your-empty-units/hero.jpg",
+    "image": "posts/26-02-19-the-vacant-properties-bill-could-councils-force-open-your-empty-units/hero.webp",
     "imageAlt": "Padlocked vacant commercial property on a UK high street with a To Let sign",
     "tags": [
       "Legislation",
@@ -71,7 +93,7 @@
     "slug": "2026-revaluation-unveiled-what-the-draft-values-reveal-about-your-rates-bill",
     "date": "Jan 22, 2026",
     "excerpt": "The VOA has published draft 2026 rateable values revealing a 19.2% national increase across 2.13 million properties — from £70.8bn to £84.4bn. We break down the regional winners and losers, the sector-by-sector impact, the £4.3 billion support package, and the critical steps you must take before March 31.",
-    "image": "posts/26-01-22-2026-revaluation-unveiled-what-the-draft-values-reveal-about-your-rates-bill/hero.jpg",
+    "image": "posts/26-01-22-2026-revaluation-unveiled-what-the-draft-values-reveal-about-your-rates-bill/hero.webp",
     "imageAlt": "London skyline at dawn reflecting the scale of the 2026 business rates revaluation",
     "tags": [
       "Business Rates",
@@ -93,7 +115,7 @@
     "slug": "2026-budget-predictions-what-commercial-landlords-should-expect-for-business-rates-reform",
     "date": "2026-01-08",
     "excerpt": "Expert analysis of expected business rates reforms in the 2026 Spring Budget. Comprehensive predictions on revaluation impacts, multiplier changes, relief adjustments, and strategic preparation guidance for commercial property owners.",
-    "image": "posts/26-01-08-2026-budget-predictions-what-commercial-landlords-should-expect-for-business-rates-reform/hero.jpg",
+    "image": "posts/26-01-08-2026-budget-predictions-what-commercial-landlords-should-expect-for-business-rates-reform/hero.webp",
     "imageAlt": "Budget planning and financial forecasting for 2026",
     "tags": [
       "Business Rates",
@@ -115,7 +137,7 @@
     "slug": "winter-void-management-why-empty-properties-cost-more-in-q4-and-how-to-protect-your-assets",
     "date": "2025-12-18",
     "excerpt": "Comprehensive analysis of winter-specific costs and risks for vacant commercial properties. Strategic guidance combining security, maintenance, insurance compliance, and business rates optimization during Q4 void periods.",
-    "image": "posts/25-12-18-winter-void-management-why-empty-properties-cost-more-in-q4-and-how-to-protect-your-assets/hero.jpg",
+    "image": "posts/25-12-18-winter-void-management-why-empty-properties-cost-more-in-q4-and-how-to-protect-your-assets/hero.webp",
     "imageAlt": "Winter Commercial Property Management",
     "tags": [
       "Property Security",
@@ -137,7 +159,7 @@
     "slug": "end-of-year-business-rates-strategy-maximising-relief-before-april-2026-revaluation",
     "date": "2025-12-05",
     "excerpt": "Strategic guidance for commercial landlords on maximising business rates relief before the April 2026 revaluation. Expert analysis of year-end planning, the 13-week occupation rule, and compliance strategies to reduce vacant property costs.",
-    "image": "posts/25-12-05-end-of-year-business-rates-strategy-maximising-relief-before-april-2026-revaluation/hero.jpg",
+    "image": "posts/25-12-05-end-of-year-business-rates-strategy-maximising-relief-before-april-2026-revaluation/hero.webp",
     "imageAlt": "End of Year Business Rates Strategy Planning",
     "tags": [
       "Business Rates",
@@ -159,7 +181,7 @@
     "slug": "snail-farms-in-the-office-a-cautionary-tale-for-commercial-landlords",
     "date": "2025-10-22",
     "excerpt": "Crates of snails in a vacant London office – part of a tax avoidance scheme that claimed an agricultural exemption on business rates.",
-    "image": "posts/25-10-22-snail-farms-in-the-office-a-cautionary-tale-for-commercial-landlords/hero.jpg",
+    "image": "posts/25-10-22-snail-farms-in-the-office-a-cautionary-tale-for-commercial-landlords/hero.webp",
     "imageAlt": "Snail Farms in the Office: A Cautionary Tale for Commercial Landlords",
     "tags": [
       "Legal Updates",
@@ -180,7 +202,7 @@
     "slug": "autumn-budget-2025-what-the-changes-mean-for-vacant-properties-and-the-wider-sector",
     "date": "2025-12-01",
     "excerpt": "The Autumn Budget 2025 introduced the most significant overhaul of the business rates system in over a decade. For commercial landlords and agents managing vacant units, the announcements provide both challenges and opportunities. This article sets out what has changed, how the rules now apply to empty property relief, and what this all means for VacatAd as a beneficial-occupation provider – and for the wider sector.",
-    "image": "posts/25-12-01-autumn-budget-2025-what-the-changes-mean-for-vacant-properties-and-the-wider-sector/hero.jpg",
+    "image": "posts/25-12-01-autumn-budget-2025-what-the-changes-mean-for-vacant-properties-and-the-wider-sector/hero.webp",
     "imageAlt": "Autumn Budget 2025 – What the Changes Mean for Vacant Properties and the Wider Sector",
     "tags": [
       "Business Rates",
@@ -215,7 +237,7 @@
       "Regulatory Changes"
     ],
     "featured": true,
-    "image": "posts/25-10-02-business-rates-forward-look-what-the-latest-updates-mean-for-your-business/hero.jpg",
+    "image": "posts/25-10-02-business-rates-forward-look-what-the-latest-updates-mean-for-your-business/hero.webp",
     "imageAlt": "Business Rates \"Forward Look\": What the Latest Updates Mean for Your Business"
   },
   {
@@ -236,7 +258,7 @@
       "High Court Ruling"
     ],
     "featured": true,
-    "image": "posts/25-09-25-high-courts-2025-ruling-reshapes-business-rates-mitigation-landscape/hero.jpg",
+    "image": "posts/25-09-25-high-courts-2025-ruling-reshapes-business-rates-mitigation-landscape/hero.webp",
     "imageAlt": "High Court's 2025 Ruling Reshapes Business Rates Mitigation Landscape"
   },
   {
@@ -257,7 +279,7 @@
       "High Street Regeneration"
     ],
     "featured": true,
-    "image": "posts/25-08-14-from-empty-units-to-community-hubs-the-social-value-of-vacatad/hero.jpg",
+    "image": "posts/25-08-14-from-empty-units-to-community-hubs-the-social-value-of-vacatad/hero.webp",
     "imageAlt": "From Empty Units to Community Hubs: The Social Value of VacatAd"
   },
   {
@@ -278,7 +300,7 @@
       "Empty Property Relief"
     ],
     "featured": true,
-    "image": "posts/25-07-10-understanding-the-13-week-occupation-rule-how-to-stay-compliant/hero.jpg",
+    "image": "posts/25-07-10-understanding-the-13-week-occupation-rule-how-to-stay-compliant/hero.webp",
     "imageAlt": "Understanding the 13-Week Occupation Rule: How to Stay Compliant"
   },
   {
@@ -320,7 +342,7 @@
       "Landlord Guide"
     ],
     "featured": true,
-    "image": "posts/25-05-22-beneficial-occupation-explained-what-landlords-need-to-know/hero.jpg",
+    "image": "posts/25-05-22-beneficial-occupation-explained-what-landlords-need-to-know/hero.webp",
     "imageAlt": "Beneficial Occupation Explained: What Landlords Need to Know"
   },
   {
@@ -362,7 +384,7 @@
       "Vacant Properties"
     ],
     "featured": false,
-    "image": "posts/25-04-06-jtg177zcrzd0d1881lzfmwfcrf3xi4/hero.jpg",
+    "image": "posts/25-04-06-jtg177zcrzd0d1881lzfmwfcrf3xi4/hero.webp",
     "imageAlt": "Vacant and Vulnerable: Securing Empty Commercial Properties in a Post-Pandemic World"
   },
   {
@@ -383,7 +405,7 @@
       "Relief Schemes"
     ],
     "featured": false,
-    "image": "posts/25-03-26-spring-budget-2025-business-rates-shake-up-and-the-case-for-strategic-occupation/hero.jpg",
+    "image": "posts/25-03-26-spring-budget-2025-business-rates-shake-up-and-the-case-for-strategic-occupation/hero.webp",
     "imageAlt": "Spring Budget 2025 – Business Rates Shake-Up and the Case for Strategic Occupation"
   },
   {
@@ -404,7 +426,7 @@
       "Beneficial Occupation"
     ],
     "featured": false,
-    "image": "posts/25-02-17-in-depth-analysis-legally-reducing-business-rates-on-vacant-property-vacatads-techfirst-solution/hero.jpg",
+    "image": "posts/25-02-17-in-depth-analysis-legally-reducing-business-rates-on-vacant-property-vacatads-techfirst-solution/hero.webp",
     "imageAlt": "In-depth Analysis | Legally Reducing Business Rates on Vacant Property: VacatAd's Tech‑First Solution"
   },
   {
@@ -425,7 +447,7 @@
       "Beginners Guide"
     ],
     "featured": true,
-    "image": "posts/25-01-15-a-beginners-guide-to-business-rates/hero.jpg",
+    "image": "posts/25-01-15-a-beginners-guide-to-business-rates/hero.webp",
     "imageAlt": "A Beginner's Guide to Business Rates"
   },
   {
@@ -446,7 +468,7 @@
       "High Street"
     ],
     "featured": false,
-    "image": "posts/24-11-11-the-uks-business-rates-reform-what-it-means-for-property-owners-and-how-vacatad-can-help/hero.jpg",
+    "image": "posts/24-11-11-the-uks-business-rates-reform-what-it-means-for-property-owners-and-how-vacatad-can-help/hero.webp",
     "imageAlt": "The UK's Business Rates Reform: What It Means for Property Owners and How Vacatad Can Help"
   },
   {
@@ -488,7 +510,7 @@
       "Post-Pandemic"
     ],
     "featured": false,
-    "image": "posts/24-08-12-securing-your-vacant-properties-how-vacatad-transforms-risks-into-rewards-in-a-post-pandemic-world/hero.jpg",
+    "image": "posts/24-08-12-securing-your-vacant-properties-how-vacatad-transforms-risks-into-rewards-in-a-post-pandemic-world/hero.webp",
     "imageAlt": "Securing Your Vacant Properties: How Vacatad Transforms Risks into Rewards in a Post-Pandemic World"
   },
   {
@@ -509,7 +531,7 @@
       "Property Owners"
     ],
     "featured": true,
-    "image": "posts/24-08-08-adapting-to-new-business-rates-how-vacatad-supports-property-owners/hero.jpg",
+    "image": "posts/24-08-08-adapting-to-new-business-rates-how-vacatad-supports-property-owners/hero.webp",
     "imageAlt": "Adapting to New Business Rates: How Vacatad Supports Property Owners"
   },
   {
@@ -530,7 +552,7 @@
       "Landlord Support"
     ],
     "featured": true,
-    "image": "posts/24-07-19-from-burden-to-relief/hero.jpg",
+    "image": "posts/24-07-19-from-burden-to-relief/hero.webp",
     "imageAlt": "From Burden to Relief: Transforming Business Rates Management for Vacant Properties with Vacatad"
   },
   {
@@ -551,7 +573,7 @@
       "Financial Planning"
     ],
     "featured": false,
-    "image": "posts/24-06-11-the-true-cost-of-an-empty-property-a-technological-solution/hero.jpg",
+    "image": "posts/24-06-11-the-true-cost-of-an-empty-property-a-technological-solution/hero.webp",
     "imageAlt": "The True Cost of an Empty Property: A Technological Solution"
   },
   {
@@ -572,7 +594,7 @@
       "Community Benefits"
     ],
     "featured": false,
-    "image": "posts/24-03-28-how-vacatad-aligns-with-government-consultation-findings/hero.jpg",
+    "image": "posts/24-03-28-how-vacatad-aligns-with-government-consultation-findings/hero.webp",
     "imageAlt": "New Business Rates Regulations: How Vacatad Aligns with Government Consultation Findings"
   },
   {
@@ -614,7 +636,7 @@
       "Community Benefits"
     ],
     "featured": false,
-    "image": "posts/23-12-04-maximising-savings-on-empty-commercial-spaces/hero.jpg",
+    "image": "posts/23-12-04-maximising-savings-on-empty-commercial-spaces/hero.webp",
     "imageAlt": "Maximising Savings on Empty Commercial Spaces: Insights from Vacatad"
   },
   {
@@ -635,7 +657,7 @@
       "VacatAd Services"
     ],
     "featured": false,
-    "image": "posts/23-07-07-the-vacatad-edge-transforming-business-rates/hero.jpg",
+    "image": "posts/23-07-07-the-vacatad-edge-transforming-business-rates/hero.webp",
     "imageAlt": "The Vacatad Edge: Transforming Business Rates on Empty Properties"
   },
   {
@@ -656,7 +678,7 @@
       "VacatAd Services"
     ],
     "featured": false,
-    "image": "posts/23-04-01-navigating-the-void-how-vacatad-revolutionises-rates-relief/hero.jpg",
+    "image": "posts/23-04-01-navigating-the-void-how-vacatad-revolutionises-rates-relief/hero.webp",
     "imageAlt": "Navigating the Void: How Vacatad Revolutionises Relief for Empty Commercial Properties"
   }
 ]
