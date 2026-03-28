@@ -809,7 +809,8 @@
     z-index: 1;
 }
 
-.calc-savings-cta a {
+.calc-savings-cta a,
+.calc-savings-cta button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -820,6 +821,7 @@
     font-weight: 700;
     text-decoration: none;
     border-radius: 10px;
+    cursor: pointer;
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -949,7 +951,8 @@
         flex-direction: column;
     }
 
-    .calc-savings-cta a {
+    .calc-savings-cta a,
+    .calc-savings-cta button {
         width: 100%;
         text-align: center;
         justify-content: center;
