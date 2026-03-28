@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VacatAd Data Manager</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/cms.css">
+    <style>
+        .upload-area {
+            border: 2px dashed var(--border-color);
+            border-radius: 12px;
+            padding: 40px 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: white;
+            margin-bottom: 24px;
+        }
+        .upload-area:hover, .upload-area.dragover {
+            border-color: var(--accent-color);
+            background: #f0f9f4;
+        }
+        .upload-area i.upload-icon { font-size: 2.5rem; color: #ccc; margin-bottom: 12px; display: block; }
+        .upload-area.dragover i.upload-icon { color: var(--accent-color); }
+        .upload-area p { color: #888; margin: 4px 0; }
+
+        .info-box {
+            background: #e8f4f8;
+            border: 1px solid #b3d9e6;
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin-bottom: 20px;
+            font-size: 0.88rem;
+            line-height: 1.5;
+        }
+        .info-box strong { color: #0369a1; }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .summary-item {
+            background: white;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            padding: 16px;
+            text-align: center;
+        }
+        .summary-item .val { font-size: 1.6rem; font-weight: 700; color: var(--primary-color); }
+        .summary-item .lbl { font-size: 0.78rem; color: #888; margin-top: 2px; }
+        .summary-item.new-item .val { color: #16a34a; }
+        .summary-item.changed-item .val { color: #d97706; }
+        .summary-item.deleted-item .val { color: #dc2626; }
+        .summary-item.unchanged-item .val { color: #94a3b8; }
+
+        .progress-bar-wrap {
+            width: 100%;
+            height: 10px;
+            background: #e2e8f0;
+            border-radius: 6px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        .progress-bar {
+            height: 100%;
+            background: var(--accent-color);
+            border-radius: 6px;
+            transition: width 0.3s;
+            width: 0%;
+        }
+
+        /* Diff table */
+        .diff-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            margin-bottom: 20px;
+            font-size: 0.85rem;
+        }
+        .diff-table thead th {
+            background: #f8fafc;
+            padding: 10px 12px;
+            text-align: left;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .diff-table tbody td {
+            padding: 8px 12px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .diff-table tbody tr:last-child td { border-bottom: none; }
+
+        .diff-new { background: #f0fdf4; }
+        .diff-changed { background: #fffbeb; }
+        .diff-deleted { background: #fef2f2; }
+
+        .change-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        .badge-new { background: #dcfce7; color: #15803d; }
+        .badge-changed { background: #fef3c7; color: #92400e; }
+        .badge-deleted { background: #fee2e2; color: #991b1b; }
+
+        .old-val { color: #dc2626; text-decoration: line-through; font-size: 0.8rem; margin-right: 6px; }
+        .new-val { color: #16a34a; font-weight: 600; }
+
+        .log-area {
+            background: #1e293b;
+            border-radius: 8px;
+            padding: 16px;
+            max-height: 250px;
+            overflow-y: auto;
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 0.78rem;
+            line-height: 1.6;
+            color: #94a3b8;
+            display: none;
+            margin-top: 16px;
+        }
+        .log-area .log-ok { color: #4ade80; }
+        .log-area .log-err { color: #f87171; }
+        .log-area .log-info { color: #60a5fa; }
+
+        .step-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            font-size: 0.88rem;
+        }
+        .step-num {
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            background: var(--border-color);
+            color: #64748b;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 0.8rem;
+        }
+        .step-num.active { background: var(--accent-color); color: white; }
+        .step-num.done { background: #16a34a; color: white; }
+        .step-line { width: 40px; height: 2px; background: var(--border-color); }
+
+        .btn-lg {
+            padding: 12px 28px;
+            font-size: 1rem;
+            border-radius: 8px;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .filter-tab {
+            padding: 6px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.82rem;
+            font-weight: 500;
+            background: white;
+        }
+        .filter-tab:hover { border-color: var(--accent-color); }
+        .filter-tab.active { background: var(--primary-color); color: white; border-color: var(--primary-color); }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <i class="fas fa-layer-group" style="margin-right: 10px;"></i> VacatAd CMS
+        </div>
+        <div class="sidebar-nav">
+            <div class="nav-item" onclick="window.location.href='index.html'">
+                <i class="fas fa-file-alt"></i> Blog Posts
+            </div>
+            <div class="nav-item" onclick="window.location.href='dashboard.html'">
+                <i class="fas fa-chart-line"></i> Dashboard
+            </div>
+            <div class="nav-item active">
+                <i class="fas fa-database"></i> Data Manager
+            </div>
+            <div class="nav-item" onclick="window.open('../index.html', '_blank')">
+                <i class="fas fa-external-link-alt"></i> View Site
+            </div>
+        </div>
+        <div class="user-profile">
+            <div id="user-name">User</div>
+            <i class="fas fa-sign-out-alt" style="cursor: pointer;" onclick="localStorage.removeItem('githubToken'); localStorage.removeItem('githubUser'); window.location.href='login.html';" title="Logout"></i>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="top-bar">
+            <div class="page-title">VOA Data Manager</div>
+        </div>
+
+        <div class="content-area">
+
+            <div class="info-box">
+                <strong><i class="fas fa-info-circle"></i> How this works:</strong>
+                Upload a VOA <strong>List Entries</strong> file (update or epoch) from the
+                <a href="https://voaratinglists.blob.core.windows.net/html/rlidata.htm" target="_blank">VOA Rating Lists</a> page.
+                The file will be scanned against the database to detect new properties, changes, and deletions.
+                You review the differences before anything is applied.
+            </div>
+
+            <!-- Steps -->
+            <div class="step-indicator" id="step-indicator">
+                <div class="step-num active" id="step1">1</div>
+                <span>Upload</span>
+                <div class="step-line"></div>
+                <div class="step-num" id="step2">2</div>
+                <span>Scan</span>
+                <div class="step-line"></div>
+                <div class="step-num" id="step3">3</div>
+                <span>Review</span>
+                <div class="step-line"></div>
+                <div class="step-num" id="step4">4</div>
+                <span>Apply</span>
+            </div>
+
+            <!-- Step 1: Upload -->
+            <div id="section-upload">
+                <div class="upload-area" id="upload-area">
+                    <input type="file" id="file-input" accept=".csv,.txt" hidden>
+                    <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                    <p><strong>Drop a VOA List Entries CSV here</strong> or click to browse</p>
+                    <p style="font-size: 0.8rem;">* delimited file from the VOA Rating Lists page</p>
+                </div>
+            </div>
+
+            <!-- Step 2: Scanning -->
+            <div id="section-scan" style="display:none;">
+                <div style="background:white; border-radius:12px; border:1px solid var(--border-color); padding:24px; text-align:center;">
+                    <i class="fas fa-search" style="font-size:2rem; color:var(--accent-color); margin-bottom:12px;"></i>
+                    <h3 style="margin:0 0 8px 0;" id="scan-title">Scanning for changes...</h3>
+                    <p style="color:#888; font-size:0.9rem;" id="scan-status">Comparing against database...</p>
+                    <div class="progress-bar-wrap"><div class="progress-bar" id="scan-progress"></div></div>
+                </div>
+            </div>
+
+            <!-- Step 3: Review -->
+            <div id="section-review" style="display:none;">
+                <div class="summary-grid" id="summary-grid"></div>
+
+                <div class="filter-tabs" id="filter-tabs"></div>
+
+                <div id="diff-container" style="max-height:400px; overflow-y:auto;"></div>
+
+                <div style="display:flex; gap:12px; margin-top:20px;">
+                    <button class="btn btn-primary btn-lg" id="btn-apply" onclick="applyChanges()">
+                        <i class="fas fa-check" style="margin-right:8px;"></i>Apply Changes
+                    </button>
+                    <button class="btn btn-secondary btn-lg" onclick="resetAll()">Cancel</button>
+                </div>
+            </div>
+
+            <!-- Step 4: Applying -->
+            <div id="section-apply" style="display:none;">
+                <div style="background:white; border-radius:12px; border:1px solid var(--border-color); padding:24px;">
+                    <h3 style="margin:0 0 8px 0;" id="apply-title">Applying changes...</h3>
+                    <div class="progress-bar-wrap"><div class="progress-bar" id="apply-progress"></div></div>
+                    <div style="display:flex; gap:24px; font-size:0.85rem; color:#64748b;">
+                        <div>Upserted: <strong id="stat-upserted">0</strong></div>
+                        <div>Deleted: <strong id="stat-deleted">0</strong></div>
+                        <div>Errors: <strong id="stat-errors">0</strong></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Log -->
+            <div class="log-area" id="log-area"></div>
+
+        </div>
+    </div>
+
+<script>
+const API_BASE = 'https://vacatad-voa-lookup.vacatad.workers.dev';
+const token = localStorage.getItem('githubToken');
+const user  = localStorage.getItem('githubUser');
+if (!token) window.location.href = 'login.html';
+document.getElementById('user-name').textContent = user || 'Admin';
+
+function authHeaders() {
+    return { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' };
+}
+
+// State
+let parsedRows = [];    // { uarn, full_address, postcode, description_code, description_text, ba_code, rv_2026, changeType }
+let diffResult = { newRows: [], changedRows: [], deletedUarns: [], unchangedCount: 0 };
+let currentFilter = 'all';
+
+// ── Step management ──
+function setStep(n) {
+    ['step1','step2','step3','step4'].forEach(function(id, i) {
+        var el = document.getElementById(id);
+        el.classList.remove('active','done');
+        if (i + 1 < n) el.classList.add('done');
+        else if (i + 1 === n) el.classList.add('active');
+    });
+    document.getElementById('section-upload').style.display = n === 1 ? 'block' : 'none';
+    document.getElementById('section-scan').style.display = n === 2 ? 'block' : 'none';
+    document.getElementById('section-review').style.display = n === 3 ? 'block' : 'none';
+    document.getElementById('section-apply').style.display = n === 4 ? 'block' : 'none';
+}
+
+// ── Upload ──
+var uploadArea = document.getElementById('upload-area');
+var fileInput = document.getElementById('file-input');
+
+uploadArea.addEventListener('click', function() { fileInput.click(); });
+uploadArea.addEventListener('dragover', function(e) { e.preventDefault(); uploadArea.classList.add('dragover'); });
+uploadArea.addEventListener('dragleave', function() { uploadArea.classList.remove('dragover'); });
+uploadArea.addEventListener('drop', function(e) {
+    e.preventDefault();
+    uploadArea.classList.remove('dragover');
+    if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+});
+fileInput.addEventListener('change', function(e) { if (e.target.files.length) handleFile(e.target.files[0]); });
+
+function handleFile(file) {
+    log('Reading ' + file.name + ' (' + (file.size / 1024).toFixed(0) + ' KB)', 'info');
+    var reader = new FileReader();
+    reader.onload = function(e) { parseAndScan(e.target.result); };
+    reader.readAsText(file);
+}
+
+// ── Parse ──
+function parseAndScan(text) {
+    var lines = text.split('\n').filter(function(l) { return l.trim(); });
+    parsedRows = [];
+
+    lines.forEach(function(line) {
+        var f = line.split('*');
+        if (f.length < 16) return;
+        var uarn = (f[3] || '').trim();
+        if (!uarn) return;
+        var changeType = (f[15] || '').trim().toUpperCase();
+
+        parsedRows.push({
+            uarn: uarn,
+            full_address: (f[4] || '').trim(),
+            postcode: (f[5] || '').trim(),
+            description_code: (f[6] || '').trim(),
+            description_text: (f[7] || '').trim(),
+            ba_code: (f[0] || '').trim(),
+            rv_2026: parseInt(f[8]) || 0,
+            changeType: changeType,
+        });
+    });
+
+    log('Parsed ' + parsedRows.length + ' entries from file', 'ok');
+    setStep(2);
+    scanForChanges();
+}
+
+// ── Scan: compare against DB ──
+async function scanForChanges() {
+    var allUarns = parsedRows.map(function(r) { return r.uarn; });
+    var existing = {};
+    var BATCH = 400;
+    var scanned = 0;
+
+    // Fetch existing records in batches
+    for (var i = 0; i < allUarns.length; i += BATCH) {
+        var batch = allUarns.slice(i, i + BATCH);
+        try {
+            var res = await fetch(API_BASE + '/api/admin/compare-properties', {
+                method: 'POST',
+                headers: authHeaders(),
+                body: JSON.stringify({ uarns: batch }),
+            });
+            if (!res.ok) throw new Error('API ' + res.status);
+            var data = await res.json();
+            Object.assign(existing, data.existing);
+        } catch (err) {
+            log('Error scanning batch: ' + err.message, 'err');
+        }
+        scanned += batch.length;
+        var pct = (scanned / allUarns.length * 100).toFixed(0);
+        document.getElementById('scan-progress').style.width = pct + '%';
+        document.getElementById('scan-status').textContent = 'Checked ' + scanned + ' of ' + allUarns.length + ' properties...';
+    }
+
+    // Classify each row
+    diffResult = { newRows: [], changedRows: [], deletedUarns: [], unchangedCount: 0 };
+
+    parsedRows.forEach(function(row) {
+        if (row.changeType.includes('DELETION')) {
+            if (existing[row.uarn]) {
+                diffResult.deletedUarns.push({ uarn: row.uarn, existing: existing[row.uarn] });
+            }
+            return;
+        }
+
+        var ex = existing[row.uarn];
+        if (!ex) {
+            diffResult.newRows.push(row);
+        } else {
+            // Check for differences
+            var changes = [];
+            if (ex.full_address !== row.full_address && row.full_address) changes.push({ field: 'Address', old: ex.full_address, new: row.full_address });
+            if (ex.postcode !== row.postcode && row.postcode) changes.push({ field: 'Postcode', old: ex.postcode, new: row.postcode });
+            if (ex.description_code !== row.description_code && row.description_code) changes.push({ field: 'Type', old: ex.description_code, new: row.description_code });
+            if (row.rv_2026 > 0 && parseInt(ex.rv_2026) !== row.rv_2026) changes.push({ field: 'RV 2026', old: '\u00a3' + Number(ex.rv_2026 || 0).toLocaleString(), new: '\u00a3' + row.rv_2026.toLocaleString() });
+
+            if (changes.length > 0) {
+                diffResult.changedRows.push({ row: row, existing: ex, changes: changes });
+            } else {
+                diffResult.unchangedCount++;
+            }
+        }
+    });
+
+    log('Scan complete: ' + diffResult.newRows.length + ' new, ' + diffResult.changedRows.length + ' changed, ' + diffResult.deletedUarns.length + ' deleted, ' + diffResult.unchangedCount + ' unchanged', 'ok');
+
+    setStep(3);
+    showReview();
+}
+
+// ── Review ──
+function showReview() {
+    var nNew = diffResult.newRows.length;
+    var nChanged = diffResult.changedRows.length;
+    var nDeleted = diffResult.deletedUarns.length;
+    var nUnchanged = diffResult.unchangedCount;
+    var nTotal = nNew + nChanged + nDeleted;
+
+    document.getElementById('summary-grid').innerHTML =
+        '<div class="summary-item new-item"><div class="val">' + nNew + '</div><div class="lbl">New Properties</div></div>' +
+        '<div class="summary-item changed-item"><div class="val">' + nChanged + '</div><div class="lbl">Changed</div></div>' +
+        '<div class="summary-item deleted-item"><div class="val">' + nDeleted + '</div><div class="lbl">To Delete</div></div>' +
+        '<div class="summary-item unchanged-item"><div class="val">' + nUnchanged + '</div><div class="lbl">Unchanged</div></div>';
+
+    // Filter tabs
+    var tabs = '<div class="filter-tab active" onclick="filterDiff(\'all\')">All Changes (' + nTotal + ')</div>';
+    if (nNew) tabs += '<div class="filter-tab" onclick="filterDiff(\'new\')">New (' + nNew + ')</div>';
+    if (nChanged) tabs += '<div class="filter-tab" onclick="filterDiff(\'changed\')">Changed (' + nChanged + ')</div>';
+    if (nDeleted) tabs += '<div class="filter-tab" onclick="filterDiff(\'deleted\')">Deleted (' + nDeleted + ')</div>';
+    document.getElementById('filter-tabs').innerHTML = tabs;
+
+    if (nTotal === 0) {
+        document.getElementById('diff-container').innerHTML = '<div style="text-align:center; padding:40px; color:#94a3b8;"><i class="fas fa-check-circle" style="font-size:2rem; margin-bottom:8px; display:block;"></i>No changes detected. Database is up to date.</div>';
+        document.getElementById('btn-apply').style.display = 'none';
+    } else {
+        filterDiff('all');
+        document.getElementById('btn-apply').style.display = '';
+        document.getElementById('btn-apply').innerHTML = '<i class="fas fa-check" style="margin-right:8px;"></i>Apply ' + nTotal + ' Changes';
+    }
+}
+
+function filterDiff(type) {
+    currentFilter = type;
+    document.querySelectorAll('.filter-tab').forEach(function(t) {
+        t.classList.toggle('active', t.textContent.toLowerCase().indexOf(type) === 0 || (type === 'all' && t.textContent.indexOf('All') === 0));
+    });
+
+    var html = '<table class="diff-table"><thead><tr><th>Status</th><th>UARN</th><th>Address</th><th>Postcode</th><th>Type</th><th>RV 2026</th><th>Changes</th></tr></thead><tbody>';
+    var count = 0;
+    var MAX = 200;
+
+    if (type === 'all' || type === 'new') {
+        diffResult.newRows.slice(0, MAX).forEach(function(r) {
+            html += '<tr class="diff-new"><td><span class="change-badge badge-new">NEW</span></td><td>' + esc(r.uarn) + '</td><td>' + esc(r.full_address) + '</td><td>' + esc(r.postcode) + '</td><td>' + esc(r.description_code) + '</td><td>\u00a3' + r.rv_2026.toLocaleString() + '</td><td>New property</td></tr>';
+            count++;
+        });
+    }
+
+    if (type === 'all' || type === 'changed') {
+        diffResult.changedRows.slice(0, MAX).forEach(function(c) {
+            var changeTxt = c.changes.map(function(ch) {
+                return '<span class="old-val">' + esc(ch.old) + '</span><span class="new-val">' + esc(ch.new) + '</span>';
+            }).join('<br>');
+            html += '<tr class="diff-changed"><td><span class="change-badge badge-changed">CHANGED</span></td><td>' + esc(c.row.uarn) + '</td><td>' + esc(c.row.full_address) + '</td><td>' + esc(c.row.postcode) + '</td><td>' + esc(c.row.description_code) + '</td><td>\u00a3' + c.row.rv_2026.toLocaleString() + '</td><td>' + changeTxt + '</td></tr>';
+            count++;
+        });
+    }
+
+    if (type === 'all' || type === 'deleted') {
+        diffResult.deletedUarns.slice(0, MAX).forEach(function(d) {
+            html += '<tr class="diff-deleted"><td><span class="change-badge badge-deleted">DELETE</span></td><td>' + esc(d.uarn) + '</td><td>' + esc(d.existing.full_address || '') + '</td><td>' + esc(d.existing.postcode || '') + '</td><td>' + esc(d.existing.description_code || '') + '</td><td>' + (d.existing.rv_2026 ? '\u00a3' + Number(d.existing.rv_2026).toLocaleString() : '--') + '</td><td>Will be removed</td></tr>';
+            count++;
+        });
+    }
+
+    html += '</tbody></table>';
+    if (count >= MAX) html += '<p style="color:#888; text-align:center; font-size:0.85rem;">Showing first ' + MAX + ' rows. All changes will be applied.</p>';
+    document.getElementById('diff-container').innerHTML = html;
+}
+
+// ── Apply ──
+async function applyChanges() {
+    setStep(4);
+    var BATCH = 100;
+    var upsertRows = diffResult.newRows.concat(diffResult.changedRows.map(function(c) { return c.row; }));
+    var deleteList = diffResult.deletedUarns.map(function(d) { return d.uarn; });
+    var total = upsertRows.length + deleteList.length;
+    var processed = 0, upserted = 0, deleted = 0, errors = 0;
+
+    // Upserts
+    for (var i = 0; i < upsertRows.length; i += BATCH) {
+        var batch = upsertRows.slice(i, i + BATCH).map(function(r) {
+            return { uarn: r.uarn, full_address: r.full_address, postcode: r.postcode, description_code: r.description_code, description_text: r.description_text, firm_name: '', ba_code: r.ba_code, rv_2023: 0, rv_2026: r.rv_2026 };
+        });
+        try {
+            var res = await fetch(API_BASE + '/api/admin/upsert-properties', {
+                method: 'POST', headers: authHeaders(),
+                body: JSON.stringify({ rows: batch }),
+            });
+            if (!res.ok) throw new Error('API ' + res.status);
+            upserted += batch.length;
+            log('Upserted batch: ' + batch.length + ' rows', 'ok');
+        } catch (err) {
+            errors += batch.length;
+            log('Upsert error: ' + err.message, 'err');
+        }
+        processed += batch.length;
+        updateApplyProgress(processed, total, upserted, deleted, errors);
+    }
+
+    // Deletes
+    for (var j = 0; j < deleteList.length; j += BATCH) {
+        var delBatch = deleteList.slice(j, j + BATCH);
+        try {
+            var dRes = await fetch(API_BASE + '/api/admin/delete-properties', {
+                method: 'POST', headers: authHeaders(),
+                body: JSON.stringify({ uarns: delBatch }),
+            });
+            if (!dRes.ok) throw new Error('API ' + dRes.status);
+            deleted += delBatch.length;
+            log('Deleted batch: ' + delBatch.length + ' UARNs', 'ok');
+        } catch (err) {
+            errors += delBatch.length;
+            log('Delete error: ' + err.message, 'err');
+        }
+        processed += delBatch.length;
+        updateApplyProgress(processed, total, upserted, deleted, errors);
+    }
+
+    document.getElementById('apply-title').innerHTML = '<i class="fas fa-check-circle" style="color:#16a34a; margin-right:8px;"></i>Complete! ' + upserted + ' upserted, ' + deleted + ' deleted' + (errors > 0 ? ', ' + errors + ' errors' : '');
+    log('All done. Upserted: ' + upserted + ', Deleted: ' + deleted + ', Errors: ' + errors, errors > 0 ? 'err' : 'ok');
+}
+
+function updateApplyProgress(processed, total, upserted, deleted, errors) {
+    document.getElementById('apply-progress').style.width = (processed / total * 100).toFixed(1) + '%';
+    document.getElementById('stat-upserted').textContent = upserted;
+    document.getElementById('stat-deleted').textContent = deleted;
+    document.getElementById('stat-errors').textContent = errors;
+}
+
+// ── Utilities ──
+function esc(s) { var d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+
+function log(msg, type) {
+    var area = document.getElementById('log-area');
+    area.style.display = 'block';
+    var cls = type === 'ok' ? 'log-ok' : type === 'err' ? 'log-err' : 'log-info';
+    area.innerHTML += '<div class="' + cls + '">[' + new Date().toLocaleTimeString('en-GB') + '] ' + msg + '</div>';
+    area.scrollTop = area.scrollHeight;
+}
+
+function resetAll() {
+    parsedRows = [];
+    diffResult = { newRows: [], changedRows: [], deletedUarns: [], unchangedCount: 0 };
+    fileInput.value = '';
+    document.getElementById('log-area').innerHTML = '';
+    document.getElementById('log-area').style.display = 'none';
+    setStep(1);
+}
+</script>
+</body>
+</html>

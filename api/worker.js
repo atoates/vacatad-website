@@ -91,6 +91,9 @@ export default {
       if (path === '/api/admin/batch-reports') return handleAdminBatchReports(url, env);
       if (path === '/api/admin/properties') return handleAdminProperties(url, env);
       if (path === '/api/admin/stats') return handleAdminStats(env);
+      if (path === '/api/admin/upsert-properties' && request.method === 'POST') return handleUpsertProperties(request, env);
+      if (path === '/api/admin/delete-properties' && request.method === 'POST') return handleDeleteProperties(request, env);
+      if (path === '/api/admin/compare-properties' && request.method === 'POST') return handleCompareProperties(request, env);
     }
 
     return jsonResponse({ error: 'Not found' }, 404);
@@ -550,6 +553,98 @@ async function handleAdminStats(env) {
         total_savings: parseFloat(rRow[3].value) || 0,
       },
     });
+  } catch (err) {
+    return jsonResponse({ error: 'Database error', detail: err.message }, 500);
+  }
+}
+
+async function handleCompareProperties(request, env) {
+  let body;
+  try { body = await request.json(); } catch { return jsonResponse({ error: 'Invalid JSON' }, 400); }
+
+  const uarns = Array.isArray(body.uarns) ? body.uarns.slice(0, 500) : [];
+  if (uarns.length === 0) return jsonResponse({ error: 'No UARNs provided' }, 400);
+
+  try {
+    // Build a query with placeholders for all UARNs
+    const placeholders = uarns.map(() => '?').join(',');
+    const sql = `SELECT uarn, full_address, description_code, description_text, firm_name, postcode, ba_code, rv_2023, rv_2026 FROM properties WHERE uarn IN (${placeholders})`;
+    const args = uarns.map(u => ({ type: 'text', value: String(u) }));
+
+    const result = await tursoQuery(env.TURSO_URL, env.TURSO_TOKEN, sql, args);
+    const rows = result.results[0].response.result.rows;
+    const cols = result.results[0].response.result.cols;
+
+    const existing = {};
+    rows.forEach(row => {
+      const obj = {};
+      cols.forEach((col, i) => { obj[col.name] = row[i].type === 'null' ? null : row[i].value; });
+      existing[obj.uarn] = obj;
+    });
+
+    return jsonResponse({ existing });
+  } catch (err) {
+    return jsonResponse({ error: 'Database error', detail: err.message }, 500);
+  }
+}
+
+async function handleUpsertProperties(request, env) {
+  let body;
+  try { body = await request.json(); } catch { return jsonResponse({ error: 'Invalid JSON' }, 400); }
+
+  const rows = Array.isArray(body.rows) ? body.rows : [];
+  if (rows.length === 0) return jsonResponse({ error: 'No rows provided' }, 400);
+  if (rows.length > 200) return jsonResponse({ error: 'Max 200 rows per batch' }, 400);
+
+  try {
+    const statements = rows.map(r => ({
+      sql: `INSERT INTO properties (uarn, full_address, description_code, description_text, firm_name, postcode, ba_code, rv_2023, rv_2026)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT(uarn) DO UPDATE SET
+              full_address = excluded.full_address,
+              description_code = excluded.description_code,
+              description_text = excluded.description_text,
+              firm_name = COALESCE(excluded.firm_name, properties.firm_name),
+              postcode = excluded.postcode,
+              ba_code = excluded.ba_code,
+              rv_2023 = CASE WHEN excluded.rv_2023 > 0 THEN excluded.rv_2023 ELSE properties.rv_2023 END,
+              rv_2026 = CASE WHEN excluded.rv_2026 > 0 THEN excluded.rv_2026 ELSE properties.rv_2026 END`,
+      args: [
+        { type: 'text', value: String(r.uarn || '') },
+        { type: 'text', value: String(r.full_address || '') },
+        { type: 'text', value: String(r.description_code || '') },
+        { type: 'text', value: String(r.description_text || '') },
+        { type: 'text', value: String(r.firm_name || '') },
+        { type: 'text', value: String(r.postcode || '') },
+        { type: 'text', value: String(r.ba_code || '') },
+        { type: 'text', value: String(r.rv_2023 || 0) },
+        { type: 'text', value: String(r.rv_2026 || 0) },
+      ],
+    }));
+
+    await tursoPipeline(env.TURSO_URL, env.TURSO_TOKEN, statements);
+    return jsonResponse({ success: true, upserted: rows.length });
+  } catch (err) {
+    return jsonResponse({ error: 'Database error', detail: err.message }, 500);
+  }
+}
+
+async function handleDeleteProperties(request, env) {
+  let body;
+  try { body = await request.json(); } catch { return jsonResponse({ error: 'Invalid JSON' }, 400); }
+
+  const uarns = Array.isArray(body.uarns) ? body.uarns : [];
+  if (uarns.length === 0) return jsonResponse({ error: 'No UARNs provided' }, 400);
+  if (uarns.length > 200) return jsonResponse({ error: 'Max 200 per batch' }, 400);
+
+  try {
+    const statements = uarns.map(u => ({
+      sql: `DELETE FROM properties WHERE uarn = ?`,
+      args: [{ type: 'text', value: String(u) }],
+    }));
+
+    await tursoPipeline(env.TURSO_URL, env.TURSO_TOKEN, statements);
+    return jsonResponse({ success: true, deleted: uarns.length });
   } catch (err) {
     return jsonResponse({ error: 'Database error', detail: err.message }, 500);
   }

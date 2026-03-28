@@ -48,131 +48,155 @@
     var descText = prop ? prop.description_text : "";
 
     /* ══════════════════════════════════════════════════
-       PAGE 1: COVER + PROPERTY DETAILS
+       PAGE 1: COMPACT PROPERTY ASSESSMENT
        ══════════════════════════════════════════════════ */
 
-    // Dark header
+    // Slim dark header
     doc.setFillColor(26, 28, 26);
-    doc.rect(0, 0, pw, 65, "F");
+    doc.rect(0, 0, pw, 36, "F");
 
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(28);
+    doc.setFontSize(20);
     doc.setTextColor(219, 244, 204);
-    doc.text("VacatAd", m, 28);
+    doc.text("VacatAd", m, 16);
 
     doc.setFont("helvetica", "normal");
-    doc.setFontSize(10);
-    doc.setTextColor(180, 180, 180);
-    doc.text("Business Rates Specialists  |  vacatad.com", m, 40);
-
     doc.setFontSize(8);
-    doc.setTextColor(160, 160, 160);
-    doc.text("0333 090 0443  |  hello@vacatad.com", pw - m, 28, { align: "right" });
+    doc.setTextColor(170, 170, 170);
+    doc.text("Business Rates Specialists  |  vacatad.com", m, 24);
+    doc.text("0333 090 0443  |  hello@vacatad.com", pw - m, 16, { align: "right" });
 
     // Accent line
     doc.setFillColor(219, 244, 204);
-    doc.rect(0, 65, pw, 1.5, "F");
+    doc.rect(0, 36, pw, 1.2, "F");
 
-    // Report title
+    // Title row: report title left, date/user right
+    var ty = 46;
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(18);
+    doc.setFontSize(14);
     doc.setTextColor(26, 28, 26);
-    doc.text("Business Rates Assessment 2026/27", m, 82);
+    doc.text("Business Rates Assessment 2026/27", m, ty);
 
-    // Prepared for + date
     doc.setFont("helvetica", "normal");
-    doc.setFontSize(9);
+    doc.setFontSize(8);
     doc.setTextColor(130);
-    var metaLine = dateStr;
-    if (userName) metaLine = "Prepared for " + userName + (userCompany ? " (" + userCompany + ")" : "") + "  |  " + dateStr;
-    doc.text(metaLine, m, 90);
+    var metaRight = dateStr;
+    if (userName) metaRight = userName + (userCompany ? " (" + userCompany + ")" : "") + "  |  " + dateStr;
+    doc.text(metaRight, pw - m, ty - 1, { align: "right" });
     if (userEmail) {
-      doc.text(userEmail, m, 96);
+      doc.text(userEmail, pw - m, ty + 4, { align: "right" });
     }
 
-    // ── Property address ──
-    var propY = userEmail ? 110 : 104;
+    // ── Property address (compact) ──
+    var propY = ty + 10;
     doc.setFillColor(219, 244, 204);
-    doc.rect(m, propY - 4.5, 3, 6, "F");
+    doc.rect(m, propY - 3, 2.5, 5, "F");
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(13);
+    doc.setFontSize(10);
     doc.setTextColor(26, 28, 26);
-    doc.text("Property", m + 7, propY);
+    var titleLines = doc.splitTextToSize(address, cw - 6);
+    doc.text(titleLines, m + 6, propY);
+    var afterAddr = propY + titleLines.length * 4.5;
 
-    var titleLines = doc.splitTextToSize(address, cw - 7);
-    doc.setFontSize(12);
-    doc.text(titleLines, m + 7, propY + 8);
-    var afterAddr = propY + 8 + titleLines.length * 5.5;
-
-    // Meta line
     if (descText || postcode) {
       doc.setFont("helvetica", "normal");
-      doc.setFontSize(8.5);
+      doc.setFontSize(7.5);
       doc.setTextColor(100);
       var metaParts = [];
       if (descText) metaParts.push(descText);
       if (postcode) metaParts.push(postcode);
-      if (prop && prop.is_rhl) metaParts.push("Retail, Hospitality & Leisure");
+      if (prop && prop.is_rhl) metaParts.push("RHL");
       if (prop && prop.is_industrial) metaParts.push("Industrial");
       if (prop && prop.is_london) metaParts.push("London");
-      doc.text(metaParts.join("  |  "), m + 7, afterAddr + 3);
-      afterAddr += 8;
+      doc.text(metaParts.join("  |  "), m + 6, afterAddr + 2);
+      afterAddr += 6;
     }
 
-    // ── Rateable Values ──
-    var rvY = afterAddr + 8;
-    doc.setFillColor(219, 244, 204);
-    doc.rect(m, rvY - 4.5, 3, 6, "F");
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(13);
-    doc.setTextColor(26, 28, 26);
-    doc.text("Rateable Values", m + 7, rvY);
+    // ── Two-column: RV left, Bill Breakdown right ──
+    var colW = (cw - 6) / 2;
+    var colStart = afterAddr + 5;
 
+    // Section label helper (compact)
+    function sectionLabel(title, x, y) {
+      doc.setFillColor(219, 244, 204);
+      doc.rect(x, y - 3, 2.5, 4.5, "F");
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(9.5);
+      doc.setTextColor(26, 28, 26);
+      doc.text(title, x + 5, y);
+      return y + 5;
+    }
+
+    // ── LEFT COLUMN: Rateable Values ──
+    var leftY = sectionLabel("Rateable Values", m, colStart);
     var rvRows = [];
     if (result.oldRV && result.oldRV > 0) {
-      rvRows.push(["2023 List (previous)", cur(result.oldRV)]);
+      rvRows.push(["2023 List", cur(result.oldRV)]);
     }
-    rvRows.push(["2026 List (current)", cur(result.inputs.rateableValue)]);
+    rvRows.push(["2026 List", cur(result.inputs.rateableValue)]);
     if (result.oldRV && result.oldRV > 0 && result.inputs.rateableValue) {
       var ch = result.inputs.rateableValue - result.oldRV;
       var pct = ((ch / result.oldRV) * 100).toFixed(1);
       var pfx = ch >= 0 ? "+" : "";
-      rvRows.push(["Change", pfx + cur(Math.abs(ch)) + "  (" + pfx + pct + "%)"]);
+      rvRows.push(["Change", pfx + cur(Math.abs(ch)) + " (" + pfx + pct + "%)"]);
     }
 
     doc.autoTable({
-      startY: rvY + 4,
-      margin: { left: m, right: m + cw / 2 + 5 },
+      startY: leftY,
+      margin: { left: m, right: pw - m - colW },
       body: rvRows,
       theme: "plain",
-      styles: { fontSize: 9, cellPadding: 2 },
+      styles: { fontSize: 8, cellPadding: { top: 1.5, bottom: 1.5, left: 2, right: 2 } },
       columnStyles: {
         0: { textColor: [100, 100, 100] },
         1: { fontStyle: "bold", halign: "right" },
       },
     });
 
-    // ── Bill Breakdown ──
-    var brkY = doc.lastAutoTable.finalY + 8;
-    doc.setFillColor(219, 244, 204);
-    doc.rect(m, brkY - 4.5, 3, 6, "F");
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(13);
-    doc.setTextColor(26, 28, 26);
-    doc.text("Bill Breakdown 2026/27", m + 7, brkY);
-
-    var brkRows = [
+    // ── RIGHT COLUMN: Key Figures ──
+    var rightX = m + colW + 6;
+    var rightLabelY = sectionLabel("Key Figures", rightX, colStart);
+    var kfRows = [
       ["Multiplier", s.multiplier.label],
-      ["Basic bill (before reliefs)", cur(s.basicBill)],
+      ["Basic bill", cur(s.basicBill)],
+      ["Annual bill", cur(result.annualBill)],
+      ["Monthly bill", cur(result.monthlyBill)],
     ];
+
+    doc.autoTable({
+      startY: rightLabelY,
+      margin: { left: rightX, right: m },
+      body: kfRows,
+      theme: "plain",
+      styles: { fontSize: 8, cellPadding: { top: 1.5, bottom: 1.5, left: 2, right: 2 } },
+      columnStyles: {
+        0: { textColor: [100, 100, 100] },
+        1: { fontStyle: "bold", halign: "right" },
+      },
+      didParseCell: function (data) {
+        if (data.row.index >= 2 && data.section === "body") {
+          data.cell.styles.fontStyle = "bold";
+          if (data.row.index === 2) {
+            data.cell.styles.fillColor = [26, 28, 26];
+            data.cell.styles.textColor = [255, 255, 255];
+          }
+        }
+      },
+    });
+
+    // ── Full-width Bill Breakdown (detailed reliefs) ──
+    var brkStart = Math.max(doc.lastAutoTable.finalY, colStart + rvRows.length * 6.5 + 10) + 6;
+    var brkY = sectionLabel("Bill Breakdown 2026/27", m, brkStart);
+
+    var brkRows = [];
     if (s.sbrr.reliefPercent > 0) {
-      brkRows.push(["Small Business Rate Relief", "-" + cur(s.basicBill - s.sbrr.billAfterSBRR) + "  (" + s.sbrr.reliefPercent.toFixed(1) + "%)"]);
+      brkRows.push(["Small Business Rate Relief (" + s.sbrr.reliefPercent.toFixed(0) + "%)", "-" + cur(s.basicBill - s.sbrr.billAfterSBRR)]);
     }
     if (s.pubsRelief.applies) {
       brkRows.push(["Pubs & Venues Relief (15%)", "-" + cur(s.pubsRelief.amount)]);
     }
     if (s.transitionalRelief.applies) {
-      brkRows.push(["Transitional Relief", "-" + cur(s.transitionalRelief.saving) + "  (capped at " + s.transitionalRelief.capPercent + "%)"]);
+      brkRows.push(["Transitional Relief (cap " + s.transitionalRelief.capPercent + "%)", "-" + cur(s.transitionalRelief.saving)]);
     }
     if (s.ssbRelief.applies) {
       brkRows.push(["Supporting Small Business Relief", "-" + cur(s.ssbRelief.saving)]);
@@ -180,42 +204,29 @@
     if (s.supplement.applies) {
       brkRows.push(["Transitional Supplement (1p)", "+" + cur(s.supplement.amount)]);
     }
-    brkRows.push(["Estimated annual bill", cur(result.annualBill)]);
-    brkRows.push(["Estimated monthly", cur(result.monthlyBill)]);
 
-    doc.autoTable({
-      startY: brkY + 4,
-      margin: { left: m, right: m },
-      body: brkRows,
-      theme: "striped",
-      styles: { fontSize: 9, cellPadding: 3 },
-      alternateRowStyles: { fillColor: [248, 249, 248] },
-      columnStyles: {
-        0: { cellWidth: "auto" },
-        1: { cellWidth: 55, halign: "right", fontStyle: "bold" },
-      },
-      didParseCell: function (data) {
-        if (data.row.index === brkRows.length - 2 && data.section === "body") {
-          data.cell.styles.fontStyle = "bold";
-          data.cell.styles.fillColor = [26, 28, 26];
-          data.cell.styles.textColor = [255, 255, 255];
-        }
-      },
-    });
+    if (brkRows.length > 0) {
+      doc.autoTable({
+        startY: brkY,
+        margin: { left: m, right: m },
+        body: brkRows,
+        theme: "striped",
+        styles: { fontSize: 8, cellPadding: { top: 2, bottom: 2, left: 3, right: 3 } },
+        alternateRowStyles: { fillColor: [248, 249, 248] },
+        columnStyles: {
+          0: { cellWidth: "auto" },
+          1: { cellWidth: 45, halign: "right", fontStyle: "bold" },
+        },
+      });
+      brkY = doc.lastAutoTable.finalY + 5;
+    }
 
-    // ── VacatAd Savings ──
-    var savY = doc.lastAutoTable.finalY + 8;
-    doc.setFillColor(219, 244, 204);
-    doc.rect(m, savY - 4.5, 3, 6, "F");
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(13);
-    doc.setTextColor(26, 28, 26);
-    doc.text("VacatAd Savings Estimate", m + 7, savY);
-
+    // ── VacatAd Savings (compact) ──
+    var savY = sectionLabel("VacatAd Savings Estimate", m, brkY + 2);
     var cycle = result.inputs.isIndustrial ? "6 months (industrial)" : "3 months (standard)";
     var savRows = [
-      ["Empty property relief cycle", cycle],
-      ["Rates-free weeks per year", result.reliefWeeks + " of " + result.weeksPerYear],
+      ["Relief cycle", cycle],
+      ["Rates-free weeks", result.reliefWeeks + " of " + result.weeksPerYear],
       ["Potential annual saving", cur(result.potentialAnnualSaving)],
       ["VacatAd fee (" + result.vacatadFee.feePercent + "%)", cur(result.vacatadFee.feeAmount)],
       ["Net annual saving", cur(result.potentialNetSaving)],
@@ -223,40 +234,41 @@
     ];
 
     doc.autoTable({
-      startY: savY + 4,
+      startY: savY,
       margin: { left: m, right: m },
       body: savRows,
       theme: "striped",
-      styles: { fontSize: 9, cellPadding: 3 },
+      styles: { fontSize: 8, cellPadding: { top: 2, bottom: 2, left: 3, right: 3 } },
       alternateRowStyles: { fillColor: [248, 249, 248] },
       columnStyles: {
         0: { cellWidth: "auto" },
-        1: { cellWidth: 55, halign: "right", fontStyle: "bold" },
+        1: { cellWidth: 45, halign: "right", fontStyle: "bold" },
       },
       didParseCell: function (data) {
         if (data.row.index === 4 && data.section === "body") {
           data.cell.styles.fontStyle = "bold";
-          data.cell.styles.textColor = [34, 120, 34];
+          data.cell.styles.fillColor = [34, 120, 34];
+          data.cell.styles.textColor = [255, 255, 255];
         }
       },
     });
 
-    // ── CTA bar on page 1 ──
-    var ctaY = doc.lastAutoTable.finalY + 12;
-    if (ctaY < ph - 50) {
+    // ── CTA bar ──
+    var ctaY = doc.lastAutoTable.finalY + 8;
+    if (ctaY < ph - 35) {
       doc.setFillColor(90, 184, 187);
-      doc.roundedRect(m, ctaY, cw, 18, 3, 3, "F");
+      doc.roundedRect(m, ctaY, cw, 14, 2, 2, "F");
       doc.setFont("helvetica", "bold");
-      doc.setFontSize(10);
+      doc.setFontSize(9);
       doc.setTextColor(255, 255, 255);
-      doc.textWithLink("Ready to start saving? Contact us: vacatad.com/contact  |  0333 090 0443", pw / 2, ctaY + 11.5, { align: "center", url: "https://vacatad.com/contact" });
+      doc.textWithLink("Ready to start saving?  vacatad.com/contact  |  0333 090 0443", pw / 2, ctaY + 9, { align: "center", url: "https://vacatad.com/contact" });
     }
 
-    // Page 1 disclaimer
-    doc.setFontSize(7);
+    // Disclaimer
+    doc.setFontSize(6.5);
     doc.setTextColor(160);
-    doc.text("Estimates based on 2026/27 multipliers and published relief schemes. Actual bills determined by your local billing authority.", m, ph - 12);
-    doc.text("Rateable values are set by the Valuation Office Agency. This report does not constitute financial advice.", m, ph - 7);
+    doc.text("Estimates based on 2026/27 multipliers and published relief schemes. Actual bills determined by your local billing authority.", m, ph - 10);
+    doc.text("Rateable values set by the Valuation Office Agency. This report does not constitute financial advice.", m, ph - 6);
 
     /* ── Helper: draw page header ribbon ── */
     function drawPageHeader(leftText, rightText) {
