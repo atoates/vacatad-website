@@ -83,12 +83,13 @@ export default {
     }
 
     // Admin endpoints (require GitHub auth)
-    if (path === '/api/admin/leads' || path === '/api/admin/batch-reports' || path === '/api/admin/stats') {
+    if (path.startsWith('/api/admin/')) {
       const authError = await validateGitHubAuth(request);
       if (authError) return authError;
 
       if (path === '/api/admin/leads') return handleAdminLeads(url, env);
       if (path === '/api/admin/batch-reports') return handleAdminBatchReports(url, env);
+      if (path === '/api/admin/properties') return handleAdminProperties(url, env);
       if (path === '/api/admin/stats') return handleAdminStats(env);
     }
 
@@ -453,6 +454,70 @@ async function handleAdminBatchReports(url, env) {
     });
 
     return jsonResponse({ reports, limit, offset });
+  } catch (err) {
+    return jsonResponse({ error: 'Database error', detail: err.message }, 500);
+  }
+}
+
+async function handleAdminProperties(url, env) {
+  const limit  = Math.min(parseInt(url.searchParams.get('limit'))  || 50, 200);
+  const offset = Math.max(parseInt(url.searchParams.get('offset')) || 0, 0);
+  const search = (url.searchParams.get('q') || '').trim();
+
+  try {
+    // Fetch batch reports that have properties_json
+    let sql, args;
+    if (search) {
+      sql = `SELECT id, quote_number, email, name, company, properties_json, created_at FROM batch_reports WHERE properties_json IS NOT NULL AND (name LIKE ? OR email LIKE ? OR company LIKE ? OR properties_json LIKE ?) ORDER BY id DESC LIMIT ? OFFSET ?`;
+      const term = `%${search}%`;
+      args = [
+        { type: 'text', value: term },
+        { type: 'text', value: term },
+        { type: 'text', value: term },
+        { type: 'text', value: term },
+        { type: 'text', value: String(limit) },
+        { type: 'text', value: String(offset) },
+      ];
+    } else {
+      sql = `SELECT id, quote_number, email, name, company, properties_json, created_at FROM batch_reports WHERE properties_json IS NOT NULL ORDER BY id DESC LIMIT ? OFFSET ?`;
+      args = [
+        { type: 'text', value: String(limit) },
+        { type: 'text', value: String(offset) },
+      ];
+    }
+
+    const result = await tursoQuery(env.TURSO_URL, env.TURSO_TOKEN, sql, args);
+    const rows = result.results[0].response.result.rows;
+    const cols = result.results[0].response.result.cols;
+
+    // Flatten: each property gets the parent report's user info
+    const properties = [];
+    rows.forEach(row => {
+      const obj = {};
+      cols.forEach((col, i) => { obj[col.name] = row[i].type === 'null' ? null : row[i].value; });
+
+      let props = [];
+      try { props = JSON.parse(obj.properties_json || '[]'); } catch {}
+
+      props.forEach(p => {
+        properties.push({
+          address:          p.address || '',
+          postcode:         p.postcode || '',
+          description_code: p.description_code || '',
+          rv_2026:          p.rv_2026 || 0,
+          annual_bill:      p.annual_bill || 0,
+          net_saving:       p.net_saving || 0,
+          searched_by:      obj.name || obj.email || 'Unknown',
+          email:            obj.email || '',
+          company:          obj.company || '',
+          quote_number:     obj.quote_number || '',
+          report_id:        obj.id,
+          searched_at:      obj.created_at,
+        });
+      });
+    });
+
+    return jsonResponse({ properties, limit, offset });
   } catch (err) {
     return jsonResponse({ error: 'Database error', detail: err.message }, 500);
   }

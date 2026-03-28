@@ -333,6 +333,9 @@
                 <button class="tab-btn" data-tab="reports" onclick="switchTab('reports')">
                     <i class="fas fa-file-invoice" style="margin-right: 6px;"></i>Batch Reports
                 </button>
+                <button class="tab-btn" data-tab="properties" onclick="switchTab('properties')">
+                    <i class="fas fa-building" style="margin-right: 6px;"></i>Properties
+                </button>
             </div>
 
             <!-- Search -->
@@ -352,6 +355,12 @@
             <div id="tab-reports" style="display:none;">
                 <div id="reports-loading" class="loading-spinner"><i class="fas fa-circle-notch"></i> Loading...</div>
                 <div id="reports-content" style="display:none;"></div>
+            </div>
+
+            <!-- Properties Table -->
+            <div id="tab-properties" style="display:none;">
+                <div id="properties-loading" class="loading-spinner"><i class="fas fa-circle-notch"></i> Loading...</div>
+                <div id="properties-content" style="display:none;"></div>
             </div>
 
         </div>
@@ -380,8 +389,10 @@ document.getElementById('user-name').textContent = user || 'Admin';
 let currentTab = 'leads';
 let leadsData = [];
 let reportsData = [];
+let propertiesData = [];
 let leadsOffset = 0;
 let reportsOffset = 0;
+let propertiesOffset = 0;
 const PAGE_SIZE = 50;
 
 // ── API Helpers ────────────────────────────────────────────
@@ -562,26 +573,112 @@ function showReportDetail(id) {
     document.getElementById('detail-overlay').classList.add('open');
 }
 
+// ── Properties ─────────────────────────────────────────────
+async function loadProperties(offset, search) {
+    const el = document.getElementById('properties-content');
+    const loader = document.getElementById('properties-loading');
+    loader.style.display = 'block';
+    el.style.display = 'none';
+
+    try {
+        let path = `/api/admin/properties?limit=${PAGE_SIZE}&offset=${offset}`;
+        if (search) path += `&q=${encodeURIComponent(search)}`;
+        const data = await apiFetch(path);
+        if (!data) return;
+        propertiesData = data.properties;
+        propertiesOffset = offset;
+
+        if (propertiesData.length === 0) {
+            el.innerHTML = `<div class="empty-state"><i class="fas fa-building"></i><p>No properties found</p></div>`;
+        } else {
+            el.innerHTML = renderPropertiesTable(propertiesData) + renderPagination('properties', offset, propertiesData.length);
+        }
+    } catch (err) {
+        el.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Error loading properties: ${err.message}</p></div>`;
+    }
+
+    loader.style.display = 'none';
+    el.style.display = 'block';
+}
+
+function renderPropertiesTable(props) {
+    let html = `<table class="data-table"><thead><tr>
+        <th>Address</th><th>Postcode</th><th>Type</th><th>RV 2026</th><th>Annual Bill</th><th>Net Saving</th><th>Searched By</th><th>Date</th>
+    </tr></thead><tbody>`;
+
+    props.forEach((p, i) => {
+        const date = formatDate(p.searched_at);
+        const rv = '\u00a3' + Number(p.rv_2026).toLocaleString('en-GB');
+        const bill = '\u00a3' + Number(p.annual_bill).toLocaleString('en-GB');
+        const saving = '\u00a3' + Number(p.net_saving).toLocaleString('en-GB');
+        html += `<tr style="cursor:pointer" onclick="showPropertyDetail(${i})">
+            <td><strong>${esc(p.address)}</strong></td>
+            <td><span class="badge badge-green">${esc(p.postcode)}</span></td>
+            <td class="text-muted">${esc(p.description_code)}</td>
+            <td>${rv}</td>
+            <td>${bill}</td>
+            <td class="money">${saving}</td>
+            <td class="text-muted">${esc(p.searched_by)}</td>
+            <td class="text-muted">${date}</td>
+        </tr>`;
+    });
+
+    html += '</tbody></table>';
+    return html;
+}
+
+function showPropertyDetail(idx) {
+    const p = propertiesData[idx];
+    if (!p) return;
+
+    const rv = '\u00a3' + Number(p.rv_2026).toLocaleString('en-GB');
+    const bill = '\u00a3' + Number(p.annual_bill).toLocaleString('en-GB');
+    const saving = '\u00a3' + Number(p.net_saving).toLocaleString('en-GB');
+
+    document.getElementById('detail-title').textContent = p.address || 'Property';
+    document.getElementById('detail-body').innerHTML = `
+        <div class="detail-row"><div class="detail-label">Address</div><div class="detail-value">${esc(p.address)}</div></div>
+        <div class="detail-row"><div class="detail-label">Postcode</div><div class="detail-value"><span class="badge badge-green">${esc(p.postcode)}</span></div></div>
+        <div class="detail-row"><div class="detail-label">Type Code</div><div class="detail-value">${esc(p.description_code)}</div></div>
+        <div class="detail-row"><div class="detail-label">RV 2026</div><div class="detail-value">${rv}</div></div>
+        <div class="detail-row"><div class="detail-label">Annual Bill</div><div class="detail-value">${bill}</div></div>
+        <div class="detail-row"><div class="detail-label">Net Saving</div><div class="detail-value"><strong class="money">${saving}</strong></div></div>
+        <hr style="border:none; border-top:1px solid #f1f5f9; margin:12px 0;">
+        <div class="detail-row"><div class="detail-label">Searched By</div><div class="detail-value">${esc(p.searched_by)}</div></div>
+        <div class="detail-row"><div class="detail-label">Email</div><div class="detail-value">${p.email ? `<a href="mailto:${esc(p.email)}">${esc(p.email)}</a>` : '--'}</div></div>
+        <div class="detail-row"><div class="detail-label">Company</div><div class="detail-value">${esc(p.company || '--')}</div></div>
+        <div class="detail-row"><div class="detail-label">Quote #</div><div class="detail-value"><span class="badge badge-purple">${esc(p.quote_number || '--')}</span></div></div>
+        <div class="detail-row"><div class="detail-label">Searched</div><div class="detail-value">${formatDateTime(p.searched_at)}</div></div>
+    `;
+    document.getElementById('detail-overlay').classList.add('open');
+}
+
 // ── Tab Switching ──────────────────────────────────────────
 function switchTab(tab) {
     currentTab = tab;
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
     document.getElementById('tab-leads').style.display = tab === 'leads' ? 'block' : 'none';
     document.getElementById('tab-reports').style.display = tab === 'reports' ? 'block' : 'none';
+    document.getElementById('tab-properties').style.display = tab === 'properties' ? 'block' : 'none';
     document.getElementById('search-input').value = '';
+    document.getElementById('search-input').placeholder = tab === 'properties'
+        ? 'Search by address, postcode, name...'
+        : 'Search by name, email, company...';
 }
 
 // ── Search ─────────────────────────────────────────────────
 function doSearch() {
     const q = document.getElementById('search-input').value.trim();
     if (currentTab === 'leads') loadLeads(0, q);
-    else loadReports(0, q);
+    else if (currentTab === 'reports') loadReports(0, q);
+    else loadProperties(0, q);
 }
 
 function clearSearch() {
     document.getElementById('search-input').value = '';
     if (currentTab === 'leads') loadLeads(0);
-    else loadReports(0);
+    else if (currentTab === 'reports') loadReports(0);
+    else loadProperties(0);
 }
 
 document.getElementById('search-input').addEventListener('keydown', e => {
@@ -608,7 +705,8 @@ function renderPagination(type, offset, count) {
 function paginate(type, offset) {
     const q = document.getElementById('search-input').value.trim();
     if (type === 'leads') loadLeads(offset, q);
-    else loadReports(offset, q);
+    else if (type === 'reports') loadReports(offset, q);
+    else loadProperties(offset, q);
 }
 
 // ── CSV Export ─────────────────────────────────────────────
@@ -622,13 +720,20 @@ function exportCSV() {
             csv += `"${csvSafe(l.name)}","${csvSafe(l.email)}","${csvSafe(l.company || '')}","${csvSafe(l.page_url || '')}","${l.created_at}"\n`;
         });
         filename = `vacatad-leads-${todayStr()}.csv`;
-    } else {
+    } else if (currentTab === 'reports') {
         if (!reportsData.length) return alert('No data to export');
         csv = 'Quote Number,Name,Email,Company,Properties,Total RV,Total Bill,Net Saving,Date\n';
         reportsData.forEach(r => {
             csv += `"${csvSafe(r.quote_number || '')}","${csvSafe(r.name || '')}","${csvSafe(r.email || '')}","${csvSafe(r.company || '')}",${r.property_count || 0},${r.total_rv || 0},${r.total_bill || 0},${r.total_net_saving || 0},"${r.created_at}"\n`;
         });
         filename = `vacatad-batch-reports-${todayStr()}.csv`;
+    } else {
+        if (!propertiesData.length) return alert('No data to export');
+        csv = 'Address,Postcode,Type,RV 2026,Annual Bill,Net Saving,Searched By,Email,Company,Quote Number,Date\n';
+        propertiesData.forEach(p => {
+            csv += `"${csvSafe(p.address)}","${csvSafe(p.postcode)}","${csvSafe(p.description_code)}",${p.rv_2026},${p.annual_bill},${p.net_saving},"${csvSafe(p.searched_by)}","${csvSafe(p.email)}","${csvSafe(p.company)}","${csvSafe(p.quote_number)}","${p.searched_at}"\n`;
+        });
+        filename = `vacatad-properties-${todayStr()}.csv`;
     }
 
     const blob = new Blob([csv], { type: 'text/csv' });
@@ -673,6 +778,7 @@ function shortenUrl(url) {
 loadStats();
 loadLeads(0);
 loadReports(0);
+loadProperties(0);
 </script>
 </body>
 </html>
