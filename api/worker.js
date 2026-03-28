@@ -82,6 +82,16 @@ export default {
       return handleBatchReport(request, env);
     }
 
+    // Admin endpoints (require GitHub auth)
+    if (path === '/api/admin/leads' || path === '/api/admin/batch-reports' || path === '/api/admin/stats') {
+      const authError = await validateGitHubAuth(request);
+      if (authError) return authError;
+
+      if (path === '/api/admin/leads') return handleAdminLeads(url, env);
+      if (path === '/api/admin/batch-reports') return handleAdminBatchReports(url, env);
+      if (path === '/api/admin/stats') return handleAdminStats(env);
+    }
+
     return jsonResponse({ error: 'Not found' }, 404);
   },
 };
@@ -333,6 +343,148 @@ async function handleBatchReport(request, env) {
     ]);
 
     return jsonResponse({ success: true, quote_number: quoteNumber });
+  } catch (err) {
+    return jsonResponse({ error: 'Database error', detail: err.message }, 500);
+  }
+}
+
+// ── Admin helpers ──────────────────────────────────────────────
+
+const ALLOWED_GITHUB_USERS = new Set(['atoates']);
+
+async function validateGitHubAuth(request) {
+  const authHeader = request.headers.get('Authorization') || '';
+  const token = authHeader.replace(/^Bearer\s+/i, '').trim();
+  if (!token) return jsonResponse({ error: 'Unauthorised' }, 401);
+
+  try {
+    const res = await fetch('https://api.github.com/user', {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'User-Agent': 'VacatAd-Worker',
+      },
+    });
+    if (!res.ok) return jsonResponse({ error: 'Invalid token' }, 401);
+    const user = await res.json();
+    if (!ALLOWED_GITHUB_USERS.has(user.login)) {
+      return jsonResponse({ error: 'Forbidden' }, 403);
+    }
+    return null; // auth OK
+  } catch {
+    return jsonResponse({ error: 'Auth check failed' }, 500);
+  }
+}
+
+async function handleAdminLeads(url, env) {
+  const limit  = Math.min(parseInt(url.searchParams.get('limit'))  || 100, 500);
+  const offset = Math.max(parseInt(url.searchParams.get('offset')) || 0, 0);
+  const search = (url.searchParams.get('q') || '').trim();
+
+  try {
+    let sql, args;
+    if (search) {
+      sql = `SELECT id, name, email, company, page_url, created_at FROM leads WHERE name LIKE ? OR email LIKE ? OR company LIKE ? ORDER BY id DESC LIMIT ? OFFSET ?`;
+      const term = `%${search}%`;
+      args = [
+        { type: 'text', value: term },
+        { type: 'text', value: term },
+        { type: 'text', value: term },
+        { type: 'text', value: String(limit) },
+        { type: 'text', value: String(offset) },
+      ];
+    } else {
+      sql = `SELECT id, name, email, company, page_url, created_at FROM leads ORDER BY id DESC LIMIT ? OFFSET ?`;
+      args = [
+        { type: 'text', value: String(limit) },
+        { type: 'text', value: String(offset) },
+      ];
+    }
+
+    const result = await tursoQuery(env.TURSO_URL, env.TURSO_TOKEN, sql, args);
+    const rows = result.results[0].response.result.rows;
+    const cols = result.results[0].response.result.cols;
+
+    const leads = rows.map(row => {
+      const obj = {};
+      cols.forEach((col, i) => { obj[col.name] = row[i].type === 'null' ? null : row[i].value; });
+      return obj;
+    });
+
+    return jsonResponse({ leads, limit, offset });
+  } catch (err) {
+    return jsonResponse({ error: 'Database error', detail: err.message }, 500);
+  }
+}
+
+async function handleAdminBatchReports(url, env) {
+  const limit  = Math.min(parseInt(url.searchParams.get('limit'))  || 50, 200);
+  const offset = Math.max(parseInt(url.searchParams.get('offset')) || 0, 0);
+  const search = (url.searchParams.get('q') || '').trim();
+
+  try {
+    let sql, args;
+    if (search) {
+      sql = `SELECT id, quote_number, email, name, company, property_count, total_rv, total_bill, total_net_saving, created_at FROM batch_reports WHERE name LIKE ? OR email LIKE ? OR company LIKE ? OR quote_number LIKE ? ORDER BY id DESC LIMIT ? OFFSET ?`;
+      const term = `%${search}%`;
+      args = [
+        { type: 'text', value: term },
+        { type: 'text', value: term },
+        { type: 'text', value: term },
+        { type: 'text', value: term },
+        { type: 'text', value: String(limit) },
+        { type: 'text', value: String(offset) },
+      ];
+    } else {
+      sql = `SELECT id, quote_number, email, name, company, property_count, total_rv, total_bill, total_net_saving, created_at FROM batch_reports ORDER BY id DESC LIMIT ? OFFSET ?`;
+      args = [
+        { type: 'text', value: String(limit) },
+        { type: 'text', value: String(offset) },
+      ];
+    }
+
+    const result = await tursoQuery(env.TURSO_URL, env.TURSO_TOKEN, sql, args);
+    const rows = result.results[0].response.result.rows;
+    const cols = result.results[0].response.result.cols;
+
+    const reports = rows.map(row => {
+      const obj = {};
+      cols.forEach((col, i) => { obj[col.name] = row[i].type === 'null' ? null : row[i].value; });
+      return obj;
+    });
+
+    return jsonResponse({ reports, limit, offset });
+  } catch (err) {
+    return jsonResponse({ error: 'Database error', detail: err.message }, 500);
+  }
+}
+
+async function handleAdminStats(env) {
+  try {
+    const leadsResult = await tursoQuery(
+      env.TURSO_URL, env.TURSO_TOKEN,
+      `SELECT COUNT(*) AS total, COUNT(CASE WHEN created_at >= date('now', '-7 days') THEN 1 END) AS last_7d, COUNT(CASE WHEN created_at >= date('now', '-30 days') THEN 1 END) AS last_30d FROM leads`, []
+    );
+    const reportsResult = await tursoQuery(
+      env.TURSO_URL, env.TURSO_TOKEN,
+      `SELECT COUNT(*) AS total, COUNT(CASE WHEN created_at >= date('now', '-7 days') THEN 1 END) AS last_7d, COUNT(CASE WHEN created_at >= date('now', '-30 days') THEN 1 END) AS last_30d, COALESCE(SUM(CAST(total_net_saving AS REAL)), 0) AS total_savings FROM batch_reports`, []
+    );
+
+    const lRow = leadsResult.results[0].response.result.rows[0];
+    const rRow = reportsResult.results[0].response.result.rows[0];
+
+    return jsonResponse({
+      leads: {
+        total:    parseInt(lRow[0].value) || 0,
+        last_7d:  parseInt(lRow[1].value) || 0,
+        last_30d: parseInt(lRow[2].value) || 0,
+      },
+      reports: {
+        total:         parseInt(rRow[0].value) || 0,
+        last_7d:       parseInt(rRow[1].value) || 0,
+        last_30d:      parseInt(rRow[2].value) || 0,
+        total_savings: parseFloat(rRow[3].value) || 0,
+      },
+    });
   } catch (err) {
     return jsonResponse({ error: 'Database error', detail: err.message }, 500);
   }

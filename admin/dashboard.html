@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VacatAd Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/cms.css">
+    <style>
+        /* Dashboard-specific styles */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+        }
+        .stat-card .stat-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            margin-bottom: 16px;
+        }
+        .stat-card .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+        .stat-card .stat-label {
+            font-size: 0.85rem;
+            color: #888;
+            font-weight: 500;
+        }
+        .stat-card .stat-sub {
+            font-size: 0.78rem;
+            color: #aaa;
+            margin-top: 8px;
+        }
+        .stat-card .stat-sub span {
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        .icon-leads { background: #e0f2fe; color: #0284c7; }
+        .icon-reports { background: #f0fdf4; color: #16a34a; }
+        .icon-savings { background: #fef3c7; color: #d97706; }
+        .icon-recent { background: #ede9fe; color: #7c3aed; }
+
+        /* Tabs */
+        .tab-bar {
+            display: flex;
+            gap: 0;
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 24px;
+        }
+        .tab-btn {
+            padding: 10px 20px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #888;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+            transition: all 0.2s;
+        }
+        .tab-btn:hover { color: var(--text-color); }
+        .tab-btn.active {
+            color: var(--accent-color);
+            border-bottom-color: var(--accent-color);
+        }
+
+        /* Search bar */
+        .search-bar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+        .search-bar input {
+            flex: 1;
+            padding: 10px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .search-bar input:focus { border-color: var(--accent-color); }
+        .search-bar .btn { border-radius: 8px; }
+
+        /* Data table */
+        .data-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+        .data-table thead th {
+            background: #f8fafc;
+            padding: 12px 16px;
+            text-align: left;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--border-color);
+            white-space: nowrap;
+        }
+        .data-table tbody td {
+            padding: 14px 16px;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #f1f5f9;
+            color: var(--text-color);
+        }
+        .data-table tbody tr:last-child td { border-bottom: none; }
+        .data-table tbody tr:hover { background: #f8fafc; }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .badge-green { background: #dcfce7; color: #15803d; }
+        .badge-blue { background: #dbeafe; color: #1d4ed8; }
+        .badge-purple { background: #ede9fe; color: #6d28d9; }
+
+        .money { font-weight: 600; color: #16a34a; }
+        .text-muted { color: #94a3b8; font-size: 0.82rem; }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 16px;
+            padding: 12px 0;
+        }
+        .pagination .page-info { font-size: 0.85rem; color: #888; }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #94a3b8;
+        }
+        .empty-state i { font-size: 3rem; margin-bottom: 16px; }
+        .empty-state p { font-size: 1rem; }
+
+        /* Loading */
+        .loading-spinner {
+            text-align: center;
+            padding: 40px;
+            color: #94a3b8;
+        }
+        .loading-spinner i { font-size: 1.5rem; animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Detail modal */
+        .detail-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.4);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .detail-overlay.open { display: flex; }
+        .detail-panel {
+            background: white;
+            width: 90%;
+            max-width: 700px;
+            max-height: 85vh;
+            border-radius: 12px;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+        }
+        .detail-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 1;
+        }
+        .detail-header h3 { margin: 0; font-size: 1.1rem; }
+        .detail-body { padding: 24px; }
+        .detail-row {
+            display: flex;
+            padding: 10px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .detail-row:last-child { border-bottom: none; }
+        .detail-label {
+            width: 140px;
+            flex-shrink: 0;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+        .detail-value { flex: 1; font-size: 0.92rem; }
+
+        .prop-list {
+            margin-top: 16px;
+            display: grid;
+            gap: 8px;
+        }
+        .prop-item {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 12px 16px;
+            border: 1px solid #e2e8f0;
+            font-size: 0.85rem;
+        }
+        .prop-item strong { display: block; margin-bottom: 4px; }
+        .prop-meta { color: #64748b; font-size: 0.8rem; }
+
+        /* Export button */
+        .btn-export {
+            background: var(--primary-color);
+            color: white;
+            border-radius: 8px;
+        }
+        .btn-export:hover { background: #1e2d3d; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .data-table { font-size: 0.82rem; }
+            .data-table thead th, .data-table tbody td { padding: 10px 12px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar (matches CMS) -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <i class="fas fa-layer-group" style="margin-right: 10px;"></i> VacatAd CMS
+        </div>
+        <div class="sidebar-nav">
+            <div class="nav-item" onclick="window.location.href='index.html'">
+                <i class="fas fa-file-alt"></i> Blog Posts
+            </div>
+            <div class="nav-item active" id="nav-dashboard">
+                <i class="fas fa-chart-line"></i> Dashboard
+            </div>
+            <div class="nav-item" onclick="window.open('../index.html', '_blank')">
+                <i class="fas fa-external-link-alt"></i> View Site
+            </div>
+        </div>
+        <div class="user-profile">
+            <div id="user-name">User</div>
+            <i class="fas fa-sign-out-alt" style="cursor: pointer;" onclick="localStorage.removeItem('githubToken'); localStorage.removeItem('githubUser'); window.location.href='login.html';" title="Logout"></i>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="top-bar">
+            <div class="page-title">Dashboard</div>
+            <button class="btn btn-export" onclick="exportCSV()">
+                <i class="fas fa-download" style="margin-right: 6px;"></i>Export CSV
+            </button>
+        </div>
+
+        <div class="content-area" id="main-area">
+
+            <!-- Stats -->
+            <div class="stats-grid" id="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon icon-leads"><i class="fas fa-user-plus"></i></div>
+                    <div class="stat-value" id="stat-leads-total">--</div>
+                    <div class="stat-label">Total Leads</div>
+                    <div class="stat-sub"><span id="stat-leads-7d">--</span> last 7 days</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon icon-reports"><i class="fas fa-file-invoice"></i></div>
+                    <div class="stat-value" id="stat-reports-total">--</div>
+                    <div class="stat-label">Batch Reports</div>
+                    <div class="stat-sub"><span id="stat-reports-7d">--</span> last 7 days</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon icon-savings"><i class="fas fa-piggy-bank"></i></div>
+                    <div class="stat-value" id="stat-savings">--</div>
+                    <div class="stat-label">Total Savings Quoted</div>
+                    <div class="stat-sub">Across all batch reports</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon icon-recent"><i class="fas fa-clock"></i></div>
+                    <div class="stat-value" id="stat-leads-30d">--</div>
+                    <div class="stat-label">Leads (30 days)</div>
+                    <div class="stat-sub"><span id="stat-reports-30d">--</span> reports in 30 days</div>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="tab-bar">
+                <button class="tab-btn active" data-tab="leads" onclick="switchTab('leads')">
+                    <i class="fas fa-users" style="margin-right: 6px;"></i>Leads
+                </button>
+                <button class="tab-btn" data-tab="reports" onclick="switchTab('reports')">
+                    <i class="fas fa-file-invoice" style="margin-right: 6px;"></i>Batch Reports
+                </button>
+            </div>
+
+            <!-- Search -->
+            <div class="search-bar">
+                <input type="text" id="search-input" placeholder="Search by name, email, company...">
+                <button class="btn btn-primary" onclick="doSearch()"><i class="fas fa-search"></i></button>
+                <button class="btn btn-secondary" onclick="clearSearch()">Clear</button>
+            </div>
+
+            <!-- Leads Table -->
+            <div id="tab-leads">
+                <div id="leads-loading" class="loading-spinner"><i class="fas fa-circle-notch"></i> Loading...</div>
+                <div id="leads-content" style="display:none;"></div>
+            </div>
+
+            <!-- Reports Table -->
+            <div id="tab-reports" style="display:none;">
+                <div id="reports-loading" class="loading-spinner"><i class="fas fa-circle-notch"></i> Loading...</div>
+                <div id="reports-content" style="display:none;"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Detail Modal -->
+    <div class="detail-overlay" id="detail-overlay" onclick="if(event.target===this)closeDetail()">
+        <div class="detail-panel">
+            <div class="detail-header">
+                <h3 id="detail-title">Details</h3>
+                <button class="btn btn-sm btn-secondary" onclick="closeDetail()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="detail-body" id="detail-body"></div>
+        </div>
+    </div>
+
+<script>
+// ── Config & State ─────────────────────────────────────────
+const API_BASE = 'https://vacatad-voa-lookup.vacatad.workers.dev';
+const token = localStorage.getItem('githubToken');
+const user  = localStorage.getItem('githubUser');
+
+if (!token) { window.location.href = 'login.html'; }
+document.getElementById('user-name').textContent = user || 'Admin';
+
+let currentTab = 'leads';
+let leadsData = [];
+let reportsData = [];
+let leadsOffset = 0;
+let reportsOffset = 0;
+const PAGE_SIZE = 50;
+
+// ── API Helpers ────────────────────────────────────────────
+function authHeaders() {
+    return { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' };
+}
+
+async function apiFetch(path) {
+    const res = await fetch(`${API_BASE}${path}`, { headers: authHeaders() });
+    if (res.status === 401 || res.status === 403) {
+        localStorage.removeItem('githubToken');
+        window.location.href = 'login.html';
+        return null;
+    }
+    if (!res.ok) throw new Error(`API error: ${res.status}`);
+    return res.json();
+}
+
+// ── Stats ──────────────────────────────────────────────────
+async function loadStats() {
+    try {
+        const data = await apiFetch('/api/admin/stats');
+        if (!data) return;
+        document.getElementById('stat-leads-total').textContent = data.leads.total.toLocaleString();
+        document.getElementById('stat-leads-7d').textContent = data.leads.last_7d;
+        document.getElementById('stat-leads-30d').textContent = data.leads.last_30d.toLocaleString();
+        document.getElementById('stat-reports-total').textContent = data.reports.total.toLocaleString();
+        document.getElementById('stat-reports-7d').textContent = data.reports.last_7d;
+        document.getElementById('stat-reports-30d').textContent = data.reports.last_30d;
+
+        const savings = data.reports.total_savings;
+        if (savings >= 1000000) {
+            document.getElementById('stat-savings').textContent = '\u00a3' + (savings / 1000000).toFixed(1) + 'M';
+        } else if (savings >= 1000) {
+            document.getElementById('stat-savings').textContent = '\u00a3' + (savings / 1000).toFixed(0) + 'k';
+        } else {
+            document.getElementById('stat-savings').textContent = '\u00a3' + savings.toFixed(0);
+        }
+    } catch (err) {
+        console.error('Stats error:', err);
+    }
+}
+
+// ── Leads ──────────────────────────────────────────────────
+async function loadLeads(offset, search) {
+    const el = document.getElementById('leads-content');
+    const loader = document.getElementById('leads-loading');
+    loader.style.display = 'block';
+    el.style.display = 'none';
+
+    try {
+        let path = `/api/admin/leads?limit=${PAGE_SIZE}&offset=${offset}`;
+        if (search) path += `&q=${encodeURIComponent(search)}`;
+        const data = await apiFetch(path);
+        if (!data) return;
+        leadsData = data.leads;
+        leadsOffset = offset;
+
+        if (leadsData.length === 0) {
+            el.innerHTML = `<div class="empty-state"><i class="fas fa-inbox"></i><p>No leads found</p></div>`;
+        } else {
+            el.innerHTML = renderLeadsTable(leadsData) + renderPagination('leads', offset, leadsData.length);
+        }
+    } catch (err) {
+        el.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Error loading leads: ${err.message}</p></div>`;
+    }
+
+    loader.style.display = 'none';
+    el.style.display = 'block';
+}
+
+function renderLeadsTable(leads) {
+    let html = `<table class="data-table"><thead><tr>
+        <th>Name</th><th>Email</th><th>Company</th><th>Page</th><th>Date</th>
+    </tr></thead><tbody>`;
+
+    leads.forEach(l => {
+        const date = formatDate(l.created_at);
+        const page = l.page_url ? shortenUrl(l.page_url) : '--';
+        html += `<tr style="cursor:pointer" onclick="showLeadDetail(${l.id})">
+            <td><strong>${esc(l.name)}</strong></td>
+            <td>${esc(l.email)}</td>
+            <td>${l.company ? esc(l.company) : '<span class="text-muted">--</span>'}</td>
+            <td class="text-muted">${esc(page)}</td>
+            <td class="text-muted">${date}</td>
+        </tr>`;
+    });
+
+    html += '</tbody></table>';
+    return html;
+}
+
+function showLeadDetail(id) {
+    const lead = leadsData.find(l => String(l.id) === String(id));
+    if (!lead) return;
+
+    document.getElementById('detail-title').textContent = lead.name;
+    document.getElementById('detail-body').innerHTML = `
+        <div class="detail-row"><div class="detail-label">Name</div><div class="detail-value">${esc(lead.name)}</div></div>
+        <div class="detail-row"><div class="detail-label">Email</div><div class="detail-value"><a href="mailto:${esc(lead.email)}">${esc(lead.email)}</a></div></div>
+        <div class="detail-row"><div class="detail-label">Company</div><div class="detail-value">${lead.company || '--'}</div></div>
+        <div class="detail-row"><div class="detail-label">Page URL</div><div class="detail-value">${lead.page_url ? `<a href="${esc(lead.page_url)}" target="_blank">${esc(lead.page_url)}</a>` : '--'}</div></div>
+        <div class="detail-row"><div class="detail-label">Submitted</div><div class="detail-value">${formatDateTime(lead.created_at)}</div></div>
+    `;
+    document.getElementById('detail-overlay').classList.add('open');
+}
+
+// ── Batch Reports ──────────────────────────────────────────
+async function loadReports(offset, search) {
+    const el = document.getElementById('reports-content');
+    const loader = document.getElementById('reports-loading');
+    loader.style.display = 'block';
+    el.style.display = 'none';
+
+    try {
+        let path = `/api/admin/batch-reports?limit=${PAGE_SIZE}&offset=${offset}`;
+        if (search) path += `&q=${encodeURIComponent(search)}`;
+        const data = await apiFetch(path);
+        if (!data) return;
+        reportsData = data.reports;
+        reportsOffset = offset;
+
+        if (reportsData.length === 0) {
+            el.innerHTML = `<div class="empty-state"><i class="fas fa-inbox"></i><p>No batch reports found</p></div>`;
+        } else {
+            el.innerHTML = renderReportsTable(reportsData) + renderPagination('reports', offset, reportsData.length);
+        }
+    } catch (err) {
+        el.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Error loading reports: ${err.message}</p></div>`;
+    }
+
+    loader.style.display = 'none';
+    el.style.display = 'block';
+}
+
+function renderReportsTable(reports) {
+    let html = `<table class="data-table"><thead><tr>
+        <th>Quote #</th><th>Name</th><th>Email</th><th>Properties</th><th>Net Saving</th><th>Date</th>
+    </tr></thead><tbody>`;
+
+    reports.forEach(r => {
+        const date = formatDate(r.created_at);
+        const saving = r.total_net_saving ? '\u00a3' + Number(r.total_net_saving).toLocaleString('en-GB', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) : '--';
+        html += `<tr style="cursor:pointer" onclick="showReportDetail(${r.id})">
+            <td><span class="badge badge-purple">${esc(r.quote_number || '--')}</span></td>
+            <td><strong>${esc(r.name || '--')}</strong></td>
+            <td>${esc(r.email || '--')}</td>
+            <td><span class="badge badge-blue">${r.property_count || 0} properties</span></td>
+            <td class="money">${saving}</td>
+            <td class="text-muted">${date}</td>
+        </tr>`;
+    });
+
+    html += '</tbody></table>';
+    return html;
+}
+
+function showReportDetail(id) {
+    const r = reportsData.find(rep => String(rep.id) === String(id));
+    if (!r) return;
+
+    const saving = r.total_net_saving ? '\u00a3' + Number(r.total_net_saving).toLocaleString('en-GB') : '--';
+    const bill   = r.total_bill ? '\u00a3' + Number(r.total_bill).toLocaleString('en-GB') : '--';
+    const rv     = r.total_rv ? '\u00a3' + Number(r.total_rv).toLocaleString('en-GB') : '--';
+
+    document.getElementById('detail-title').textContent = r.quote_number || 'Report #' + r.id;
+    document.getElementById('detail-body').innerHTML = `
+        <div class="detail-row"><div class="detail-label">Quote #</div><div class="detail-value"><span class="badge badge-purple">${esc(r.quote_number || '--')}</span></div></div>
+        <div class="detail-row"><div class="detail-label">Name</div><div class="detail-value">${esc(r.name || '--')}</div></div>
+        <div class="detail-row"><div class="detail-label">Email</div><div class="detail-value">${r.email ? `<a href="mailto:${esc(r.email)}">${esc(r.email)}</a>` : '--'}</div></div>
+        <div class="detail-row"><div class="detail-label">Company</div><div class="detail-value">${esc(r.company || '--')}</div></div>
+        <div class="detail-row"><div class="detail-label">Properties</div><div class="detail-value"><span class="badge badge-blue">${r.property_count || 0}</span></div></div>
+        <div class="detail-row"><div class="detail-label">Total RV</div><div class="detail-value">${rv}</div></div>
+        <div class="detail-row"><div class="detail-label">Total Bill</div><div class="detail-value">${bill}</div></div>
+        <div class="detail-row"><div class="detail-label">Net Saving</div><div class="detail-value"><strong class="money">${saving}</strong></div></div>
+        <div class="detail-row"><div class="detail-label">Submitted</div><div class="detail-value">${formatDateTime(r.created_at)}</div></div>
+    `;
+    document.getElementById('detail-overlay').classList.add('open');
+}
+
+// ── Tab Switching ──────────────────────────────────────────
+function switchTab(tab) {
+    currentTab = tab;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+    document.getElementById('tab-leads').style.display = tab === 'leads' ? 'block' : 'none';
+    document.getElementById('tab-reports').style.display = tab === 'reports' ? 'block' : 'none';
+    document.getElementById('search-input').value = '';
+}
+
+// ── Search ─────────────────────────────────────────────────
+function doSearch() {
+    const q = document.getElementById('search-input').value.trim();
+    if (currentTab === 'leads') loadLeads(0, q);
+    else loadReports(0, q);
+}
+
+function clearSearch() {
+    document.getElementById('search-input').value = '';
+    if (currentTab === 'leads') loadLeads(0);
+    else loadReports(0);
+}
+
+document.getElementById('search-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') doSearch();
+});
+
+// ── Pagination ─────────────────────────────────────────────
+function renderPagination(type, offset, count) {
+    const hasPrev = offset > 0;
+    const hasNext = count >= PAGE_SIZE;
+    return `<div class="pagination">
+        <div class="page-info">Showing ${offset + 1} - ${offset + count}</div>
+        <div class="flex gap-2">
+            <button class="btn btn-secondary btn-sm" ${hasPrev ? '' : 'disabled'} onclick="paginate('${type}', ${offset - PAGE_SIZE})">
+                <i class="fas fa-chevron-left"></i> Prev
+            </button>
+            <button class="btn btn-secondary btn-sm" ${hasNext ? '' : 'disabled'} onclick="paginate('${type}', ${offset + PAGE_SIZE})">
+                Next <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>`;
+}
+
+function paginate(type, offset) {
+    const q = document.getElementById('search-input').value.trim();
+    if (type === 'leads') loadLeads(offset, q);
+    else loadReports(offset, q);
+}
+
+// ── CSV Export ─────────────────────────────────────────────
+function exportCSV() {
+    let csv, filename;
+
+    if (currentTab === 'leads') {
+        if (!leadsData.length) return alert('No data to export');
+        csv = 'Name,Email,Company,Page URL,Date\n';
+        leadsData.forEach(l => {
+            csv += `"${csvSafe(l.name)}","${csvSafe(l.email)}","${csvSafe(l.company || '')}","${csvSafe(l.page_url || '')}","${l.created_at}"\n`;
+        });
+        filename = `vacatad-leads-${todayStr()}.csv`;
+    } else {
+        if (!reportsData.length) return alert('No data to export');
+        csv = 'Quote Number,Name,Email,Company,Properties,Total RV,Total Bill,Net Saving,Date\n';
+        reportsData.forEach(r => {
+            csv += `"${csvSafe(r.quote_number || '')}","${csvSafe(r.name || '')}","${csvSafe(r.email || '')}","${csvSafe(r.company || '')}",${r.property_count || 0},${r.total_rv || 0},${r.total_bill || 0},${r.total_net_saving || 0},"${r.created_at}"\n`;
+        });
+        filename = `vacatad-batch-reports-${todayStr()}.csv`;
+    }
+
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    a.click();
+}
+
+// ── Detail Modal ───────────────────────────────────────────
+function closeDetail() {
+    document.getElementById('detail-overlay').classList.remove('open');
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDetail(); });
+
+// ── Utilities ──────────────────────────────────────────────
+function esc(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+function csvSafe(s) { return (s || '').replace(/"/g, '""'); }
+function todayStr() { return new Date().toISOString().slice(0, 10); }
+
+function formatDate(iso) {
+    if (!iso) return '--';
+    const d = new Date(iso);
+    return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+function formatDateTime(iso) {
+    if (!iso) return '--';
+    const d = new Date(iso);
+    return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) + ' at ' +
+           d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+}
+
+function shortenUrl(url) {
+    try {
+        const u = new URL(url);
+        return u.pathname.length > 30 ? u.pathname.slice(0, 30) + '...' : u.pathname;
+    } catch { return url.slice(0, 30); }
+}
+
+// ── Init ───────────────────────────────────────────────────
+loadStats();
+loadLeads(0);
+loadReports(0);
+</script>
+</body>
+</html>
