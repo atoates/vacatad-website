@@ -259,6 +259,7 @@ document.addEventListener("DOMContentLoaded", function () {
     var result = calculateBusinessRates(inputs);
     result.previousBillCalc = previousBill;
     result.oldRV = oldRV;
+    window._vacatadLastResult = result;
     displayResults(result);
 
     if (typeof gtag === "function") {

@@ -286,6 +286,7 @@
 
   function selectProperty(prop) {
     hideResults();
+    window._vacatadSelectedProp = prop;
 
     // Auto-fill rateable values
     if (prop.rv_2023) {
@@ -352,6 +353,7 @@
   }
 
   function clearSelection() {
+    window._vacatadSelectedProp = null;
     previousRVInput.value = "";
     newRVInput.value = "";
     setRadio(rhlRadios, "no");
