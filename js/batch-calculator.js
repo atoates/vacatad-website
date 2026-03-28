@@ -353,6 +353,7 @@
     try { gateData = JSON.parse(localStorage.getItem("vacatad_gate_v1")); } catch (e) {}
     var userName    = gateData ? gateData.name    : "";
     var userCompany = gateData ? gateData.company : "";
+    var userEmail   = gateData ? gateData.email   : "";
 
     // Portfolio totals
     var totalRV = 0, totalBill = 0, totalGross = 0, totalFee = 0, totalNet = 0;
@@ -396,18 +397,27 @@
     doc.setFontSize(14);
     doc.setTextColor(26, 28, 26);
     doc.text(userName || "Property Portfolio", m, y + 10);
+    var detailY = y + 10;
     if (userCompany) {
       doc.setFont("helvetica", "normal");
       doc.setFontSize(12);
       doc.setTextColor(80);
-      doc.text(userCompany, m, y + 20);
+      doc.text(userCompany, m, detailY + 10);
+      detailY += 10;
+    }
+    if (userEmail) {
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(10);
+      doc.setTextColor(100);
+      doc.text(userEmail, m, detailY + 8);
+      detailY += 8;
     }
 
     // Date
     doc.setFont("helvetica", "normal");
     doc.setFontSize(10);
     doc.setTextColor(120);
-    doc.text("Generated: " + new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" }), m, y + 35);
+    doc.text("Generated: " + new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" }), m, detailY + 15);
 
     // Summary stat boxes
     var boxY = 195;

@@ -279,47 +279,52 @@ async function handleBatchReport(request, env) {
   })));
 
   try {
-    await tursoQuery(
-      env.TURSO_URL,
-      env.TURSO_TOKEN,
-      `CREATE TABLE IF NOT EXISTS batch_reports (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        email TEXT,
-        name TEXT,
-        company TEXT,
-        property_count INTEGER NOT NULL,
-        properties_json TEXT NOT NULL,
-        total_rv REAL,
-        total_bill REAL,
-        total_net_saving REAL,
-        created_at TEXT NOT NULL
-      )`,
-      [],
-    );
-
-    await tursoQuery(
-      env.TURSO_URL,
-      env.TURSO_TOKEN,
-      `INSERT INTO batch_reports (email, name, company, property_count, properties_json, total_rv, total_bill, total_net_saving, created_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [
-        { type: 'text',    value: email },
-        { type: 'text',    value: name },
-        { type: 'text',    value: company },
-        { type: 'integer', value: String(properties.length) },
-        { type: 'text',    value: propertiesJson },
-        { type: 'float',   value: String(totalRV) },
-        { type: 'float',   value: String(totalBill) },
-        { type: 'float',   value: String(totalNet) },
-        { type: 'text',    value: createdAt },
-      ],
-    );
+    await tursoPipeline(env.TURSO_URL, env.TURSO_TOKEN, [
+      {
+        sql: `CREATE TABLE IF NOT EXISTS batch_reports (id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT, name TEXT, company TEXT, property_count INTEGER NOT NULL, properties_json TEXT NOT NULL, total_rv REAL, total_bill REAL, total_net_saving REAL, created_at TEXT NOT NULL)`,
+        args: [],
+      },
+      {
+        sql: `INSERT INTO batch_reports (email, name, company, property_count, properties_json, total_rv, total_bill, total_net_saving, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        args: [
+          { type: 'text',    value: email },
+          { type: 'text',    value: name },
+          { type: 'text',    value: company },
+          { type: 'integer', value: String(properties.length) },
+          { type: 'text',    value: propertiesJson },
+          { type: 'float',   value: String(totalRV) },
+          { type: 'float',   value: String(totalBill) },
+          { type: 'float',   value: String(totalNet) },
+          { type: 'text',    value: createdAt },
+        ],
+      },
+    ]);
 
     return jsonResponse({ success: true });
   } catch (err) {
-    // Log to Turso failed — don't block the PDF download
     return jsonResponse({ error: 'Database error', detail: err.message }, 500);
   }
+}
+
+async function tursoPipeline(url, token, statements) {
+  const requests = statements.map(s => ({ type: 'execute', stmt: { sql: s.sql, args: s.args } }));
+  requests.push({ type: 'close' });
+
+  const response = await fetch(`${url}/v2/pipeline`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ requests }),
+  });
+
+  if (!response.ok) {
+    const body = await response.text();
+    throw new Error(`Turso API error: ${response.status} — ${body}`);
+  }
+
+  return response.json();
 }
 
 async function tursoQuery(url, token, sql, args) {
@@ -338,7 +343,8 @@ async function tursoQuery(url, token, sql, args) {
   });
 
   if (!response.ok) {
-    throw new Error(`Turso API error: ${response.status}`);
+    const body = await response.text();
+    throw new Error(`Turso API error: ${response.status} — ${body}`);
   }
 
   return response.json();
