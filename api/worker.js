@@ -279,28 +279,60 @@ async function handleBatchReport(request, env) {
   })));
 
   try {
+    // Create table with quote_number column
     await tursoPipeline(env.TURSO_URL, env.TURSO_TOKEN, [
       {
-        sql: `CREATE TABLE IF NOT EXISTS batch_reports (id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT, name TEXT, company TEXT, property_count INTEGER NOT NULL, properties_json TEXT NOT NULL, total_rv REAL, total_bill REAL, total_net_saving REAL, created_at TEXT NOT NULL)`,
+        sql: `CREATE TABLE IF NOT EXISTS batch_reports (id INTEGER PRIMARY KEY AUTOINCREMENT, quote_number TEXT, email TEXT, name TEXT, company TEXT, property_count INTEGER NOT NULL, properties_json TEXT NOT NULL, total_rv REAL, total_bill REAL, total_net_saving REAL, created_at TEXT NOT NULL)`,
         args: [],
       },
+    ]);
+
+    // Add quote_number column if table already exists without it
+    try {
+      await tursoPipeline(env.TURSO_URL, env.TURSO_TOKEN, [
+        { sql: `ALTER TABLE batch_reports ADD COLUMN quote_number TEXT`, args: [] },
+      ]);
+    } catch { /* column already exists — safe to ignore */ }
+
+    // Insert the report
+    await tursoPipeline(env.TURSO_URL, env.TURSO_TOKEN, [
       {
         sql: `INSERT INTO batch_reports (email, name, company, property_count, properties_json, total_rv, total_bill, total_net_saving, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         args: [
-          { type: 'text',    value: email },
-          { type: 'text',    value: name },
-          { type: 'text',    value: company },
-          { type: 'integer', value: String(properties.length) },
-          { type: 'text',    value: propertiesJson },
-          { type: 'float',   value: String(totalRV) },
-          { type: 'float',   value: String(totalBill) },
-          { type: 'float',   value: String(totalNet) },
-          { type: 'text',    value: createdAt },
+          { type: 'text', value: email },
+          { type: 'text', value: name },
+          { type: 'text', value: company },
+          { type: 'text', value: String(properties.length) },
+          { type: 'text', value: propertiesJson },
+          { type: 'text', value: String(totalRV) },
+          { type: 'text', value: String(totalBill) },
+          { type: 'text', value: String(totalNet) },
+          { type: 'text', value: createdAt },
         ],
       },
     ]);
 
-    return jsonResponse({ success: true });
+    // Get the last inserted ID and build the quotation number
+    const idResult = await tursoPipeline(env.TURSO_URL, env.TURSO_TOKEN, [
+      { sql: `SELECT last_insert_rowid() AS id`, args: [] },
+    ]);
+
+    const rowId = idResult.results[0].response.result.rows[0][0].value;
+    const year = new Date().getFullYear();
+    const quoteNumber = `VAC-${year}-${String(rowId).padStart(5, '0')}`;
+
+    // Store the quote number back
+    await tursoPipeline(env.TURSO_URL, env.TURSO_TOKEN, [
+      {
+        sql: `UPDATE batch_reports SET quote_number = ? WHERE id = ?`,
+        args: [
+          { type: 'text', value: quoteNumber },
+          { type: 'text', value: String(rowId) },
+        ],
+      },
+    ]);
+
+    return jsonResponse({ success: true, quote_number: quoteNumber });
   } catch (err) {
     return jsonResponse({ error: 'Database error', detail: err.message }, 500);
   }

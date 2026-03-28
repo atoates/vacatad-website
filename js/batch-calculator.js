@@ -31,7 +31,14 @@
     initModeTabs();
     initBatchSearch();
     batchGenerateBtn.addEventListener("click", function () {
-      if (batchProperties.length > 0) generateReport();
+      if (batchProperties.length > 0 && !batchGenerateBtn.disabled) {
+        batchGenerateBtn.disabled = true;
+        batchGenerateBtn.textContent = "Generating\u2026";
+        generateReport().finally(function () {
+          batchGenerateBtn.disabled = false;
+          batchGenerateBtn.textContent = "Generate Portfolio Report (PDF)";
+        });
+      }
     });
   });
 
@@ -342,7 +349,7 @@
      PDF REPORT GENERATION (jsPDF + AutoTable)
      ═══════════════════════════════════════════ */
 
-  function generateReport() {
+  async function generateReport() {
     var jsPDF = window.jspdf.jsPDF;
     var doc = new jsPDF("p", "mm", "a4");
     var pw = 210, ph = 297, m = 20;
@@ -364,6 +371,36 @@
       totalFee   += item.result.vacatadFee.feeAmount || 0;
       totalNet   += item.result.potentialNetSaving || 0;
     });
+
+    // Get quotation number from server
+    var quoteNumber = "";
+    try {
+      var payload = {
+        email:   userEmail,
+        name:    userName,
+        company: userCompany,
+        total_rv:   totalRV,
+        total_bill:  totalBill,
+        total_net:   totalNet,
+        properties: batchProperties.map(function (item) {
+          return {
+            address:          item.prop.full_address || "",
+            postcode:         item.prop.postcode || "",
+            description_code: item.prop.description_code || "",
+            rv_2026:          item.prop.rv_2026 || 0,
+            annual_bill:      item.result.annualBill || 0,
+            net_saving:       item.result.potentialNetSaving || 0,
+          };
+        }),
+      };
+      var res = await fetch(API_URL + "/api/batch-report", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      var data = await res.json();
+      if (data.quote_number) quoteNumber = data.quote_number;
+    } catch (e) { /* continue without quote number */ }
 
     /* ── PAGE 1: COVER ── */
     // Header bar
@@ -387,6 +424,14 @@
     doc.setFont("helvetica", "normal");
     doc.setTextColor(100);
     doc.text("2026/27 Financial Year", m, 102);
+
+    // Quotation number (top right)
+    if (quoteNumber) {
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(10);
+      doc.setTextColor(26, 28, 26);
+      doc.text("Quotation: " + quoteNumber, pw - m, 90, { align: "right" });
+    }
 
     // Prepared for
     var y = 125;
@@ -442,13 +487,22 @@
       doc.text(stat.value, x + boxW / 2, boxY + 30, { align: "center" });
     });
 
+    // CTA section
+    var ctaY = 250;
+    doc.setFillColor(26, 28, 26);
+    doc.roundedRect(m, ctaY, cw, 22, 3, 3, "F");
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(12);
+    doc.setTextColor(219, 244, 204);
+    doc.textWithLink("Get in touch to start saving — vacatad.com/contact", pw / 2, ctaY + 14, { align: "center", url: "https://vacatad.com/contact" });
+
     // Cover disclaimer
     doc.setDrawColor(200);
-    doc.line(m, ph - 25, pw - m, ph - 25);
+    doc.line(m, ph - 20, pw - m, ph - 20);
     doc.setFontSize(7.5);
     doc.setTextColor(150);
-    doc.text("This report provides estimates based on the 2026/27 multipliers and published relief schemes.", m, ph - 18);
-    doc.text("Actual bills are determined by your local billing authority. Rateable values are set by the Valuation Office Agency.", m, ph - 13);
+    doc.text("This report provides estimates based on the 2026/27 multipliers and published relief schemes.", m, ph - 13);
+    doc.text("Actual bills are determined by your local billing authority. Rateable values are set by the Valuation Office Agency.", m, ph - 8);
 
     /* ── PAGE 2+: SUMMARY TABLE ── */
     doc.addPage();
@@ -511,47 +565,25 @@
       drawPropertyPage(doc, item, i + 1, m, cw, pw);
     });
 
-    /* ── PAGE NUMBERS ── */
+    /* ── PAGE NUMBERS (skip cover page) ── */
     var totalPages = doc.internal.getNumberOfPages();
-    for (var p = 1; p <= totalPages; p++) {
+    for (var p = 2; p <= totalPages; p++) {
       doc.setPage(p);
       doc.setFontSize(7.5);
       doc.setTextColor(150);
       doc.text("Page " + p + " of " + totalPages, pw / 2, ph - 10, { align: "center" });
-      if (p > 1) {
-        doc.text("Generated " + new Date().toLocaleDateString("en-GB"), m, ph - 10);
+      doc.text("Generated " + new Date().toLocaleDateString("en-GB"), m, ph - 10);
+      if (quoteNumber) {
+        doc.text(quoteNumber, pw - m, ph - 10, { align: "right" });
+      } else {
         doc.text("vacatad.com", pw - m, ph - 10, { align: "right" });
       }
     }
 
-    doc.save("VacatAd-Portfolio-Report-2026-27.pdf");
-
-    // Log batch report data to backend (fire-and-forget)
-    try {
-      var payload = {
-        email:   gateData ? gateData.email   : "",
-        name:    userName,
-        company: userCompany,
-        total_rv:   totalRV,
-        total_bill:  totalBill,
-        total_net:   totalNet,
-        properties: batchProperties.map(function (item) {
-          return {
-            address:          item.prop.full_address || "",
-            postcode:         item.prop.postcode || "",
-            description_code: item.prop.description_code || "",
-            rv_2026:          item.prop.rv_2026 || 0,
-            annual_bill:      item.result.annualBill || 0,
-            net_saving:       item.result.potentialNetSaving || 0,
-          };
-        }),
-      };
-      fetch(API_URL + "/api/batch-report", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      }).catch(function () { /* silent — don't block user */ });
-    } catch (e) { /* silent */ }
+    var fileName = quoteNumber
+      ? "VacatAd-" + quoteNumber + ".pdf"
+      : "VacatAd-Portfolio-Report-2026-27.pdf";
+    doc.save(fileName);
 
     if (typeof gtag === "function") {
       gtag("event", "batch_report_generated", {
