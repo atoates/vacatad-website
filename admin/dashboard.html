@@ -339,6 +339,9 @@
                 <button class="tab-btn" data-tab="properties" onclick="switchTab('properties')">
                     <i class="fas fa-building" style="margin-right: 6px;"></i>Properties
                 </button>
+                <button class="tab-btn" data-tab="searches" onclick="switchTab('searches')">
+                    <i class="fas fa-search" style="margin-right: 6px;"></i>Searches
+                </button>
             </div>
 
             <!-- Search -->
@@ -364,6 +367,12 @@
             <div id="tab-properties" style="display:none;">
                 <div id="properties-loading" class="loading-spinner"><i class="fas fa-circle-notch"></i> Loading...</div>
                 <div id="properties-content" style="display:none;"></div>
+            </div>
+
+            <!-- Searches Table -->
+            <div id="tab-searches" style="display:none;">
+                <div id="searches-loading" class="loading-spinner"><i class="fas fa-circle-notch"></i> Loading...</div>
+                <div id="searches-content" style="display:none;"></div>
             </div>
 
         </div>
@@ -393,9 +402,12 @@ let currentTab = 'leads';
 let leadsData = [];
 let reportsData = [];
 let propertiesData = [];
+let searchesData = [];
 let leadsOffset = 0;
 let reportsOffset = 0;
 let propertiesOffset = 0;
+let searchesOffset = 0;
+let searchesLoaded = false;
 const PAGE_SIZE = 50;
 
 // ── API Helpers ────────────────────────────────────────────
@@ -656,6 +668,89 @@ function showPropertyDetail(idx) {
     document.getElementById('detail-overlay').classList.add('open');
 }
 
+// ── Searches ──────────────────────────────────────────────
+async function loadSearches(offset, search) {
+    const el = document.getElementById('searches-content');
+    const loader = document.getElementById('searches-loading');
+    loader.style.display = 'block';
+    el.style.display = 'none';
+
+    try {
+        let path = `/api/admin/search-logs?limit=${PAGE_SIZE}&offset=${offset}`;
+        if (search) path += `&q=${encodeURIComponent(search)}`;
+        const data = await apiFetch(path);
+        if (!data) return;
+        searchesData = data.logs;
+        searchesOffset = offset;
+        searchesLoaded = true;
+
+        if (searchesData.length === 0) {
+            el.innerHTML = `<div class="empty-state"><i class="fas fa-inbox"></i><p>No search logs found</p></div>`;
+        } else {
+            el.innerHTML = renderSearchesTable(searchesData) + renderPagination('searches', offset, searchesData.length);
+        }
+    } catch (err) {
+        el.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Error loading searches: ${err.message}</p></div>`;
+    }
+
+    loader.style.display = 'none';
+    el.style.display = 'block';
+}
+
+function renderSearchesTable(logs) {
+    let html = `<table class="data-table"><thead><tr>
+        <th>Address</th><th>Postcode</th><th>RV 2026</th><th>Annual Bill</th><th>Net Saving</th><th>Name</th><th>Date</th>
+    </tr></thead><tbody>`;
+
+    logs.forEach(l => {
+        const date = formatDate(l.created_at);
+        const rv = l.rv_2026 ? '\u00a3' + Number(l.rv_2026).toLocaleString() : '--';
+        const bill = l.annual_bill ? '\u00a3' + Number(l.annual_bill).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2}) : '--';
+        const saving = l.net_saving ? '\u00a3' + Number(l.net_saving).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2}) : '--';
+        html += `<tr style="cursor:pointer" onclick="showSearchDetail(${l.id})">
+            <td><strong>${esc(l.address || '--')}</strong></td>
+            <td>${esc(l.postcode || '--')}</td>
+            <td>${rv}</td>
+            <td>${bill}</td>
+            <td>${saving}</td>
+            <td>${esc(l.name || '--')}</td>
+            <td class="text-muted">${date}</td>
+        </tr>`;
+    });
+
+    html += '</tbody></table>';
+    return html;
+}
+
+function showSearchDetail(id) {
+    const s = searchesData.find(l => String(l.id) === String(id));
+    if (!s) return;
+
+    const fmtMoney = v => v ? '\u00a3' + Number(v).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2}) : '--';
+
+    document.getElementById('detail-title').textContent = s.address || 'Search Detail';
+    document.getElementById('detail-body').innerHTML = `
+        <div class="detail-row"><div class="detail-label">Address</div><div class="detail-value">${esc(s.address || '--')}</div></div>
+        <div class="detail-row"><div class="detail-label">Postcode</div><div class="detail-value">${esc(s.postcode || '--')}</div></div>
+        <div class="detail-row"><div class="detail-label">UARN</div><div class="detail-value">${esc(s.uarn || '--')}</div></div>
+        <div class="detail-row"><div class="detail-label">Description</div><div class="detail-value">${esc(s.description_code || '--')}</div></div>
+        <hr style="border:none;border-top:1px solid var(--border-color);margin:12px 0;">
+        <div class="detail-row"><div class="detail-label">RV 2023</div><div class="detail-value">${fmtMoney(s.rv_2023)}</div></div>
+        <div class="detail-row"><div class="detail-label">RV 2026</div><div class="detail-value">${fmtMoney(s.rv_2026)}</div></div>
+        <div class="detail-row"><div class="detail-label">Annual Bill</div><div class="detail-value">${fmtMoney(s.annual_bill)}</div></div>
+        <div class="detail-row"><div class="detail-label">Potential Saving</div><div class="detail-value">${fmtMoney(s.potential_saving)}</div></div>
+        <div class="detail-row"><div class="detail-label">Net Saving</div><div class="detail-value"><strong>${fmtMoney(s.net_saving)}</strong></div></div>
+        <div class="detail-row"><div class="detail-label">Fee</div><div class="detail-value">${s.fee_percent ? s.fee_percent + '%' : '--'} ${s.fee_amount ? '(' + fmtMoney(s.fee_amount) + ')' : ''}</div></div>
+        <div class="detail-row"><div class="detail-label">Multiplier</div><div class="detail-value">${esc(s.multiplier || '--')}</div></div>
+        <hr style="border:none;border-top:1px solid var(--border-color);margin:12px 0;">
+        <div class="detail-row"><div class="detail-label">Name</div><div class="detail-value">${esc(s.name || '--')}</div></div>
+        <div class="detail-row"><div class="detail-label">Email</div><div class="detail-value">${s.email ? `<a href="mailto:${esc(s.email)}">${esc(s.email)}</a>` : '--'}</div></div>
+        <div class="detail-row"><div class="detail-label">Company</div><div class="detail-value">${esc(s.company || '--')}</div></div>
+        <div class="detail-row"><div class="detail-label">Searched</div><div class="detail-value">${formatDateTime(s.created_at)}</div></div>
+    `;
+    document.getElementById('detail-overlay').classList.add('open');
+}
+
 // ── Tab Switching ──────────────────────────────────────────
 function switchTab(tab) {
     currentTab = tab;
@@ -663,10 +758,12 @@ function switchTab(tab) {
     document.getElementById('tab-leads').style.display = tab === 'leads' ? 'block' : 'none';
     document.getElementById('tab-reports').style.display = tab === 'reports' ? 'block' : 'none';
     document.getElementById('tab-properties').style.display = tab === 'properties' ? 'block' : 'none';
+    document.getElementById('tab-searches').style.display = tab === 'searches' ? 'block' : 'none';
     document.getElementById('search-input').value = '';
-    document.getElementById('search-input').placeholder = tab === 'properties'
+    document.getElementById('search-input').placeholder = (tab === 'properties' || tab === 'searches')
         ? 'Search by address, postcode, name...'
         : 'Search by name, email, company...';
+    if (tab === 'searches' && !searchesLoaded) loadSearches(0);
 }
 
 // ── Search ─────────────────────────────────────────────────
@@ -674,6 +771,7 @@ function doSearch() {
     const q = document.getElementById('search-input').value.trim();
     if (currentTab === 'leads') loadLeads(0, q);
     else if (currentTab === 'reports') loadReports(0, q);
+    else if (currentTab === 'searches') loadSearches(0, q);
     else loadProperties(0, q);
 }
 
@@ -681,6 +779,7 @@ function clearSearch() {
     document.getElementById('search-input').value = '';
     if (currentTab === 'leads') loadLeads(0);
     else if (currentTab === 'reports') loadReports(0);
+    else if (currentTab === 'searches') loadSearches(0);
     else loadProperties(0);
 }
 
@@ -709,6 +808,7 @@ function paginate(type, offset) {
     const q = document.getElementById('search-input').value.trim();
     if (type === 'leads') loadLeads(offset, q);
     else if (type === 'reports') loadReports(offset, q);
+    else if (type === 'searches') loadSearches(offset, q);
     else loadProperties(offset, q);
 }
 
@@ -730,6 +830,13 @@ function exportCSV() {
             csv += `"${csvSafe(r.quote_number || '')}","${csvSafe(r.name || '')}","${csvSafe(r.email || '')}","${csvSafe(r.company || '')}",${r.property_count || 0},${r.total_rv || 0},${r.total_bill || 0},${r.total_net_saving || 0},"${r.created_at}"\n`;
         });
         filename = `vacatad-batch-reports-${todayStr()}.csv`;
+    } else if (currentTab === 'searches') {
+        if (!searchesData.length) return alert('No data to export');
+        csv = 'Address,Postcode,UARN,Description,RV 2023,RV 2026,Annual Bill,Potential Saving,Net Saving,Fee %,Fee Amount,Multiplier,Name,Email,Company,Date\n';
+        searchesData.forEach(s => {
+            csv += `"${csvSafe(s.address)}","${csvSafe(s.postcode)}","${csvSafe(s.uarn)}","${csvSafe(s.description_code)}",${s.rv_2023 || 0},${s.rv_2026 || 0},${s.annual_bill || 0},${s.potential_saving || 0},${s.net_saving || 0},${s.fee_percent || 0},${s.fee_amount || 0},"${csvSafe(s.multiplier)}","${csvSafe(s.name)}","${csvSafe(s.email)}","${csvSafe(s.company)}","${s.created_at}"\n`;
+        });
+        filename = `vacatad-search-logs-${todayStr()}.csv`;
     } else {
         if (!propertiesData.length) return alert('No data to export');
         csv = 'Address,Postcode,Type,RV 2026,Annual Bill,Net Saving,Searched By,Email,Company,Quote Number,Date\n';

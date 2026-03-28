@@ -273,6 +273,34 @@ document.addEventListener("DOMContentLoaded", function () {
         annual_bill: result.annualBill,
       });
     }
+
+    // Log the search to the database
+    try {
+      var gateData = null;
+      try { gateData = JSON.parse(localStorage.getItem("vacatad_gate_v1")); } catch (e) {}
+      var prop = window._vacatadSelectedProp || {};
+      fetch("https://vacatad-voa-lookup.vacatad.workers.dev/api/search-log", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: gateData ? gateData.name : "",
+          email: gateData ? gateData.email : "",
+          company: gateData ? gateData.company : "",
+          address: prop.full_address || "",
+          postcode: prop.postcode || "",
+          uarn: prop.uarn || "",
+          description_code: prop.description_code || "",
+          rv_2023: result.oldRV || 0,
+          rv_2026: result.inputs.rateableValue || 0,
+          annual_bill: result.annualBill || 0,
+          potential_saving: result.potentialAnnualSaving || 0,
+          net_saving: result.potentialNetSaving || 0,
+          fee_percent: result.vacatadFee ? result.vacatadFee.feePercent : 0,
+          fee_amount: result.vacatadFee ? result.vacatadFee.feeAmount : 0,
+          multiplier: result.steps.multiplier ? result.steps.multiplier.label : "",
+        }),
+      }).catch(function () {}); // fire-and-forget, don't block the UI
+    } catch (e) {}
   });
 
   function showError(inputId, message) {

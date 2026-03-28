@@ -82,6 +82,10 @@ export default {
       return handleBatchReport(request, env);
     }
 
+    if ((path === '/api/search-log' || path === '/search-log') && request.method === 'POST') {
+      return handleSearchLog(request, env);
+    }
+
     // Admin endpoints (require GitHub auth)
     if (path.startsWith('/api/admin/')) {
       const authError = await validateGitHubAuth(request);
@@ -96,6 +100,7 @@ export default {
       if (path === '/api/admin/compare-properties' && request.method === 'POST') return handleCompareProperties(request, env);
       if (path === '/api/admin/log-upload' && request.method === 'POST') return handleLogUpload(request, env);
       if (path === '/api/admin/upload-history') return handleUploadHistory(url, env);
+      if (path === '/api/admin/search-logs') return handleAdminSearchLogs(url, env);
     }
 
     return jsonResponse({ error: 'Not found' }, 404);
@@ -668,6 +673,129 @@ async function handleDeleteProperties(request, env) {
 
     await tursoPipeline(env.TURSO_URL, env.TURSO_TOKEN, statements);
     return jsonResponse({ success: true, deleted: uarns.length });
+  } catch (err) {
+    return jsonResponse({ error: 'Database error', detail: err.message }, 500);
+  }
+}
+
+async function handleSearchLog(request, env) {
+  let body;
+  try { body = await request.json(); } catch { return jsonResponse({ error: 'Invalid JSON' }, 400); }
+
+  const name      = (body.name || '').trim().slice(0, 200);
+  const email     = (body.email || '').trim().slice(0, 200);
+  const company   = (body.company || '').trim().slice(0, 200);
+  const address   = (body.address || '').trim().slice(0, 400);
+  const postcode  = (body.postcode || '').trim().slice(0, 12);
+  const uarn      = (body.uarn || '').trim().slice(0, 30);
+  const descCode  = (body.description_code || '').trim().slice(0, 10);
+  const rv2023    = Number(body.rv_2023) || 0;
+  const rv2026    = Number(body.rv_2026) || 0;
+  const annualBill     = Number(body.annual_bill) || 0;
+  const netSaving      = Number(body.net_saving) || 0;
+  const potentialSaving = Number(body.potential_saving) || 0;
+  const feePercent     = Number(body.fee_percent) || 0;
+  const feeAmount      = Number(body.fee_amount) || 0;
+  const multiplier     = (body.multiplier || '').slice(0, 50);
+  const createdAt = new Date().toISOString();
+
+  try {
+    await tursoPipeline(env.TURSO_URL, env.TURSO_TOKEN, [
+      {
+        sql: `CREATE TABLE IF NOT EXISTS search_log (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          name TEXT, email TEXT, company TEXT,
+          address TEXT, postcode TEXT, uarn TEXT, description_code TEXT,
+          rv_2023 REAL, rv_2026 REAL,
+          annual_bill REAL, potential_saving REAL, net_saving REAL,
+          fee_percent REAL, fee_amount REAL, multiplier TEXT,
+          created_at TEXT NOT NULL
+        )`,
+        args: [],
+      },
+      {
+        sql: `INSERT INTO search_log (name, email, company, address, postcode, uarn, description_code, rv_2023, rv_2026, annual_bill, potential_saving, net_saving, fee_percent, fee_amount, multiplier, created_at)
+              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        args: [
+          { type: 'text', value: name },
+          { type: 'text', value: email },
+          { type: 'text', value: company },
+          { type: 'text', value: address },
+          { type: 'text', value: postcode },
+          { type: 'text', value: uarn },
+          { type: 'text', value: descCode },
+          { type: 'text', value: String(rv2023) },
+          { type: 'text', value: String(rv2026) },
+          { type: 'text', value: String(annualBill) },
+          { type: 'text', value: String(potentialSaving) },
+          { type: 'text', value: String(netSaving) },
+          { type: 'text', value: String(feePercent) },
+          { type: 'text', value: String(feeAmount) },
+          { type: 'text', value: multiplier },
+          { type: 'text', value: createdAt },
+        ],
+      },
+    ]);
+    return jsonResponse({ success: true });
+  } catch (err) {
+    return jsonResponse({ error: 'Database error', detail: err.message }, 500);
+  }
+}
+
+async function handleAdminSearchLogs(url, env) {
+  const limit  = Math.min(parseInt(url.searchParams.get('limit'))  || 100, 500);
+  const offset = Math.max(parseInt(url.searchParams.get('offset')) || 0, 0);
+  const search = (url.searchParams.get('q') || '').trim();
+
+  try {
+    // Create table if not yet exists
+    await tursoPipeline(env.TURSO_URL, env.TURSO_TOKEN, [
+      {
+        sql: `CREATE TABLE IF NOT EXISTS search_log (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          name TEXT, email TEXT, company TEXT,
+          address TEXT, postcode TEXT, uarn TEXT, description_code TEXT,
+          rv_2023 REAL, rv_2026 REAL,
+          annual_bill REAL, potential_saving REAL, net_saving REAL,
+          fee_percent REAL, fee_amount REAL, multiplier TEXT,
+          created_at TEXT NOT NULL
+        )`,
+        args: [],
+      },
+    ]);
+
+    let sql, args;
+    if (search) {
+      sql = `SELECT * FROM search_log WHERE name LIKE ? OR email LIKE ? OR company LIKE ? OR address LIKE ? OR postcode LIKE ? ORDER BY id DESC LIMIT ? OFFSET ?`;
+      const term = `%${search}%`;
+      args = [
+        { type: 'text', value: term },
+        { type: 'text', value: term },
+        { type: 'text', value: term },
+        { type: 'text', value: term },
+        { type: 'text', value: term },
+        { type: 'text', value: String(limit) },
+        { type: 'text', value: String(offset) },
+      ];
+    } else {
+      sql = `SELECT * FROM search_log ORDER BY id DESC LIMIT ? OFFSET ?`;
+      args = [
+        { type: 'text', value: String(limit) },
+        { type: 'text', value: String(offset) },
+      ];
+    }
+
+    const result = await tursoQuery(env.TURSO_URL, env.TURSO_TOKEN, sql, args);
+    const rows = result.results[0].response.result.rows;
+    const cols = result.results[0].response.result.cols;
+
+    const logs = rows.map(row => {
+      const obj = {};
+      cols.forEach((col, i) => { obj[col.name] = row[i].type === 'null' ? null : row[i].value; });
+      return obj;
+    });
+
+    return jsonResponse({ logs, limit, offset });
   } catch (err) {
     return jsonResponse({ error: 'Database error', detail: err.message }, 500);
   }
