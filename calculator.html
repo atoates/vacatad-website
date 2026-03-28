@@ -285,14 +285,46 @@ Year: 2026
                     <div class="calc-divider"></div>
                     <p class="calc-divider-label">Property details</p>
 
-                    <!-- Property type -->
-                    <div class="calc-field">
-                        <label class="calc-label">Is this a Retail, Hospitality or Leisure property?</label>
-                        <div class="calc-toggle-group">
-                            <label class="calc-toggle"><input type="radio" name="isRHL" value="no" checked><span>No</span></label>
-                            <label class="calc-toggle"><input type="radio" name="isRHL" value="yes"><span>Yes</span></label>
+                    <div class="calc-details-grid">
+                        <!-- Property type -->
+                        <div class="calc-field calc-grid-item">
+                            <label class="calc-label">Retail, Hospitality or Leisure?</label>
+                            <div class="calc-toggle-group">
+                                <label class="calc-toggle"><input type="radio" name="isRHL" value="no" checked><span>No</span></label>
+                                <label class="calc-toggle"><input type="radio" name="isRHL" value="yes"><span>Yes</span></label>
+                            </div>
+                            <p class="calc-hint">Shops, restaurants, pubs, hotels, gyms, etc.</p>
                         </div>
-                        <p class="calc-hint">Shops, restaurants, cafés, pubs, hotels, gyms, cinemas, salons, etc.</p>
+
+                        <!-- Industrial property -->
+                        <div class="calc-field calc-grid-item">
+                            <label class="calc-label">Industrial property?</label>
+                            <div class="calc-toggle-group">
+                                <label class="calc-toggle"><input type="radio" name="isIndustrial" value="no" checked><span>No</span></label>
+                                <label class="calc-toggle"><input type="radio" name="isIndustrial" value="yes"><span>Yes</span></label>
+                            </div>
+                            <p class="calc-hint">Warehouses, factories and industrial premises.</p>
+                        </div>
+
+                        <!-- Sole property -->
+                        <div class="calc-field calc-grid-item">
+                            <label class="calc-label">Only property occupied?</label>
+                            <div class="calc-toggle-group">
+                                <label class="calc-toggle"><input type="radio" name="isSoleProperty" value="no" checked><span>No</span></label>
+                                <label class="calc-toggle"><input type="radio" name="isSoleProperty" value="yes"><span>Yes</span></label>
+                            </div>
+                            <p class="calc-hint">May qualify for Small Business Rate Relief.</p>
+                        </div>
+
+                        <!-- London -->
+                        <div class="calc-field calc-grid-item">
+                            <label class="calc-label">Property in London?</label>
+                            <div class="calc-toggle-group">
+                                <label class="calc-toggle"><input type="radio" name="isLondon" value="no" checked><span>No</span></label>
+                                <label class="calc-toggle"><input type="radio" name="isLondon" value="yes"><span>Yes</span></label>
+                            </div>
+                            <p class="calc-hint">Different transitional relief thresholds apply.</p>
+                        </div>
                     </div>
 
                     <!-- Pub / venue (conditional on RHL = yes) -->
@@ -303,36 +335,6 @@ Year: 2026
                             <label class="calc-toggle"><input type="radio" name="isPubOrVenue" value="yes"><span>Yes</span></label>
                         </div>
                         <p class="calc-hint">Eligible for an additional 15% relief in 2026/27.</p>
-                    </div>
-
-                    <!-- Industrial property -->
-                    <div class="calc-field">
-                        <label class="calc-label">Is this an industrial property?</label>
-                        <div class="calc-toggle-group">
-                            <label class="calc-toggle"><input type="radio" name="isIndustrial" value="no" checked><span>No</span></label>
-                            <label class="calc-toggle"><input type="radio" name="isIndustrial" value="yes"><span>Yes</span></label>
-                        </div>
-                        <p class="calc-hint">Warehouses, factories, and industrial premises qualify for a 6-month empty rates exemption instead of 3 months.</p>
-                    </div>
-
-                    <!-- Sole property -->
-                    <div class="calc-field">
-                        <label class="calc-label">Is this the only property the business occupies?</label>
-                        <div class="calc-toggle-group">
-                            <label class="calc-toggle"><input type="radio" name="isSoleProperty" value="no" checked><span>No</span></label>
-                            <label class="calc-toggle"><input type="radio" name="isSoleProperty" value="yes"><span>Yes</span></label>
-                        </div>
-                        <p class="calc-hint">Sole occupancy may qualify for Small Business Rate Relief.</p>
-                    </div>
-
-                    <!-- London -->
-                    <div class="calc-field">
-                        <label class="calc-label">Is the property in London?</label>
-                        <div class="calc-toggle-group">
-                            <label class="calc-toggle"><input type="radio" name="isLondon" value="no" checked><span>No</span></label>
-                            <label class="calc-toggle"><input type="radio" name="isLondon" value="yes"><span>Yes</span></label>
-                        </div>
-                        <p class="calc-hint">London properties have different transitional relief thresholds.</p>
                     </div>
 
                     <!-- Lost relief (conditional on previous RV entered) -->
@@ -434,7 +436,7 @@ Year: 2026
                             <span class="calc-row-value" style="color: rgba(255,255,255,0.9);" id="res-relief-weeks">&mdash;</span>
                         </div>
                     </div>
-                    <div class="calc-savings-grid">
+                    <div class="calc-savings-grid" id="savings-grid-normal">
                         <div class="calc-savings-stat">
                             <div class="calc-savings-stat-label">Potential annual saving</div>
                             <div class="calc-savings-stat-value green" id="res-saving">&mdash;</div>
@@ -448,7 +450,14 @@ Year: 2026
                             <div class="calc-savings-stat-value green" id="res-net-saving">&mdash;</div>
                         </div>
                     </div>
-                    <p style="font-size: 0.85rem; color: rgba(255,255,255,0.5); margin-bottom: 1.25rem;">Net monthly saving: <strong style="color: rgba(255,255,255,0.85);" id="res-monthly-saving">&mdash;</strong></p>
+                    <p id="monthly-saving-line" style="font-size: 0.85rem; color: rgba(255,255,255,0.5); margin-bottom: 1.25rem;">Net monthly saving: <strong style="color: rgba(255,255,255,0.85);" id="res-monthly-saving">&mdash;</strong></p>
+
+                    <!-- Drop-ship pricing message (shown when fee < £500) -->
+                    <div id="dropship-message" style="display:none; text-align:center; padding: 1.5rem 1rem; margin-bottom: 1.25rem;">
+                        <p style="font-size: 1rem; color: rgba(255,255,255,0.85); margin-bottom: 0.75rem;">This property may qualify for our drop-ship pricing model.</p>
+                        <a href="contact.html" style="display:inline-block; background: var(--mint); color: var(--eerie-black); font-weight: 700; padding: 0.65rem 1.75rem; border-radius: 8px; text-decoration: none; font-size: 0.95rem;">Please contact us for drop-ship pricing</a>
+                    </div>
+
                     <div class="calc-savings-cta">
                         <a href="contact.html" class="btn-primary" id="calc-cta-btn">Get Your Free Assessment</a>
                         <a href="tel:03330900443" class="btn-secondary">

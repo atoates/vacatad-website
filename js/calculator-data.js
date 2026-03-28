@@ -84,4 +84,7 @@ const RATES_CONFIG = {
     { rvCeiling: 100000,   feePercent: 12.5 },
     { rvCeiling: Infinity, feePercent: 10 },
   ],
+
+  // ── MINIMUM FEE ──
+  minimumFee: 500,
 };

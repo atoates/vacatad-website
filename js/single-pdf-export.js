@@ -23,15 +23,31 @@
     return "\u00A3" + Number(n).toLocaleString("en-GB", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
 
+  function curWhole(n) {
+    return "\u00A3" + Number(n).toLocaleString("en-GB", { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+  }
+
   function trunc(s, max) {
     if (!s) return "";
     return s.length > max ? s.substring(0, max - 1) + "\u2026" : s;
   }
 
+  /* Brand colours */
+  var C = {
+    dark:   [26, 28, 26],
+    mint:   [219, 244, 204],
+    teal:   [90, 184, 187],
+    green:  [34, 120, 34],
+    white:  [255, 255, 255],
+    off:    [248, 249, 248],
+    grey:   [100, 100, 100],
+    ltGrey: [160, 160, 160],
+  };
+
   function generateSinglePDF(result, prop) {
     var jsPDF = window.jspdf.jsPDF;
     var doc = new jsPDF("p", "mm", "a4");
-    var pw = 210, ph = 297, m = 20;
+    var pw = 210, ph = 297, m = 18;
     var cw = pw - m * 2;
     var s = result.steps;
 
@@ -42,93 +58,122 @@
     var userEmail   = gateData ? gateData.email   : "";
     var dateStr = new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
 
-    // Build address line from prop or fall back
-    var address = prop ? prop.full_address : "Property Assessment";
+    var address  = prop ? prop.full_address : "Property Assessment";
     var postcode = prop ? prop.postcode : "";
     var descText = prop ? prop.description_text : "";
 
     /* ══════════════════════════════════════════════════
-       PAGE 1: COMPACT PROPERTY ASSESSMENT
+       PAGE 1: PROPERTY ASSESSMENT
        ══════════════════════════════════════════════════ */
 
-    // Slim dark header
-    doc.setFillColor(26, 28, 26);
-    doc.rect(0, 0, pw, 36, "F");
+    // ── Dark header band ──
+    doc.setFillColor.apply(doc, C.dark);
+    doc.rect(0, 0, pw, 44, "F");
 
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(20);
-    doc.setTextColor(219, 244, 204);
-    doc.text("VacatAd", m, 16);
+    doc.setFontSize(24);
+    doc.setTextColor.apply(doc, C.mint);
+    doc.text("VacatAd", m, 20);
 
     doc.setFont("helvetica", "normal");
-    doc.setFontSize(8);
-    doc.setTextColor(170, 170, 170);
-    doc.text("Business Rates Specialists  |  vacatad.com", m, 24);
-    doc.text("0333 090 0443  |  hello@vacatad.com", pw - m, 16, { align: "right" });
-
-    // Accent line
-    doc.setFillColor(219, 244, 204);
-    doc.rect(0, 36, pw, 1.2, "F");
-
-    // Title row: report title left, date/user right
-    var ty = 46;
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(14);
-    doc.setTextColor(26, 28, 26);
-    doc.text("Business Rates Assessment 2026/27", m, ty);
-
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(8);
-    doc.setTextColor(130);
-    var metaRight = dateStr;
-    if (userName) metaRight = userName + (userCompany ? " (" + userCompany + ")" : "") + "  |  " + dateStr;
-    doc.text(metaRight, pw - m, ty - 1, { align: "right" });
-    if (userEmail) {
-      doc.text(userEmail, pw - m, ty + 4, { align: "right" });
-    }
-
-    // ── Property address (compact) ──
-    var propY = ty + 10;
-    doc.setFillColor(219, 244, 204);
-    doc.rect(m, propY - 3, 2.5, 5, "F");
-    doc.setFont("helvetica", "bold");
     doc.setFontSize(10);
-    doc.setTextColor(26, 28, 26);
-    var titleLines = doc.splitTextToSize(address, cw - 6);
-    doc.text(titleLines, m + 6, propY);
-    var afterAddr = propY + titleLines.length * 4.5;
+    doc.setTextColor(180, 180, 180);
+    doc.text("Business Rates Specialists", m, 30);
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
+    doc.setTextColor(180, 180, 180);
+    doc.text("0333 090 0443  |  hello@vacatad.com", pw - m, 20, { align: "right" });
+    doc.text("vacatad.com", pw - m, 30, { align: "right" });
+
+    // Accent bar
+    doc.setFillColor.apply(doc, C.mint);
+    doc.rect(0, 44, pw, 1.5, "F");
+
+    // ── Report title + meta ──
+    var y = 56;
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(18);
+    doc.setTextColor.apply(doc, C.dark);
+    doc.text("Business Rates Assessment 2026/27", m, y);
+
+    y += 8;
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    doc.setTextColor.apply(doc, C.grey);
+    var metaParts = [dateStr];
+    if (userName) metaParts.unshift(userName + (userCompany ? " (" + userCompany + ")" : ""));
+    doc.text(metaParts.join("   |   "), m, y);
+
+    // ── Property address block ──
+    y += 12;
+    doc.setFillColor.apply(doc, C.mint);
+    doc.rect(m, y - 5, 3, 8, "F");
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(13);
+    doc.setTextColor.apply(doc, C.dark);
+    var addrLines = doc.splitTextToSize(address, cw - 8);
+    doc.text(addrLines, m + 8, y);
+    y += addrLines.length * 6;
 
     if (descText || postcode) {
       doc.setFont("helvetica", "normal");
-      doc.setFontSize(7.5);
-      doc.setTextColor(100);
-      var metaParts = [];
-      if (descText) metaParts.push(descText);
-      if (postcode) metaParts.push(postcode);
-      if (prop && prop.is_rhl) metaParts.push("RHL");
-      if (prop && prop.is_industrial) metaParts.push("Industrial");
-      if (prop && prop.is_london) metaParts.push("London");
-      doc.text(metaParts.join("  |  "), m + 6, afterAddr + 2);
-      afterAddr += 6;
+      doc.setFontSize(10);
+      doc.setTextColor.apply(doc, C.grey);
+      var tags = [];
+      if (descText) tags.push(descText);
+      if (postcode) tags.push(postcode);
+      if (prop && prop.is_rhl) tags.push("Retail, Hospitality & Leisure");
+      if (prop && prop.is_industrial) tags.push("Industrial");
+      if (prop && prop.is_london) tags.push("London");
+      doc.text(tags.join("   |   "), m + 8, y + 2);
+      y += 8;
     }
 
-    // ── Two-column: RV left, Bill Breakdown right ──
-    var colW = (cw - 6) / 2;
-    var colStart = afterAddr + 5;
+    // ── Hero savings banner ──
+    y += 6;
+    var heroH = 38;
+    doc.setFillColor.apply(doc, C.dark);
+    doc.roundedRect(m, y, cw, heroH, 3, 3, "F");
 
-    // Section label helper (compact)
-    function sectionLabel(title, x, y) {
-      doc.setFillColor(219, 244, 204);
-      doc.rect(x, y - 3, 2.5, 4.5, "F");
+    // Left side: Net annual saving
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    doc.setTextColor(180, 180, 180);
+    doc.text("ESTIMATED NET ANNUAL SAVING", m + 12, y + 13);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(26);
+    doc.setTextColor.apply(doc, C.mint);
+    doc.text(cur(result.potentialNetSaving), m + 12, y + 30);
+
+    // Right side: Annual bill
+    var rightCol = pw / 2 + 15;
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    doc.setTextColor(180, 180, 180);
+    doc.text("ANNUAL RATES BILL", rightCol, y + 13);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(22);
+    doc.setTextColor.apply(doc, C.white);
+    doc.text(cur(result.annualBill), rightCol, y + 30);
+
+    y += heroH + 10;
+
+    // ── Two-column layout ──
+    var colW = (cw - 8) / 2;
+
+    // Left: Rateable Values
+    function sectionHead(title, x, sy) {
+      doc.setFillColor.apply(doc, C.mint);
+      doc.rect(x, sy - 4, 3, 6, "F");
       doc.setFont("helvetica", "bold");
-      doc.setFontSize(9.5);
-      doc.setTextColor(26, 28, 26);
-      doc.text(title, x + 5, y);
-      return y + 5;
+      doc.setFontSize(12);
+      doc.setTextColor.apply(doc, C.dark);
+      doc.text(title, x + 7, sy);
+      return sy + 7;
     }
 
-    // ── LEFT COLUMN: Rateable Values ──
-    var leftY = sectionLabel("Rateable Values", m, colStart);
+    var leftY = sectionHead("Rateable Values", m, y);
     var rvRows = [];
     if (result.oldRV && result.oldRV > 0) {
       rvRows.push(["2023 List", cur(result.oldRV)]);
@@ -146,16 +191,16 @@
       margin: { left: m, right: pw - m - colW },
       body: rvRows,
       theme: "plain",
-      styles: { fontSize: 8, cellPadding: { top: 1.5, bottom: 1.5, left: 2, right: 2 } },
+      styles: { fontSize: 10, cellPadding: { top: 2.5, bottom: 2.5, left: 3, right: 3 } },
       columnStyles: {
-        0: { textColor: [100, 100, 100] },
+        0: { textColor: C.grey },
         1: { fontStyle: "bold", halign: "right" },
       },
     });
 
-    // ── RIGHT COLUMN: Key Figures ──
-    var rightX = m + colW + 6;
-    var rightLabelY = sectionLabel("Key Figures", rightX, colStart);
+    // Right: Key Figures
+    var rightX = m + colW + 8;
+    var rightY = sectionHead("Key Figures", rightX, y);
     var kfRows = [
       ["Multiplier", s.multiplier.label],
       ["Basic bill", cur(s.basicBill)],
@@ -164,29 +209,27 @@
     ];
 
     doc.autoTable({
-      startY: rightLabelY,
+      startY: rightY,
       margin: { left: rightX, right: m },
       body: kfRows,
       theme: "plain",
-      styles: { fontSize: 8, cellPadding: { top: 1.5, bottom: 1.5, left: 2, right: 2 } },
+      styles: { fontSize: 10, cellPadding: { top: 2.5, bottom: 2.5, left: 3, right: 3 } },
       columnStyles: {
-        0: { textColor: [100, 100, 100] },
+        0: { textColor: C.grey },
         1: { fontStyle: "bold", halign: "right" },
       },
       didParseCell: function (data) {
-        if (data.row.index >= 2 && data.section === "body") {
+        if (data.row.index === 2 && data.section === "body") {
+          data.cell.styles.fillColor = C.dark;
+          data.cell.styles.textColor = C.white;
           data.cell.styles.fontStyle = "bold";
-          if (data.row.index === 2) {
-            data.cell.styles.fillColor = [26, 28, 26];
-            data.cell.styles.textColor = [255, 255, 255];
-          }
         }
       },
     });
 
-    // ── Full-width Bill Breakdown (detailed reliefs) ──
-    var brkStart = Math.max(doc.lastAutoTable.finalY, colStart + rvRows.length * 6.5 + 10) + 6;
-    var brkY = sectionLabel("Bill Breakdown 2026/27", m, brkStart);
+    // ── Bill Breakdown (reliefs) ──
+    var tableBottom = Math.max(doc.lastAutoTable.finalY, leftY + rvRows.length * 8 + 5);
+    var brkY = sectionHead("Bill Breakdown", m, tableBottom + 8);
 
     var brkRows = [];
     if (s.sbrr.reliefPercent > 0) {
@@ -211,18 +254,18 @@
         margin: { left: m, right: m },
         body: brkRows,
         theme: "striped",
-        styles: { fontSize: 8, cellPadding: { top: 2, bottom: 2, left: 3, right: 3 } },
-        alternateRowStyles: { fillColor: [248, 249, 248] },
+        styles: { fontSize: 10, cellPadding: { top: 3, bottom: 3, left: 4, right: 4 } },
+        alternateRowStyles: { fillColor: C.off },
         columnStyles: {
           0: { cellWidth: "auto" },
-          1: { cellWidth: 45, halign: "right", fontStyle: "bold" },
+          1: { cellWidth: 50, halign: "right", fontStyle: "bold" },
         },
       });
-      brkY = doc.lastAutoTable.finalY + 5;
+      brkY = doc.lastAutoTable.finalY + 6;
     }
 
-    // ── VacatAd Savings (compact) ──
-    var savY = sectionLabel("VacatAd Savings Estimate", m, brkY + 2);
+    // ── VacatAd Savings ──
+    var savY = sectionHead("VacatAd Savings Estimate", m, brkY + 3);
     var cycle = result.inputs.isIndustrial ? "6 months (industrial)" : "3 months (standard)";
     var savRows = [
       ["Relief cycle", cycle],
@@ -238,264 +281,179 @@
       margin: { left: m, right: m },
       body: savRows,
       theme: "striped",
-      styles: { fontSize: 8, cellPadding: { top: 2, bottom: 2, left: 3, right: 3 } },
-      alternateRowStyles: { fillColor: [248, 249, 248] },
+      styles: { fontSize: 10, cellPadding: { top: 3, bottom: 3, left: 4, right: 4 } },
+      alternateRowStyles: { fillColor: C.off },
       columnStyles: {
         0: { cellWidth: "auto" },
-        1: { cellWidth: 45, halign: "right", fontStyle: "bold" },
+        1: { cellWidth: 50, halign: "right", fontStyle: "bold" },
       },
       didParseCell: function (data) {
         if (data.row.index === 4 && data.section === "body") {
           data.cell.styles.fontStyle = "bold";
-          data.cell.styles.fillColor = [34, 120, 34];
-          data.cell.styles.textColor = [255, 255, 255];
+          data.cell.styles.fillColor = C.green;
+          data.cell.styles.textColor = C.white;
+          data.cell.styles.fontSize = 11;
         }
       },
     });
 
     // ── CTA bar ──
-    var ctaY = doc.lastAutoTable.finalY + 8;
-    if (ctaY < ph - 35) {
-      doc.setFillColor(90, 184, 187);
-      doc.roundedRect(m, ctaY, cw, 14, 2, 2, "F");
+    var ctaBarY = doc.lastAutoTable.finalY + 8;
+    if (ctaBarY < ph - 30) {
+      doc.setFillColor.apply(doc, C.teal);
+      doc.roundedRect(m, ctaBarY, cw, 16, 3, 3, "F");
       doc.setFont("helvetica", "bold");
-      doc.setFontSize(9);
-      doc.setTextColor(255, 255, 255);
-      doc.textWithLink("Ready to start saving?  vacatad.com/contact  |  0333 090 0443", pw / 2, ctaY + 9, { align: "center", url: "https://vacatad.com/contact" });
+      doc.setFontSize(11);
+      doc.setTextColor.apply(doc, C.white);
+      doc.textWithLink("Ready to start saving?  vacatad.com/contact  |  0333 090 0443", pw / 2, ctaBarY + 10.5, { align: "center", url: "https://vacatad.com/contact" });
     }
 
     // Disclaimer
-    doc.setFontSize(6.5);
-    doc.setTextColor(160);
+    doc.setFontSize(7);
+    doc.setTextColor.apply(doc, C.ltGrey);
     doc.text("Estimates based on 2026/27 multipliers and published relief schemes. Actual bills determined by your local billing authority.", m, ph - 10);
     doc.text("Rateable values set by the Valuation Office Agency. This report does not constitute financial advice.", m, ph - 6);
 
-    /* ── Helper: draw page header ribbon ── */
-    function drawPageHeader(leftText, rightText) {
-      doc.setFillColor(26, 28, 26);
-      doc.rect(0, 0, pw, 14, "F");
-      doc.setFont("helvetica", "normal");
-      doc.setFontSize(7.5);
-      doc.setTextColor(200, 200, 200);
-      doc.text(leftText, m, 9);
-      doc.text(rightText, pw - m, 9, { align: "right" });
-    }
-
-    /* ── Helper: draw section heading with accent bar ── */
-    function drawSectionHeading(title, y) {
-      doc.setFillColor(219, 244, 204);
-      doc.rect(m, y - 4.5, 3, 6, "F");
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(13);
-      doc.setTextColor(26, 28, 26);
-      doc.text(title, m + 7, y);
-      return y + 8;
-    }
-
-    /* ══════════════════════════════════════════════════
-       PAGE 2: HOW VACATAD WORKS
-       ══════════════════════════════════════════════════ */
+    /* ═════════════════════════════════════════════
+       PAGE 2: HOW VACATAD WORKS + CTA
+       ═════════════════════════════════════════════ */
     doc.addPage();
-    drawPageHeader("How VacatAd Works", "vacatad.com");
 
-    var hy = drawSectionHeading("Our Process", 28);
+    // Mini header ribbon
+    doc.setFillColor.apply(doc, C.dark);
+    doc.rect(0, 0, pw, 16, "F");
     doc.setFont("helvetica", "normal");
     doc.setFontSize(9);
-    doc.setTextColor(80);
+    doc.setTextColor(200, 200, 200);
+    doc.text("How VacatAd Works", m, 10.5);
+    doc.text("vacatad.com", pw - m, 10.5, { align: "right" });
+
+    var hy = 30;
+    doc.setFillColor.apply(doc, C.mint);
+    doc.rect(m, hy - 5, 3, 8, "F");
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(16);
+    doc.setTextColor.apply(doc, C.dark);
+    doc.text("Our Process", m + 8, hy);
+
+    hy += 8;
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10.5);
+    doc.setTextColor(80, 80, 80);
     var introLines = doc.splitTextToSize(
       "VacatAd helps commercial landlords legally reduce business rates on vacant properties through compliant beneficial occupation using plug-and-play Wi-Fi technology. With a 100% relief success rate across 250+ UK properties, we deliver proven results.",
-      cw - 7
+      cw - 8
     );
-    doc.text(introLines, m + 7, hy);
-    hy += introLines.length * 4.5 + 8;
+    doc.text(introLines, m + 8, hy);
+    hy += introLines.length * 5.2 + 10;
 
     var steps = [
-      { num: "01", title: "Free Assessment", desc: "We evaluate your property's business rates relief potential and provide a detailed savings estimate at no cost. Our experts analyse your rateable values, applicable reliefs, and the optimal strategy for your portfolio." },
-      { num: "02", title: "Plug-and-Play Setup", desc: "Our secure Wi-Fi technology is installed rapidly and non-disruptively, typically operational within days. There's no impact on your property plans, existing tenants, or building condition." },
-      { num: "03", title: "Beneficial Occupation", desc: "We create compliant occupation for the required period, resetting relief cycles and reducing your holding costs. Our method is fully aligned with VOA regulations and case law." },
-      { num: "04", title: "Compliance Evidence", desc: "Continuous monitoring produces documented proof of genuine occupation. We maintain a full audit trail ready for any local authority enquiry, giving you complete peace of mind." },
-      { num: "05", title: "Ongoing Savings", desc: "Relief cycles are managed continuously to maximise savings. You receive regular reporting, and our team is always available to discuss changes in legislation or your portfolio." },
+      { num: "01", title: "Free Assessment", desc: "We evaluate your property's business rates relief potential and provide a detailed savings estimate at no cost." },
+      { num: "02", title: "Plug-and-Play Setup", desc: "Our secure Wi-Fi technology is installed rapidly and non-disruptively, typically operational within days." },
+      { num: "03", title: "Beneficial Occupation", desc: "We create compliant occupation for the required period, resetting relief cycles and reducing your holding costs." },
+      { num: "04", title: "Compliance Evidence", desc: "Continuous monitoring produces documented proof of genuine occupation with a full audit trail." },
+      { num: "05", title: "Ongoing Savings", desc: "Relief cycles are managed continuously. You receive regular reporting and our team handles everything." },
     ];
 
     steps.forEach(function (step) {
-      doc.setFillColor(26, 28, 26);
-      doc.circle(m + 7, hy + 2, 5, "F");
+      // Number badge
+      doc.setFillColor.apply(doc, C.dark);
+      doc.circle(m + 8, hy + 2.5, 6, "F");
       doc.setFont("helvetica", "bold");
-      doc.setFontSize(8);
-      doc.setTextColor(219, 244, 204);
-      doc.text(step.num, m + 7, hy + 3.5, { align: "center" });
+      doc.setFontSize(9);
+      doc.setTextColor.apply(doc, C.mint);
+      doc.text(step.num, m + 8, hy + 4, { align: "center" });
 
       doc.setFont("helvetica", "bold");
-      doc.setFontSize(11);
-      doc.setTextColor(26, 28, 26);
-      doc.text(step.title, m + 16, hy + 3);
+      doc.setFontSize(13);
+      doc.setTextColor.apply(doc, C.dark);
+      doc.text(step.title, m + 18, hy + 4);
 
       doc.setFont("helvetica", "normal");
-      doc.setFontSize(8.5);
-      doc.setTextColor(80);
-      var descLines = doc.splitTextToSize(step.desc, cw - 16);
-      doc.text(descLines, m + 16, hy + 9);
-      hy += 9 + descLines.length * 4 + 8;
+      doc.setFontSize(10);
+      doc.setTextColor(80, 80, 80);
+      var dLines = doc.splitTextToSize(step.desc, cw - 20);
+      doc.text(dLines, m + 18, hy + 11);
+      hy += 11 + dLines.length * 5 + 8;
     });
 
-    // Why VacatAd boxes
+    // ── Why Choose VacatAd (2x2 grid) ──
     hy += 4;
-    var whyY = drawSectionHeading("Why Choose VacatAd", hy);
+    doc.setFillColor.apply(doc, C.mint);
+    doc.rect(m, hy - 5, 3, 8, "F");
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(16);
+    doc.setTextColor.apply(doc, C.dark);
+    doc.text("Why Choose VacatAd", m + 8, hy);
+    hy += 10;
+
     var whyItems = [
       { title: "Technology-First", desc: "Plug-and-play Wi-Fi routers with real-time monitoring" },
       { title: "100% Compliant", desc: "Fully aligned with VOA regulations and current case law" },
       { title: "Rapid Deployment", desc: "Go live in under a week from first call" },
       { title: "Proven Track Record", desc: "100% success rate across 250+ UK properties" },
     ];
-    var whyBoxW = (cw - 10) / 2;
+    var boxW = (cw - 8) / 2;
     whyItems.forEach(function (item, i) {
       var col = i % 2;
       var row = Math.floor(i / 2);
-      var bx = m + col * (whyBoxW + 10);
-      var by = whyY + row * 24;
-      doc.setFillColor(248, 249, 248);
-      doc.roundedRect(bx, by, whyBoxW, 20, 2, 2, "F");
+      var bx = m + col * (boxW + 8);
+      var by = hy + row * 28;
+      doc.setFillColor.apply(doc, C.off);
+      doc.roundedRect(bx, by, boxW, 24, 3, 3, "F");
       doc.setFont("helvetica", "bold");
-      doc.setFontSize(9);
-      doc.setTextColor(26, 28, 26);
-      doc.text(item.title, bx + 4, by + 8);
+      doc.setFontSize(11);
+      doc.setTextColor.apply(doc, C.dark);
+      doc.text(item.title, bx + 6, by + 10);
       doc.setFont("helvetica", "normal");
-      doc.setFontSize(7.5);
-      doc.setTextColor(100);
-      doc.text(item.desc, bx + 4, by + 14);
+      doc.setFontSize(9);
+      doc.setTextColor.apply(doc, C.grey);
+      doc.text(item.desc, bx + 6, by + 18);
     });
 
-    /* ══════════════════════════════════════════════════
-       PAGE 3: LATEST INSIGHTS / BLOG POSTS
-       ══════════════════════════════════════════════════ */
-    doc.addPage();
-    drawPageHeader("Insights & Resources", "vacatad.com");
-
-    var iy = drawSectionHeading("Latest Insights from VacatAd", 28);
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(9);
-    doc.setTextColor(80);
-    doc.text("Stay informed on business rates changes, legislation updates, and strategies to reduce your property holding costs.", m + 7, iy);
-    iy += 10;
-
-    var blogPosts = [
-      { date: "26 Mar 2026", title: "The Double Squeeze: Why Rising Rates and EPC Rules Are a Perfect Storm for Vacant Property Owners", url: "https://vacatad.com/blog/posts/26-03-26-the-double-squeeze-why-rising-rates-and-epc-rules-are-a-perfect-storm-for-vacant-property-owners/", desc: "Commercial landlords with vacant properties face mounting pressure from the April 2026 business rates overhaul alongside tightening EPC regulations." },
-      { date: "12 Mar 2026", title: "The April Reset: Your Complete Guide to the Biggest Rates Overhaul in a Decade", url: "https://vacatad.com/blog/posts/26-03-12-the-april-reset-your-complete-guide-to-the-biggest-rates-overhaul-in-a-decade/", desc: "A comprehensive guide to the new five-tier multiplier system and what it means for your business rates bill from April 2026." },
-      { date: "19 Feb 2026", title: "The Vacant Properties Bill: Could Councils Force Open Your Empty Units?", url: "https://vacatad.com/blog/posts/26-02-19-the-vacant-properties-bill-could-councils-force-open-your-empty-units/", desc: "Analysis of the new Private Members' Bill proposing councils place charities and small businesses in vacant commercial properties." },
-      { date: "22 Jan 2026", title: "2026 Revaluation Unveiled: What the Draft Values Reveal About Your Rates Bill", url: "https://vacatad.com/blog/posts/26-01-22-2026-revaluation-unveiled-what-the-draft-values-reveal-about-your-rates-bill/", desc: "The VOA has published draft 2026 rateable values, revealing a 19.2% national increase. We break down the regional impacts." },
-      { date: "8 Jan 2026", title: "2026 Budget Predictions: What Commercial Landlords Should Expect for Business Rates Reform", url: "https://vacatad.com/blog/posts/26-01-08-2026-budget-predictions-what-commercial-landlords-should-expect-for-business-rates-reform/", desc: "Expert analysis of expected business rates reforms covering revaluation cycles and multiplier changes." },
-      { date: "25 Sep 2025", title: "High Court's 2025 Ruling Reshapes Business Rates Mitigation Landscape", url: "https://vacatad.com/blog/posts/25-09-25-high-courts-2025-ruling-reshapes-business-rates-mitigation-landscape/", desc: "A landmark High Court ruling marks a turning point for commercial landlords seeking to reduce empty property rates." },
-    ];
-
-    blogPosts.forEach(function (post) {
-      doc.setFillColor(246, 247, 248);
-      doc.roundedRect(m, iy, cw, 30, 2, 2, "F");
-
-      doc.setFont("helvetica", "normal");
-      doc.setFontSize(7.5);
-      doc.setTextColor(90, 184, 187);
-      doc.text(post.date, m + 4, iy + 7);
-
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(9);
-      doc.setTextColor(26, 28, 26);
-      var titleLines = doc.splitTextToSize(post.title, cw - 8);
-      doc.textWithLink(titleLines[0], m + 4, iy + 13, { url: post.url });
-      if (titleLines[1]) doc.textWithLink(titleLines[1], m + 4, iy + 17.5, { url: post.url });
-
-      doc.setFont("helvetica", "normal");
-      doc.setFontSize(7.5);
-      doc.setTextColor(100);
-      var descLine = trunc(post.desc, 120);
-      var lastTitleY = titleLines[1] ? iy + 17.5 : iy + 13;
-      doc.text(descLine, m + 4, lastTitleY + 5.5);
-
-      iy += 34;
-    });
-
-    iy += 4;
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(9);
-    doc.setTextColor(90, 184, 187);
-    doc.textWithLink("View all insights at vacatad.com/blog", m + 7, iy, { url: "https://vacatad.com/blog/" });
-
-    /* ══════════════════════════════════════════════════
-       PAGE 4: CTA / CONTACT
-       ══════════════════════════════════════════════════ */
-    doc.addPage();
-
-    doc.setFillColor(26, 28, 26);
-    doc.rect(0, 0, pw, ph, "F");
+    // ── CTA section at bottom ──
+    var ctaTop = ph - 52;
+    doc.setFillColor.apply(doc, C.dark);
+    doc.roundedRect(m, ctaTop, cw, 40, 4, 4, "F");
 
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(36);
-    doc.setTextColor(219, 244, 204);
-    doc.text("VacatAd", pw / 2, 80, { align: "center" });
-
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(12);
-    doc.setTextColor(200, 200, 200);
-    doc.text("Business Rates Specialists", pw / 2, 92, { align: "center" });
-
-    doc.setDrawColor(219, 244, 204);
-    doc.setLineWidth(0.5);
-    doc.line(pw / 2 - 30, 102, pw / 2 + 30, 102);
-
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(22);
-    doc.setTextColor(255, 255, 255);
-    doc.text("Ready to Reduce Your", pw / 2, 125, { align: "center" });
-    doc.text("Business Rates?", pw / 2, 137, { align: "center" });
+    doc.setFontSize(16);
+    doc.setTextColor.apply(doc, C.white);
+    doc.text("Ready to Reduce Your Business Rates?", pw / 2, ctaTop + 14, { align: "center" });
 
     if (result.potentialNetSaving > 0) {
       doc.setFont("helvetica", "normal");
       doc.setFontSize(11);
-      doc.setTextColor(180, 180, 180);
-      doc.text("This property could save an estimated", pw / 2, 155, { align: "center" });
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(28);
-      doc.setTextColor(219, 244, 204);
-      doc.text(cur(result.potentialNetSaving) + " per year", pw / 2, 170, { align: "center" });
+      doc.setTextColor.apply(doc, C.mint);
+      doc.text("This property could save " + cur(result.potentialNetSaving) + " per year", pw / 2, ctaTop + 24, { align: "center" });
     }
 
-    var ctaBtnY = 190;
-    doc.setFillColor(90, 184, 187);
-    doc.roundedRect(pw / 2 - 50, ctaBtnY, 100, 16, 3, 3, "F");
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(12);
-    doc.setTextColor(255, 255, 255);
-    doc.textWithLink("Get in Touch", pw / 2, ctaBtnY + 10.5, { align: "center", url: "https://vacatad.com/contact" });
-
-    var cdY = 222;
     doc.setFont("helvetica", "normal");
     doc.setFontSize(10);
     doc.setTextColor(180, 180, 180);
-    doc.textWithLink("vacatad.com/contact", pw / 2, cdY, { align: "center", url: "https://vacatad.com/contact" });
-    doc.text("hello@vacatad.com  |  0333 090 0443", pw / 2, cdY + 10, { align: "center" });
-    doc.text("86-90 Paul Street, London, EC2A 4NA", pw / 2, cdY + 20, { align: "center" });
+    doc.textWithLink("vacatad.com/contact  |  hello@vacatad.com  |  0333 090 0443", pw / 2, ctaTop + 34, { align: "center", url: "https://vacatad.com/contact" });
 
+    // Footer
     doc.setFontSize(7);
-    doc.setTextColor(80, 80, 80);
-    doc.text("VacatAd Ltd  |  Company registered in England & Wales", pw / 2, ph - 10, { align: "center" });
+    doc.setTextColor.apply(doc, C.ltGrey);
+    doc.text("VacatAd Ltd  |  86-90 Paul Street, London, EC2A 4NA  |  Company registered in England & Wales", pw / 2, ph - 6, { align: "center" });
 
-    /* ══════════════════════════════════════════════════
-       PAGE NUMBERS (skip page 1 and final CTA page)
-       ══════════════════════════════════════════════════ */
+    // ── Page numbers ──
     var totalPages = doc.internal.getNumberOfPages();
-    for (var p = 2; p < totalPages; p++) {
+    for (var p = 1; p <= totalPages; p++) {
       doc.setPage(p);
       doc.setFontSize(7);
-      doc.setTextColor(160);
-      doc.text("Page " + p + " of " + totalPages, pw / 2, ph - 8, { align: "center" });
-      doc.text(dateStr, m, ph - 8);
-      doc.text("vacatad.com", pw - m, ph - 8, { align: "right" });
+      doc.setTextColor.apply(doc, C.ltGrey);
+      if (p > 1) {
+        doc.text(dateStr, m, ph - 6);
+        doc.text("Page " + p + " of " + totalPages, pw - m, ph - 6, { align: "right" });
+      }
     }
 
-    // Build filename
+    // Save
     var fileName = "VacatAd-Assessment";
     if (postcode) fileName += "-" + postcode.replace(/\s+/g, "");
     fileName += "-2026-27.pdf";
-
     doc.save(fileName);
 
     if (typeof gtag === "function") {
@@ -506,4 +464,7 @@
       });
     }
   }
+
+  /* Expose globally so calculator.js can call it directly on submit */
+  window.generateSinglePDF = generateSinglePDF;
 })();

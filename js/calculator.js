@@ -115,9 +115,13 @@ function calculateTRSupplement(rateableValue, receivingTR, receivingSSB) {
 function calculateVacatAdFee(rateableValue, savingAmount) {
   var tier = RATES_CONFIG.vacatadFees.find(function(t) { return rateableValue < t.rvCeiling; });
   var feePercent = tier ? tier.feePercent : 10;
+  var feeAmount = Math.round(savingAmount * (feePercent / 100) * 100) / 100;
+  var minFee = RATES_CONFIG.minimumFee || 500;
   return {
     feePercent: feePercent,
-    feeAmount: Math.round(savingAmount * (feePercent / 100) * 100) / 100,
+    feeAmount: feeAmount,
+    belowMinimum: feeAmount < minFee,
+    minimumFee: minFee,
   };
 }
 
@@ -261,6 +265,11 @@ document.addEventListener("DOMContentLoaded", function () {
     result.oldRV = oldRV;
     window._vacatadLastResult = result;
     displayResults(result);
+
+    // Immediately generate and download the PDF (skip if below minimum fee)
+    if (typeof window.generateSinglePDF === "function" && !result.vacatadFee.belowMinimum) {
+      window.generateSinglePDF(result, window._vacatadSelectedProp || null);
+    }
 
     if (typeof gtag === "function") {
       gtag("event", "calculator_submit", {
@@ -424,12 +433,29 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("res-cycle-type").textContent = cycleLabel;
     document.getElementById("res-relief-weeks").textContent = weeksLabel;
 
-    // Savings figures
-    animateValue(document.getElementById("res-saving"), 0, result.potentialAnnualSaving, 1000);
-    document.getElementById("res-fee-percent").textContent = result.vacatadFee.feePercent;
-    animateValue(document.getElementById("res-fee-amount"), 0, result.vacatadFee.feeAmount, 800);
-    animateValue(document.getElementById("res-net-saving"), 0, result.potentialNetSaving, 1200);
-    document.getElementById("res-monthly-saving").textContent = formatCurrency(Math.round(result.potentialNetSaving / 12 * 100) / 100);
+    // Savings figures — check minimum fee
+    var belowMin = result.vacatadFee.belowMinimum;
+    var savingsGrid = document.getElementById("savings-grid-normal");
+    var monthlyLine = document.getElementById("monthly-saving-line");
+    var dropshipMsg = document.getElementById("dropship-message");
+
+    if (belowMin) {
+      // Below minimum fee: show drop-ship message, hide normal savings grid
+      if (savingsGrid) savingsGrid.style.display = "none";
+      if (monthlyLine) monthlyLine.style.display = "none";
+      if (dropshipMsg) dropshipMsg.style.display = "block";
+    } else {
+      // Normal: show savings grid, hide drop-ship message
+      if (savingsGrid) savingsGrid.style.display = "";
+      if (monthlyLine) monthlyLine.style.display = "";
+      if (dropshipMsg) dropshipMsg.style.display = "none";
+
+      animateValue(document.getElementById("res-saving"), 0, result.potentialAnnualSaving, 1000);
+      document.getElementById("res-fee-percent").textContent = result.vacatadFee.feePercent;
+      animateValue(document.getElementById("res-fee-amount"), 0, result.vacatadFee.feeAmount, 800);
+      animateValue(document.getElementById("res-net-saving"), 0, result.potentialNetSaving, 1200);
+      document.getElementById("res-monthly-saving").textContent = formatCurrency(Math.round(result.potentialNetSaving / 12 * 100) / 100);
+    }
 
     resultsPanel.style.display = "block";
     resultsPanel.classList.add("animate-in");
