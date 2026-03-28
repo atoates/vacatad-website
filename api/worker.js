@@ -358,10 +358,22 @@ async function handleBatchReport(request, env) {
 
 const ALLOWED_GITHUB_USERS = new Set(['atoates']);
 
+// Cache validated tokens in-memory (per isolate) to avoid hitting GitHub API on every request.
+// TTL: 10 minutes. Cloudflare Workers reuse isolates across requests so this dramatically
+// reduces GitHub API calls during bulk operations like epoch uploads.
+const authCache = new Map();
+const AUTH_CACHE_TTL = 10 * 60 * 1000;
+
 async function validateGitHubAuth(request) {
   const authHeader = request.headers.get('Authorization') || '';
   const token = authHeader.replace(/^Bearer\s+/i, '').trim();
   if (!token) return jsonResponse({ error: 'Unauthorised' }, 401);
+
+  // Check in-memory cache first
+  const cached = authCache.get(token);
+  if (cached && cached.expiry > Date.now()) {
+    return cached.valid ? null : jsonResponse({ error: 'Invalid token' }, 401);
+  }
 
   try {
     const res = await fetch('https://api.github.com/user', {
@@ -370,11 +382,16 @@ async function validateGitHubAuth(request) {
         'User-Agent': 'VacatAd-Worker',
       },
     });
-    if (!res.ok) return jsonResponse({ error: 'Invalid token' }, 401);
+    if (!res.ok) {
+      authCache.set(token, { valid: false, expiry: Date.now() + AUTH_CACHE_TTL });
+      return jsonResponse({ error: 'Invalid token' }, 401);
+    }
     const user = await res.json();
     if (!ALLOWED_GITHUB_USERS.has(user.login)) {
+      authCache.set(token, { valid: false, expiry: Date.now() + AUTH_CACHE_TTL });
       return jsonResponse({ error: 'Forbidden' }, 403);
     }
+    authCache.set(token, { valid: true, expiry: Date.now() + AUTH_CACHE_TTL });
     return null; // auth OK
   } catch {
     return jsonResponse({ error: 'Auth check failed' }, 500);

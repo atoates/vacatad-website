@@ -237,6 +237,31 @@
         .hs-new { color: #16a34a; }
         .hs-changed { color: #d97706; }
         .hs-deleted { color: #dc2626; }
+
+        .mode-toggle {
+            display: flex;
+            gap: 0;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            width: fit-content;
+        }
+        .mode-btn {
+            padding: 10px 20px;
+            background: white;
+            border: none;
+            cursor: pointer;
+            font-size: 0.88rem;
+            font-weight: 500;
+            color: #64748b;
+            transition: all 0.15s;
+            border-right: 1px solid var(--border-color);
+        }
+        .mode-btn:last-child { border-right: none; }
+        .mode-btn:hover { background: #f8fafc; }
+        .mode-btn.active { background: var(--primary-color); color: white; }
+        .mode-btn i { margin-right: 6px; }
     </style>
 </head>
 <body>
@@ -275,10 +300,16 @@
 
             <div class="info-box">
                 <strong><i class="fas fa-info-circle"></i> How this works:</strong>
-                Upload a VOA <strong>List Entries</strong> file (update or epoch) from the
+                Upload a VOA <strong>List Entries</strong> file from the
                 <a href="https://voaratinglists.blob.core.windows.net/html/rlidata.htm" target="_blank">VOA Rating Lists</a> page.
-                The file will be scanned against the database to detect new properties, changes, and deletions.
-                You review the differences before anything is applied.
+                Use <strong>Scan &amp; Review</strong> for change updates (detects diffs), or
+                <strong>Direct Import</strong> for full epoch files (faster, skips comparison).
+            </div>
+
+            <!-- Mode toggle -->
+            <div class="mode-toggle">
+                <button class="mode-btn active" id="mode-scan" onclick="setMode('scan')"><i class="fas fa-search"></i>Scan &amp; Review</button>
+                <button class="mode-btn" id="mode-direct" onclick="setMode('direct')"><i class="fas fa-bolt"></i>Direct Import</button>
             </div>
 
             <!-- Steps -->
@@ -376,6 +407,13 @@ let diffResult = { newRows: [], changedRows: [], deletedUarns: [], unchangedCoun
 let currentFilter = 'all';
 let currentFileName = '';
 let currentFileSizeKb = 0;
+let importMode = 'scan'; // 'scan' or 'direct'
+
+function setMode(mode) {
+    importMode = mode;
+    document.getElementById('mode-scan').classList.toggle('active', mode === 'scan');
+    document.getElementById('mode-direct').classList.toggle('active', mode === 'direct');
+}
 
 // ── Step management ──
 function setStep(n) {
@@ -439,8 +477,13 @@ function parseAndScan(text) {
     });
 
     log('Parsed ' + parsedRows.length + ' entries from file', 'ok');
-    setStep(2);
-    scanForChanges();
+
+    if (importMode === 'direct') {
+        directImport();
+    } else {
+        setStep(2);
+        scanForChanges();
+    }
 }
 
 // ── Scan: compare against DB ──
@@ -666,6 +709,98 @@ function log(msg, type) {
     var cls = type === 'ok' ? 'log-ok' : type === 'err' ? 'log-err' : 'log-info';
     area.innerHTML += '<div class="' + cls + '">[' + new Date().toLocaleTimeString('en-GB') + '] ' + msg + '</div>';
     area.scrollTop = area.scrollHeight;
+}
+
+// ── Direct Import (for epoch files — skips scan, upserts everything) ──
+async function directImport() {
+    setStep(4);
+    document.getElementById('section-review').style.display = 'none';
+    document.getElementById('section-scan').style.display = 'none';
+    document.getElementById('apply-title').textContent = 'Importing ' + parsedRows.length.toLocaleString() + ' properties...';
+    log('Direct import mode — skipping scan, upserting all ' + parsedRows.length + ' entries', 'info');
+
+    var BATCH = 100;
+    var total = parsedRows.length;
+    var processed = 0, upserted = 0, deleted = 0, errors = 0;
+
+    // Separate deletions from upserts
+    var upsertRows = [];
+    var deleteList = [];
+    parsedRows.forEach(function(r) {
+        if (r.changeType && r.changeType.includes('DELETION')) {
+            deleteList.push(r.uarn);
+        } else {
+            upsertRows.push(r);
+        }
+    });
+
+    total = upsertRows.length + deleteList.length;
+    log('Upserting ' + upsertRows.length + ' properties, deleting ' + deleteList.length, 'info');
+
+    // Upserts
+    for (var i = 0; i < upsertRows.length; i += BATCH) {
+        var batch = upsertRows.slice(i, i + BATCH).map(function(r) {
+            return { uarn: r.uarn, full_address: r.full_address, postcode: r.postcode, description_code: r.description_code, description_text: r.description_text, firm_name: '', ba_code: r.ba_code, rv_2023: 0, rv_2026: r.rv_2026 };
+        });
+        try {
+            var res = await fetch(API_BASE + '/api/admin/upsert-properties', {
+                method: 'POST', headers: authHeaders(),
+                body: JSON.stringify({ rows: batch }),
+            });
+            if (!res.ok) throw new Error('API ' + res.status);
+            upserted += batch.length;
+        } catch (err) {
+            errors += batch.length;
+            log('Upsert error: ' + err.message, 'err');
+        }
+        processed += batch.length;
+        updateApplyProgress(processed, total, upserted, deleted, errors);
+
+        // Log progress every 5000 rows
+        if (upserted % 5000 < BATCH) {
+            log('Progress: ' + upserted.toLocaleString() + ' / ' + upsertRows.length.toLocaleString() + ' upserted', 'info');
+        }
+    }
+
+    // Deletes
+    for (var j = 0; j < deleteList.length; j += BATCH) {
+        var delBatch = deleteList.slice(j, j + BATCH);
+        try {
+            var dRes = await fetch(API_BASE + '/api/admin/delete-properties', {
+                method: 'POST', headers: authHeaders(),
+                body: JSON.stringify({ uarns: delBatch }),
+            });
+            if (!dRes.ok) throw new Error('API ' + dRes.status);
+            deleted += delBatch.length;
+        } catch (err) {
+            errors += delBatch.length;
+            log('Delete error: ' + err.message, 'err');
+        }
+        processed += delBatch.length;
+        updateApplyProgress(processed, total, upserted, deleted, errors);
+    }
+
+    document.getElementById('apply-title').innerHTML = '<i class="fas fa-check-circle" style="color:#16a34a; margin-right:8px;"></i>Import complete! ' + upserted.toLocaleString() + ' upserted, ' + deleted + ' deleted' + (errors > 0 ? ', ' + errors + ' errors' : '');
+    log('Direct import done. Upserted: ' + upserted.toLocaleString() + ', Deleted: ' + deleted + ', Errors: ' + errors, errors > 0 ? 'err' : 'ok');
+
+    // Log to history
+    try {
+        await fetch(API_BASE + '/api/admin/log-upload', {
+            method: 'POST',
+            headers: authHeaders(),
+            body: JSON.stringify({
+                filename: currentFileName,
+                file_size_kb: Math.round(currentFileSizeKb),
+                count_new: upserted,
+                count_changed: 0,
+                count_deleted: deleted,
+                count_unchanged: 0,
+                count_errors: errors,
+                status: errors > 0 ? 'errors' : 'completed',
+            }),
+        });
+        loadHistory();
+    } catch (e) { /* non-critical */ }
 }
 
 function resetAll() {
