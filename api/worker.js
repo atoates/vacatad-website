@@ -58,8 +58,54 @@ const PUB_VENUE_CODES = new Set([
   'LT',   // Theatre
 ]);
 
+// ── Input helpers ─────────────────────────────────────────
+function escapeLike(str) {
+  return str.replace(/%/g, '\\%').replace(/_/g, '\\_');
+}
+
+function sanitiseSearch(raw, maxLen = 100) {
+  const trimmed = (raw || '').trim().slice(0, maxLen);
+  return trimmed;
+}
+
+const MAX_BODY_BYTES = 1024 * 1024; // 1 MB
+
+// ── Rate limiting (per-isolate, best-effort) ──────────────
+const rateLimitMap = new Map();
+const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute
+const RATE_LIMIT_MAX = 30;           // max requests per IP per window
+
+function isRateLimited(request) {
+  const ip = request.headers.get('cf-connecting-ip') || 'unknown';
+  const now = Date.now();
+  const entry = rateLimitMap.get(ip);
+
+  if (!entry || now - entry.start > RATE_LIMIT_WINDOW) {
+    rateLimitMap.set(ip, { start: now, count: 1 });
+    return false;
+  }
+
+  entry.count++;
+  if (entry.count > RATE_LIMIT_MAX) return true;
+  return false;
+}
+
+// Periodically prune stale entries (every 100 requests)
+let rateLimitCounter = 0;
+function pruneRateLimitMap() {
+  rateLimitCounter++;
+  if (rateLimitCounter % 100 !== 0) return;
+  const now = Date.now();
+  for (const [ip, entry] of rateLimitMap) {
+    if (now - entry.start > RATE_LIMIT_WINDOW) rateLimitMap.delete(ip);
+  }
+}
+
 export default {
   async fetch(request, env) {
+    // Set CORS origin for this request
+    corsHeaders(request);
+
     // Handle CORS preflight
     if (request.method === 'OPTIONS') {
       return new Response(null, {
@@ -69,6 +115,14 @@ export default {
 
     const url = new URL(request.url);
     const path = url.pathname;
+
+    // Rate-limit public POST endpoints
+    pruneRateLimitMap();
+    if (request.method === 'POST' && !path.startsWith('/api/admin/')) {
+      if (isRateLimited(request)) {
+        return jsonResponse({ error: 'Too many requests' }, 429);
+      }
+    }
 
     if (path === '/api/lookup' || path === '/lookup') {
       return handleLookup(url, env);
@@ -101,6 +155,7 @@ export default {
       if (path === '/api/admin/log-upload' && request.method === 'POST') return handleLogUpload(request, env);
       if (path === '/api/admin/upload-history') return handleUploadHistory(url, env);
       if (path === '/api/admin/search-logs') return handleAdminSearchLogs(url, env);
+      if (path === '/api/admin/unsplash-search') return handleUnsplashSearch(url, env);
     }
 
     return jsonResponse({ error: 'Not found' }, 404);
@@ -108,11 +163,15 @@ export default {
 };
 
 async function handleLookup(url, env) {
-  const postcode = (url.searchParams.get('postcode') || '').trim().toUpperCase();
-  const query = (url.searchParams.get('q') || '').trim().toUpperCase();
+  const postcode = (url.searchParams.get('postcode') || '').trim().toUpperCase().slice(0, 10);
+  const query = (url.searchParams.get('q') || '').trim().toUpperCase().slice(0, 100);
 
   if (!postcode && !query) {
     return jsonResponse({ error: 'Please provide a postcode or search query' }, 400);
+  }
+
+  if (query && query.length < 2) {
+    return jsonResponse({ error: 'Search query must be at least 2 characters' }, 400);
   }
 
   let sql, args;
@@ -140,7 +199,7 @@ async function handleLookup(url, env) {
            WHERE full_address LIKE ? OR firm_name LIKE ?
            ORDER BY full_address
            LIMIT 30`;
-    const searchTerm = `%${query}%`;
+    const searchTerm = `%${escapeLike(query)}%`;
     args = [
       { type: 'text', value: searchTerm },
       { type: 'text', value: searchTerm },
@@ -182,13 +241,19 @@ async function handleLookup(url, env) {
       properties,
     });
   } catch (err) {
-    return jsonResponse({ error: 'Database query failed', detail: err.message }, 500);
+    console.error('Database query failed:', err);
+    return jsonResponse({ error: 'An internal error occurred' }, 500);
   }
 }
 
 async function handleLeads(request, env) {
   if (request.method !== 'POST') {
     return jsonResponse({ error: 'Method not allowed' }, 405);
+  }
+
+  const contentLength = parseInt(request.headers.get('content-length') || '0', 10);
+  if (contentLength > MAX_BODY_BYTES) {
+    return jsonResponse({ error: 'Payload too large' }, 413);
   }
 
   let body;
@@ -254,7 +319,8 @@ async function handleLeads(request, env) {
   ]);
 
   if (tursoResult.status === 'rejected') {
-    return jsonResponse({ error: 'Database error', detail: tursoResult.reason?.message }, 500);
+    console.error('Database error:', tursoResult.reason?.message);
+    return jsonResponse({ error: 'An internal error occurred' }, 500);
   }
 
   return jsonResponse({
@@ -266,6 +332,11 @@ async function handleLeads(request, env) {
 async function handleBatchReport(request, env) {
   if (request.method !== 'POST') {
     return jsonResponse({ error: 'Method not allowed' }, 405);
+  }
+
+  const contentLength = parseInt(request.headers.get('content-length') || '0', 10);
+  if (contentLength > MAX_BODY_BYTES) {
+    return jsonResponse({ error: 'Payload too large' }, 413);
   }
 
   let body;
@@ -355,7 +426,8 @@ async function handleBatchReport(request, env) {
 
     return jsonResponse({ success: true, quote_number: quoteNumber });
   } catch (err) {
-    return jsonResponse({ error: 'Database error', detail: err.message }, 500);
+    console.error('Database error:', err);
+    return jsonResponse({ error: 'An internal error occurred' }, 500);
   }
 }
 
@@ -410,13 +482,13 @@ async function validateGitHubAuth(request) {
 async function handleAdminLeads(url, env) {
   const limit  = Math.min(parseInt(url.searchParams.get('limit'))  || 100, 500);
   const offset = Math.max(parseInt(url.searchParams.get('offset')) || 0, 0);
-  const search = (url.searchParams.get('q') || '').trim();
+  const search = sanitiseSearch(url.searchParams.get('q'));
 
   try {
     let sql, args;
     if (search) {
       sql = `SELECT id, name, email, company, page_url, created_at FROM leads WHERE name LIKE ? OR email LIKE ? OR company LIKE ? ORDER BY id DESC LIMIT ? OFFSET ?`;
-      const term = `%${search}%`;
+      const term = `%${escapeLike(search)}%`;
       args = [
         { type: 'text', value: term },
         { type: 'text', value: term },
@@ -444,20 +516,21 @@ async function handleAdminLeads(url, env) {
 
     return jsonResponse({ leads, limit, offset });
   } catch (err) {
-    return jsonResponse({ error: 'Database error', detail: err.message }, 500);
+    console.error('Database error:', err);
+    return jsonResponse({ error: 'An internal error occurred' }, 500);
   }
 }
 
 async function handleAdminBatchReports(url, env) {
   const limit  = Math.min(parseInt(url.searchParams.get('limit'))  || 50, 200);
   const offset = Math.max(parseInt(url.searchParams.get('offset')) || 0, 0);
-  const search = (url.searchParams.get('q') || '').trim();
+  const search = sanitiseSearch(url.searchParams.get('q'));
 
   try {
     let sql, args;
     if (search) {
       sql = `SELECT id, quote_number, email, name, company, property_count, total_rv, total_bill, total_net_saving, created_at FROM batch_reports WHERE name LIKE ? OR email LIKE ? OR company LIKE ? OR quote_number LIKE ? ORDER BY id DESC LIMIT ? OFFSET ?`;
-      const term = `%${search}%`;
+      const term = `%${escapeLike(search)}%`;
       args = [
         { type: 'text', value: term },
         { type: 'text', value: term },
@@ -486,21 +559,22 @@ async function handleAdminBatchReports(url, env) {
 
     return jsonResponse({ reports, limit, offset });
   } catch (err) {
-    return jsonResponse({ error: 'Database error', detail: err.message }, 500);
+    console.error('Database error:', err);
+    return jsonResponse({ error: 'An internal error occurred' }, 500);
   }
 }
 
 async function handleAdminProperties(url, env) {
   const limit  = Math.min(parseInt(url.searchParams.get('limit'))  || 50, 200);
   const offset = Math.max(parseInt(url.searchParams.get('offset')) || 0, 0);
-  const search = (url.searchParams.get('q') || '').trim();
+  const search = sanitiseSearch(url.searchParams.get('q'));
 
   try {
     // Fetch batch reports that have properties_json
     let sql, args;
     if (search) {
       sql = `SELECT id, quote_number, email, name, company, properties_json, created_at FROM batch_reports WHERE properties_json IS NOT NULL AND (name LIKE ? OR email LIKE ? OR company LIKE ? OR properties_json LIKE ?) ORDER BY id DESC LIMIT ? OFFSET ?`;
-      const term = `%${search}%`;
+      const term = `%${escapeLike(search)}%`;
       args = [
         { type: 'text', value: term },
         { type: 'text', value: term },
@@ -550,7 +624,8 @@ async function handleAdminProperties(url, env) {
 
     return jsonResponse({ properties, limit, offset });
   } catch (err) {
-    return jsonResponse({ error: 'Database error', detail: err.message }, 500);
+    console.error('Database error:', err);
+    return jsonResponse({ error: 'An internal error occurred' }, 500);
   }
 }
 
@@ -582,7 +657,8 @@ async function handleAdminStats(env) {
       },
     });
   } catch (err) {
-    return jsonResponse({ error: 'Database error', detail: err.message }, 500);
+    console.error('Database error:', err);
+    return jsonResponse({ error: 'An internal error occurred' }, 500);
   }
 }
 
@@ -612,7 +688,8 @@ async function handleCompareProperties(request, env) {
 
     return jsonResponse({ existing });
   } catch (err) {
-    return jsonResponse({ error: 'Database error', detail: err.message }, 500);
+    console.error('Database error:', err);
+    return jsonResponse({ error: 'An internal error occurred' }, 500);
   }
 }
 
@@ -653,7 +730,8 @@ async function handleUpsertProperties(request, env) {
     await tursoPipeline(env.TURSO_URL, env.TURSO_TOKEN, statements);
     return jsonResponse({ success: true, upserted: rows.length });
   } catch (err) {
-    return jsonResponse({ error: 'Database error', detail: err.message }, 500);
+    console.error('Database error:', err);
+    return jsonResponse({ error: 'An internal error occurred' }, 500);
   }
 }
 
@@ -674,11 +752,17 @@ async function handleDeleteProperties(request, env) {
     await tursoPipeline(env.TURSO_URL, env.TURSO_TOKEN, statements);
     return jsonResponse({ success: true, deleted: uarns.length });
   } catch (err) {
-    return jsonResponse({ error: 'Database error', detail: err.message }, 500);
+    console.error('Database error:', err);
+    return jsonResponse({ error: 'An internal error occurred' }, 500);
   }
 }
 
 async function handleSearchLog(request, env) {
+  const contentLength = parseInt(request.headers.get('content-length') || '0', 10);
+  if (contentLength > MAX_BODY_BYTES) {
+    return jsonResponse({ error: 'Payload too large' }, 413);
+  }
+
   let body;
   try { body = await request.json(); } catch { return jsonResponse({ error: 'Invalid JSON' }, 400); }
 
@@ -738,14 +822,15 @@ async function handleSearchLog(request, env) {
     ]);
     return jsonResponse({ success: true });
   } catch (err) {
-    return jsonResponse({ error: 'Database error', detail: err.message }, 500);
+    console.error('Database error:', err);
+    return jsonResponse({ error: 'An internal error occurred' }, 500);
   }
 }
 
 async function handleAdminSearchLogs(url, env) {
   const limit  = Math.min(parseInt(url.searchParams.get('limit'))  || 100, 500);
   const offset = Math.max(parseInt(url.searchParams.get('offset')) || 0, 0);
-  const search = (url.searchParams.get('q') || '').trim();
+  const search = sanitiseSearch(url.searchParams.get('q'));
 
   try {
     // Create table if not yet exists
@@ -767,7 +852,7 @@ async function handleAdminSearchLogs(url, env) {
     let sql, args;
     if (search) {
       sql = `SELECT * FROM search_log WHERE name LIKE ? OR email LIKE ? OR company LIKE ? OR address LIKE ? OR postcode LIKE ? ORDER BY id DESC LIMIT ? OFFSET ?`;
-      const term = `%${search}%`;
+      const term = `%${escapeLike(search)}%`;
       args = [
         { type: 'text', value: term },
         { type: 'text', value: term },
@@ -797,7 +882,8 @@ async function handleAdminSearchLogs(url, env) {
 
     return jsonResponse({ logs, limit, offset });
   } catch (err) {
-    return jsonResponse({ error: 'Database error', detail: err.message }, 500);
+    console.error('Database error:', err);
+    return jsonResponse({ error: 'An internal error occurred' }, 500);
   }
 }
 
@@ -850,7 +936,8 @@ async function handleLogUpload(request, env) {
     ]);
     return jsonResponse({ success: true });
   } catch (err) {
-    return jsonResponse({ error: 'Database error', detail: err.message }, 500);
+    console.error('Database error:', err);
+    return jsonResponse({ error: 'An internal error occurred' }, 500);
   }
 }
 
@@ -895,7 +982,34 @@ async function handleUploadHistory(url, env) {
 
     return jsonResponse({ history });
   } catch (err) {
-    return jsonResponse({ error: 'Database error', detail: err.message }, 500);
+    console.error('Database error:', err);
+    return jsonResponse({ error: 'An internal error occurred' }, 500);
+  }
+}
+
+async function handleUnsplashSearch(url, env) {
+  const query = (url.searchParams.get('q') || '').trim();
+  if (!query || query.length > 100) {
+    return jsonResponse({ error: 'Invalid search query' }, 400);
+  }
+
+  const unsplashKey = env.UNSPLASH_KEY;
+  if (!unsplashKey) {
+    return jsonResponse({ error: 'Unsplash not configured' }, 500);
+  }
+
+  try {
+    const res = await fetch(
+      `https://api.unsplash.com/search/photos?page=1&query=${encodeURIComponent(query)}&per_page=12&client_id=${unsplashKey}`
+    );
+    if (!res.ok) {
+      return jsonResponse({ error: 'Unsplash search failed' }, res.status);
+    }
+    const data = await res.json();
+    return jsonResponse(data);
+  } catch (err) {
+    console.error('Unsplash search error:', err);
+    return jsonResponse({ error: 'An internal error occurred' }, 500);
   }
 }
 
@@ -953,11 +1067,23 @@ function jsonResponse(data, status = 200) {
   });
 }
 
-function corsHeaders() {
+const ALLOWED_ORIGINS = new Set([
+  'https://vacatad.com',
+  'https://www.vacatad.com',
+]);
+
+let _currentOrigin = 'https://vacatad.com';
+
+function corsHeaders(request) {
+  if (request) {
+    const origin = request.headers.get('Origin') || '';
+    _currentOrigin = ALLOWED_ORIGINS.has(origin) ? origin : 'https://vacatad.com';
+  }
   return {
-    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Origin': _currentOrigin,
     'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type, Authorization',
     'Access-Control-Max-Age': '86400',
+    'Vary': 'Origin',
   };
 }

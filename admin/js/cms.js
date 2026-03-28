@@ -6,7 +6,7 @@ const CONFIG = {
     postsPath: 'blog/data/posts.json',
     postsDir: 'blog/posts',
     imagesPath: 'blog/images',
-    unsplashKey: 'fdDbx-PtU0_yUG7tesTCiAP_Z8nyabBJnQc5zVgilHg'
+    apiBase: 'https://vacatad-voa-lookup.vacatad.workers.dev'
 };
 
 // State
@@ -225,7 +225,7 @@ const MediaLibrary = {
         grid.innerHTML = 'Searching...';
         
         try {
-            const res = await fetch(`https://api.unsplash.com/search/photos?page=1&query=${encodeURIComponent(query)}&per_page=12&client_id=${CONFIG.unsplashKey}`);
+            const res = await fetch(`${CONFIG.apiBase}/api/admin/unsplash-search?q=${encodeURIComponent(query)}`, { headers: { 'Authorization': `Bearer ${State.token}` } });
             const data = await res.json();
             
             grid.innerHTML = '';
