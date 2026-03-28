@@ -94,6 +94,8 @@ export default {
       if (path === '/api/admin/upsert-properties' && request.method === 'POST') return handleUpsertProperties(request, env);
       if (path === '/api/admin/delete-properties' && request.method === 'POST') return handleDeleteProperties(request, env);
       if (path === '/api/admin/compare-properties' && request.method === 'POST') return handleCompareProperties(request, env);
+      if (path === '/api/admin/log-upload' && request.method === 'POST') return handleLogUpload(request, env);
+      if (path === '/api/admin/upload-history') return handleUploadHistory(url, env);
     }
 
     return jsonResponse({ error: 'Not found' }, 404);
@@ -645,6 +647,104 @@ async function handleDeleteProperties(request, env) {
 
     await tursoPipeline(env.TURSO_URL, env.TURSO_TOKEN, statements);
     return jsonResponse({ success: true, deleted: uarns.length });
+  } catch (err) {
+    return jsonResponse({ error: 'Database error', detail: err.message }, 500);
+  }
+}
+
+async function handleLogUpload(request, env) {
+  let body;
+  try { body = await request.json(); } catch { return jsonResponse({ error: 'Invalid JSON' }, 400); }
+
+  const filename       = (body.filename || '').slice(0, 300);
+  const fileSizeKb     = Number(body.file_size_kb)   || 0;
+  const countNew       = Number(body.count_new)       || 0;
+  const countChanged   = Number(body.count_changed)   || 0;
+  const countDeleted   = Number(body.count_deleted)   || 0;
+  const countUnchanged = Number(body.count_unchanged) || 0;
+  const countErrors    = Number(body.count_errors)    || 0;
+  const status         = (body.status || 'completed').slice(0, 20);
+  const uploadedAt     = new Date().toISOString();
+
+  try {
+    await tursoPipeline(env.TURSO_URL, env.TURSO_TOKEN, [
+      {
+        sql: `CREATE TABLE IF NOT EXISTS upload_history (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          filename TEXT NOT NULL,
+          file_size_kb REAL,
+          count_new INTEGER DEFAULT 0,
+          count_changed INTEGER DEFAULT 0,
+          count_deleted INTEGER DEFAULT 0,
+          count_unchanged INTEGER DEFAULT 0,
+          count_errors INTEGER DEFAULT 0,
+          status TEXT DEFAULT 'completed',
+          uploaded_at TEXT NOT NULL
+        )`,
+        args: [],
+      },
+      {
+        sql: `INSERT INTO upload_history (filename, file_size_kb, count_new, count_changed, count_deleted, count_unchanged, count_errors, status, uploaded_at)
+              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        args: [
+          { type: 'text', value: filename },
+          { type: 'text', value: String(fileSizeKb) },
+          { type: 'text', value: String(countNew) },
+          { type: 'text', value: String(countChanged) },
+          { type: 'text', value: String(countDeleted) },
+          { type: 'text', value: String(countUnchanged) },
+          { type: 'text', value: String(countErrors) },
+          { type: 'text', value: status },
+          { type: 'text', value: uploadedAt },
+        ],
+      },
+    ]);
+    return jsonResponse({ success: true });
+  } catch (err) {
+    return jsonResponse({ error: 'Database error', detail: err.message }, 500);
+  }
+}
+
+async function handleUploadHistory(url, env) {
+  const limit = Math.min(parseInt(url.searchParams.get('limit')) || 50, 200);
+
+  try {
+    // Create table if it doesn't exist yet, then fetch
+    await tursoPipeline(env.TURSO_URL, env.TURSO_TOKEN, [
+      {
+        sql: `CREATE TABLE IF NOT EXISTS upload_history (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          filename TEXT NOT NULL,
+          file_size_kb REAL,
+          count_new INTEGER DEFAULT 0,
+          count_changed INTEGER DEFAULT 0,
+          count_deleted INTEGER DEFAULT 0,
+          count_unchanged INTEGER DEFAULT 0,
+          count_errors INTEGER DEFAULT 0,
+          status TEXT DEFAULT 'completed',
+          uploaded_at TEXT NOT NULL
+        )`,
+        args: [],
+      },
+    ]);
+
+    const result = await tursoQuery(
+      env.TURSO_URL, env.TURSO_TOKEN,
+      `SELECT id, filename, file_size_kb, count_new, count_changed, count_deleted, count_unchanged, count_errors, status, uploaded_at
+       FROM upload_history ORDER BY id DESC LIMIT ?`,
+      [{ type: 'text', value: String(limit) }],
+    );
+
+    const rows = result.results[0].response.result.rows;
+    const cols = result.results[0].response.result.cols;
+
+    const history = rows.map(row => {
+      const obj = {};
+      cols.forEach((col, i) => { obj[col.name] = row[i].type === 'null' ? null : row[i].value; });
+      return obj;
+    });
+
+    return jsonResponse({ history });
   } catch (err) {
     return jsonResponse({ error: 'Database error', detail: err.message }, 500);
   }

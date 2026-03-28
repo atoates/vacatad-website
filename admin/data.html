@@ -177,6 +177,66 @@
         }
         .filter-tab:hover { border-color: var(--accent-color); }
         .filter-tab.active { background: var(--primary-color); color: white; border-color: var(--primary-color); }
+
+        .history-section {
+            margin-top: 40px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 28px;
+        }
+        .history-section h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin: 0 0 16px 0;
+        }
+        .history-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            font-size: 0.85rem;
+        }
+        .history-table thead th {
+            background: #f8fafc;
+            padding: 10px 14px;
+            text-align: left;
+            font-size: 0.74rem;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .history-table tbody td {
+            padding: 10px 14px;
+            border-bottom: 1px solid #f1f5f9;
+            vertical-align: middle;
+        }
+        .history-table tbody tr:last-child td { border-bottom: none; }
+        .history-table tbody tr:hover td { background: #f8fafc; }
+        .status-badge {
+            display: inline-block;
+            padding: 2px 9px;
+            border-radius: 12px;
+            font-size: 0.72rem;
+            font-weight: 600;
+        }
+        .status-ok { background: #dcfce7; color: #15803d; }
+        .status-err { background: #fee2e2; color: #991b1b; }
+        .history-empty {
+            text-align: center;
+            padding: 32px;
+            color: #94a3b8;
+            font-size: 0.88rem;
+        }
+        .history-stat { display: inline-block; margin-right: 10px; }
+        .history-stat .hs-num { font-weight: 700; }
+        .hs-new { color: #16a34a; }
+        .hs-changed { color: #d97706; }
+        .hs-deleted { color: #dc2626; }
     </style>
 </head>
 <body>
@@ -288,6 +348,14 @@
             <!-- Log -->
             <div class="log-area" id="log-area"></div>
 
+            <!-- Upload History -->
+            <div class="history-section">
+                <h3><i class="fas fa-history" style="margin-right:8px; color:var(--accent-color);"></i>Upload History</h3>
+                <div id="history-container">
+                    <div class="history-empty"><i class="fas fa-spinner fa-spin"></i> Loading...</div>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -306,6 +374,8 @@ function authHeaders() {
 let parsedRows = [];    // { uarn, full_address, postcode, description_code, description_text, ba_code, rv_2026, changeType }
 let diffResult = { newRows: [], changedRows: [], deletedUarns: [], unchangedCount: 0 };
 let currentFilter = 'all';
+let currentFileName = '';
+let currentFileSizeKb = 0;
 
 // ── Step management ──
 function setStep(n) {
@@ -336,7 +406,9 @@ uploadArea.addEventListener('drop', function(e) {
 fileInput.addEventListener('change', function(e) { if (e.target.files.length) handleFile(e.target.files[0]); });
 
 function handleFile(file) {
-    log('Reading ' + file.name + ' (' + (file.size / 1024).toFixed(0) + ' KB)', 'info');
+    currentFileName = file.name;
+    currentFileSizeKb = (file.size / 1024);
+    log('Reading ' + file.name + ' (' + currentFileSizeKb.toFixed(0) + ' KB)', 'info');
     var reader = new FileReader();
     reader.onload = function(e) { parseAndScan(e.target.result); };
     reader.readAsText(file);
@@ -554,8 +626,28 @@ async function applyChanges() {
         updateApplyProgress(processed, total, upserted, deleted, errors);
     }
 
+    var finalStatus = errors > 0 ? 'errors' : 'completed';
     document.getElementById('apply-title').innerHTML = '<i class="fas fa-check-circle" style="color:#16a34a; margin-right:8px;"></i>Complete! ' + upserted + ' upserted, ' + deleted + ' deleted' + (errors > 0 ? ', ' + errors + ' errors' : '');
     log('All done. Upserted: ' + upserted + ', Deleted: ' + deleted + ', Errors: ' + errors, errors > 0 ? 'err' : 'ok');
+
+    // Log this upload to history
+    try {
+        await fetch(API_BASE + '/api/admin/log-upload', {
+            method: 'POST',
+            headers: authHeaders(),
+            body: JSON.stringify({
+                filename: currentFileName,
+                file_size_kb: Math.round(currentFileSizeKb),
+                count_new: diffResult.newRows.length,
+                count_changed: diffResult.changedRows.length,
+                count_deleted: diffResult.deletedUarns.length,
+                count_unchanged: diffResult.unchangedCount,
+                count_errors: errors,
+                status: finalStatus,
+            }),
+        });
+        loadHistory();
+    } catch (e) { /* non-critical */ }
 }
 
 function updateApplyProgress(processed, total, upserted, deleted, errors) {
@@ -580,10 +672,69 @@ function resetAll() {
     parsedRows = [];
     diffResult = { newRows: [], changedRows: [], deletedUarns: [], unchangedCount: 0 };
     fileInput.value = '';
+    currentFileName = '';
+    currentFileSizeKb = 0;
     document.getElementById('log-area').innerHTML = '';
     document.getElementById('log-area').style.display = 'none';
     setStep(1);
 }
+
+// ── Upload History ──
+async function loadHistory() {
+    var container = document.getElementById('history-container');
+    try {
+        var res = await fetch(API_BASE + '/api/admin/upload-history?limit=20', {
+            headers: authHeaders(),
+        });
+        if (!res.ok) throw new Error('API ' + res.status);
+        var data = await res.json();
+        var history = data.history || [];
+
+        if (history.length === 0) {
+            container.innerHTML = '<div class="history-empty"><i class="fas fa-inbox" style="font-size:1.5rem; display:block; margin-bottom:8px;"></i>No uploads yet</div>';
+            return;
+        }
+
+        var html = '<table class="history-table"><thead><tr>'
+            + '<th>Date</th><th>File</th><th>Size</th>'
+            + '<th>Changes</th><th>Unchanged</th><th>Status</th>'
+            + '</tr></thead><tbody>';
+
+        history.forEach(function(h) {
+            var dt = h.uploaded_at ? new Date(h.uploaded_at).toLocaleString('en-GB', { day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' }) : '--';
+            var sz = h.file_size_kb ? Number(h.file_size_kb).toLocaleString('en-GB', {maximumFractionDigits:0}) + ' KB' : '--';
+            var hasErrors = parseInt(h.count_errors) > 0;
+            var statusCls = h.status === 'completed' ? 'status-ok' : 'status-err';
+            var statusLabel = hasErrors ? 'errors' : (h.status || 'completed');
+
+            var changes = [];
+            var nNew = parseInt(h.count_new) || 0;
+            var nChanged = parseInt(h.count_changed) || 0;
+            var nDeleted = parseInt(h.count_deleted) || 0;
+            if (nNew) changes.push('<span class="history-stat hs-new"><span class="hs-num">+' + nNew + '</span> new</span>');
+            if (nChanged) changes.push('<span class="history-stat hs-changed"><span class="hs-num">~' + nChanged + '</span> changed</span>');
+            if (nDeleted) changes.push('<span class="history-stat hs-deleted"><span class="hs-num">-' + nDeleted + '</span> deleted</span>');
+            if (!changes.length) changes.push('<span style="color:#94a3b8;">None</span>');
+
+            html += '<tr>'
+                + '<td>' + dt + '</td>'
+                + '<td style="max-width:220px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="' + esc(h.filename) + '">' + esc(h.filename) + '</td>'
+                + '<td>' + sz + '</td>'
+                + '<td>' + changes.join('') + '</td>'
+                + '<td style="color:#94a3b8;">' + (parseInt(h.count_unchanged) || 0).toLocaleString() + '</td>'
+                + '<td><span class="status-badge ' + statusCls + '">' + esc(statusLabel) + '</span></td>'
+                + '</tr>';
+        });
+
+        html += '</tbody></table>';
+        container.innerHTML = html;
+    } catch (err) {
+        container.innerHTML = '<div class="history-empty" style="color:#f87171;"><i class="fas fa-exclamation-circle"></i> Could not load history</div>';
+    }
+}
+
+// Load history when page opens
+loadHistory();
 </script>
 </body>
 </html>
