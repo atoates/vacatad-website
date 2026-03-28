@@ -401,6 +401,27 @@ function authHeaders() {
     return { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' };
 }
 
+// Auth pre-check: test the token once before starting a long batch
+async function checkAuth() {
+    try {
+        var res = await fetch(API_BASE + '/api/admin/stats', { headers: authHeaders() });
+        if (res.status === 401 || res.status === 403) {
+            log('Authentication failed — your GitHub token may have expired. Please log out and log back in with a fresh token.', 'err');
+            alert('Your GitHub token appears to have expired. Please log out and log back in.');
+            return false;
+        }
+        if (!res.ok) {
+            log('Auth check returned ' + res.status + ' — retrying...', 'err');
+            return false;
+        }
+        log('Authentication verified', 'ok');
+        return true;
+    } catch (err) {
+        log('Auth check failed: ' + err.message, 'err');
+        return false;
+    }
+}
+
 // State
 let parsedRows = [];    // { uarn, full_address, postcode, description_code, description_text, ba_code, rv_2026, changeType }
 let diffResult = { newRows: [], changedRows: [], deletedUarns: [], unchangedCount: 0 };
@@ -453,7 +474,7 @@ function handleFile(file) {
 }
 
 // ── Parse ──
-function parseAndScan(text) {
+async function parseAndScan(text) {
     var lines = text.split('\n').filter(function(l) { return l.trim(); });
     parsedRows = [];
 
@@ -477,6 +498,13 @@ function parseAndScan(text) {
     });
 
     log('Parsed ' + parsedRows.length + ' entries from file', 'ok');
+    log('Checking authentication...', 'info');
+
+    var authOk = await checkAuth();
+    if (!authOk) {
+        resetAll();
+        return;
+    }
 
     if (importMode === 'direct') {
         directImport();

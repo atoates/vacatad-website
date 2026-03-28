@@ -383,7 +383,10 @@ async function validateGitHubAuth(request) {
       },
     });
     if (!res.ok) {
-      authCache.set(token, { valid: false, expiry: Date.now() + AUTH_CACHE_TTL });
+      // Only cache definitive rejections (401/403), not transient errors (429, 5xx)
+      if (res.status === 401 || res.status === 403) {
+        authCache.set(token, { valid: false, expiry: Date.now() + AUTH_CACHE_TTL });
+      }
       return jsonResponse({ error: 'Invalid token' }, 401);
     }
     const user = await res.json();
@@ -394,6 +397,7 @@ async function validateGitHubAuth(request) {
     authCache.set(token, { valid: true, expiry: Date.now() + AUTH_CACHE_TTL });
     return null; // auth OK
   } catch {
+    // Network errors should not be cached — they are transient
     return jsonResponse({ error: 'Auth check failed' }, 500);
   }
 }
