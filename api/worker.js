@@ -187,7 +187,7 @@ async function handleLookup(url, env) {
                   firm_name, postcode, ba_code, rv_2023, rv_2026
            FROM properties
            WHERE postcode = ?
-             AND (rv_2026 >= 9000 OR rv_2023 >= 9000)
+             AND (rv_2026 >= 10000 OR rv_2023 >= 10000)
            ORDER BY full_address
            LIMIT 500`;
     args = [{ type: 'text', value: normalised }];
@@ -196,9 +196,10 @@ async function handleLookup(url, env) {
     sql = `SELECT uarn, full_address, description_code, description_text,
                   firm_name, postcode, rv_2023, rv_2026
            FROM properties
-           WHERE full_address LIKE ? OR firm_name LIKE ?
+           WHERE (full_address LIKE ? OR firm_name LIKE ?)
+             AND (rv_2026 >= 10000 OR rv_2023 >= 10000)
            ORDER BY full_address
-           LIMIT 30`;
+           LIMIT 100`;
     const searchTerm = `%${escapeLike(query)}%`;
     args = [
       { type: 'text', value: searchTerm },
