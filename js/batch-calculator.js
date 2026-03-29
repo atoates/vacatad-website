@@ -187,6 +187,7 @@
         '<button type="button" class="calc-search-result-item' + (added ? ' already-added' : '') + '" data-index="' + index + '"' + (added ? ' disabled' : '') + '>' +
           '<div class="calc-search-result-address">' + esc(prop.full_address) + (added ? ' <span class="batch-added-badge">Added</span>' : '') + '</div>' +
           '<div class="calc-search-result-meta">' +
+            (prop.postcode ? '<span>' + esc(prop.postcode) + '</span>' : '') +
             '<span>2023: <span class="calc-search-result-rv">' + rv23 + '</span></span>' +
             '<span>2026: <span class="calc-search-result-rv">' + rv26 + '</span></span>' +
             '<span>' + esc(prop.description_text) + '</span>' +
@@ -260,6 +261,7 @@
           '<button type="button" class="calc-search-result-item' + (added ? ' already-added' : '') + '" data-index="' + filteredIndices[i] + '"' + (added ? ' disabled' : '') + '>' +
             '<div class="calc-search-result-address">' + esc(prop.full_address) + (added ? ' <span class="batch-added-badge">Added</span>' : '') + '</div>' +
             '<div class="calc-search-result-meta">' +
+              (prop.postcode ? '<span>' + esc(prop.postcode) + '</span>' : '') +
               '<span>2023: <span class="calc-search-result-rv">' + rv23 + '</span></span>' +
               '<span>2026: <span class="calc-search-result-rv">' + rv26 + '</span></span>' +
               '<span>' + esc(prop.description_text) + '</span>' +
@@ -348,7 +350,9 @@
           '<div class="batch-item-header">' +
             '<div class="batch-item-info">' +
               '<div class="batch-item-address">' + esc(prop.full_address) + '</div>' +
-              '<div class="batch-item-meta">' + badges +
+              '<div class="batch-item-meta">' +
+                (prop.postcode ? '<span class="batch-item-postcode">' + esc(prop.postcode) + '</span>' : '') +
+                badges +
                 '<span class="batch-item-desc">' + esc(prop.description_text) + '</span>' +
               '</div>' +
             '</div>' +
@@ -880,10 +884,12 @@
     var rvRows = [];
     if (prop.rv_2023) rvRows.push(["2023 List (previous)", cur(prop.rv_2023)]);
     rvRows.push(["2026 List (current)", cur(prop.rv_2026 || 0)]);
+    var batchRvChangePositive = false;
     if (prop.rv_2023 && prop.rv_2026) {
       var ch = prop.rv_2026 - prop.rv_2023;
       var pct = ((ch / prop.rv_2023) * 100).toFixed(1);
       var pfx = ch >= 0 ? "+" : "";
+      batchRvChangePositive = ch > 0;
       rvRows.push(["Change", pfx + cur(Math.abs(ch)) + "  (" + pfx + pct + "%)"]);
     }
 
@@ -896,6 +902,11 @@
       columnStyles: {
         0: { textColor: BC.grey },
         1: { fontStyle: "bold", halign: "right" },
+      },
+      didParseCell: function (data) {
+        if (data.row.raw && data.row.raw[0] === "Change" && data.column.index === 1 && batchRvChangePositive) {
+          data.cell.styles.textColor = [220, 38, 38];
+        }
       },
     });
 

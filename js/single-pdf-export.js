@@ -179,10 +179,12 @@
       rvRows.push(["2023 List", cur(result.oldRV)]);
     }
     rvRows.push(["2026 List", cur(result.inputs.rateableValue)]);
+    var rvChangePositive = false;
     if (result.oldRV && result.oldRV > 0 && result.inputs.rateableValue) {
       var ch = result.inputs.rateableValue - result.oldRV;
       var pct = ((ch / result.oldRV) * 100).toFixed(1);
       var pfx = ch >= 0 ? "+" : "";
+      rvChangePositive = ch > 0;
       rvRows.push(["Change", pfx + cur(Math.abs(ch)) + " (" + pfx + pct + "%)"]);
     }
 
@@ -195,6 +197,11 @@
       columnStyles: {
         0: { textColor: C.grey },
         1: { fontStyle: "bold", halign: "right" },
+      },
+      didParseCell: function (data) {
+        if (data.row.raw && data.row.raw[0] === "Change" && data.column.index === 1 && rvChangePositive) {
+          data.cell.styles.textColor = [220, 38, 38];
+        }
       },
     });
 

@@ -204,6 +204,7 @@
         '<button type="button" class="calc-search-result-item" data-index="' + index + '">' +
           '<div class="calc-search-result-address">' + escapeHtml(prop.full_address) + '</div>' +
           '<div class="calc-search-result-meta">' +
+            (prop.postcode ? '<span>' + escapeHtml(prop.postcode) + '</span>' : '') +
             '<span>2023: <span class="calc-search-result-rv">' + rv23 + '</span></span>' +
             '<span>2026: <span class="calc-search-result-rv">' + rv26 + '</span></span>' +
             '<span>' + escapeHtml(prop.description_text) + '</span>' +
@@ -281,6 +282,7 @@
           '<button type="button" class="calc-search-result-item" data-index="' + filteredIndices[i] + '">' +
             '<div class="calc-search-result-address">' + escapeHtml(prop.full_address) + '</div>' +
             '<div class="calc-search-result-meta">' +
+              (prop.postcode ? '<span>' + escapeHtml(prop.postcode) + '</span>' : '') +
               '<span>2023: <span class="calc-search-result-rv">' + rv23 + '</span></span>' +
               '<span>2026: <span class="calc-search-result-rv">' + rv26 + '</span></span>' +
               '<span>' + escapeHtml(prop.description_text) + '</span>' +
