@@ -147,6 +147,7 @@ export default {
 
       if (path === '/api/admin/leads') return handleAdminLeads(url, env);
       if (path === '/api/admin/batch-reports') return handleAdminBatchReports(url, env);
+      if (path === '/api/admin/batch-report-properties') return handleAdminBatchReportProperties(url, env);
       if (path === '/api/admin/properties') return handleAdminProperties(url, env);
       if (path === '/api/admin/stats') return handleAdminStats(env);
       if (path === '/api/admin/upsert-properties' && request.method === 'POST') return handleUpsertProperties(request, env);
@@ -192,19 +193,24 @@ async function handleLookup(url, env) {
            LIMIT 500`;
     args = [{ type: 'text', value: normalised }];
   } else {
-    // Address search (partial match)
+    // Address search — split into words, each must match in address OR firm name
+    const words = query.split(/\s+/).filter(w => w.length > 0).slice(0, 6);
+    const wordClauses = words.map(() =>
+      `(full_address LIKE ? OR firm_name LIKE ?)`
+    ).join(' AND ');
     sql = `SELECT uarn, full_address, description_code, description_text,
                   firm_name, postcode, rv_2023, rv_2026
            FROM properties
-           WHERE (full_address LIKE ? OR firm_name LIKE ?)
+           WHERE (${wordClauses})
              AND (rv_2026 >= 10000 OR rv_2023 >= 10000)
            ORDER BY full_address
            LIMIT 100`;
-    const searchTerm = `%${escapeLike(query)}%`;
-    args = [
-      { type: 'text', value: searchTerm },
-      { type: 'text', value: searchTerm },
-    ];
+    args = [];
+    for (const w of words) {
+      const term = `%${escapeLike(w)}%`;
+      args.push({ type: 'text', value: term });
+      args.push({ type: 'text', value: term });
+    }
   }
 
   try {
@@ -559,6 +565,27 @@ async function handleAdminBatchReports(url, env) {
     });
 
     return jsonResponse({ reports, limit, offset });
+  } catch (err) {
+    console.error('Database error:', err);
+    return jsonResponse({ error: 'An internal error occurred' }, 500);
+  }
+}
+
+async function handleAdminBatchReportProperties(url, env) {
+  const reportId = url.searchParams.get('id');
+  if (!reportId) return jsonResponse({ error: 'Missing id parameter' }, 400);
+
+  try {
+    const sql = `SELECT properties_json FROM batch_reports WHERE id = ?`;
+    const args = [{ type: 'text', value: String(reportId) }];
+    const result = await tursoQuery(env.TURSO_URL, env.TURSO_TOKEN, sql, args);
+    const rows = result.results[0].response.result.rows;
+
+    if (!rows.length) return jsonResponse({ error: 'Report not found' }, 404);
+
+    const raw = rows[0][0].type === 'null' ? '[]' : rows[0][0].value;
+    const properties = JSON.parse(raw);
+    return jsonResponse({ properties });
   } catch (err) {
     console.error('Database error:', err);
     return jsonResponse({ error: 'An internal error occurred' }, 500);

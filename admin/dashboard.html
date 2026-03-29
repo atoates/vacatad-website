@@ -579,7 +579,7 @@ function showReportDetail(id) {
         <div class="detail-row"><div class="detail-label">Name</div><div class="detail-value">${esc(r.name || '--')}</div></div>
         <div class="detail-row"><div class="detail-label">Email</div><div class="detail-value">${r.email ? `<a href="mailto:${esc(r.email)}">${esc(r.email)}</a>` : '--'}</div></div>
         <div class="detail-row"><div class="detail-label">Company</div><div class="detail-value">${esc(r.company || '--')}</div></div>
-        <div class="detail-row"><div class="detail-label">Properties</div><div class="detail-value"><span class="badge badge-blue">${r.property_count || 0}</span></div></div>
+        <div class="detail-row"><div class="detail-label">Properties</div><div class="detail-value"><span class="badge badge-blue" style="cursor:pointer;" onclick="toggleReportProperties(${r.id}, this)" title="Click to view properties">${r.property_count || 0} <i class="fas fa-chevron-down" style="font-size:0.6rem;margin-left:4px;"></i></span><div id="report-props-${r.id}" class="prop-list" style="display:none;"></div></div></div>
         <div class="detail-row"><div class="detail-label">Total RV</div><div class="detail-value">${rv}</div></div>
         <div class="detail-row"><div class="detail-label">Total Bill</div><div class="detail-value">${bill}</div></div>
         <div class="detail-row"><div class="detail-label">Net Saving</div><div class="detail-value"><strong class="money">${saving}</strong></div></div>
@@ -858,6 +858,54 @@ function closeDetail() {
     document.getElementById('detail-overlay').classList.remove('open');
 }
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDetail(); });
+
+// ── Report Properties Toggle ──────────────────────────────
+async function toggleReportProperties(reportId, badge) {
+    const container = document.getElementById('report-props-' + reportId);
+    if (!container) return;
+
+    // Toggle visibility
+    if (container.style.display !== 'none' && container.innerHTML) {
+        container.style.display = 'none';
+        badge.querySelector('i').className = 'fas fa-chevron-down';
+        return;
+    }
+
+    // Load if not yet fetched
+    if (!container.dataset.loaded) {
+        container.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner"></i> Loading...</div>';
+        container.style.display = 'block';
+        badge.querySelector('i').className = 'fas fa-chevron-up';
+
+        try {
+            const resp = await fetch(API_BASE + '/api/admin/batch-report-properties?id=' + reportId, {
+                headers: authHeaders()
+            });
+            const data = await resp.json();
+            if (data.properties && data.properties.length) {
+                container.innerHTML = data.properties.map(p =>
+                    `<div class="prop-item">
+                        <strong>${esc(p.address || '--')}</strong>
+                        <div class="prop-meta">
+                            ${p.postcode ? esc(p.postcode) + ' &middot; ' : ''}
+                            RV: £${Number(p.rv_2026 || 0).toLocaleString('en-GB')} &middot;
+                            Bill: £${Number(p.annual_bill || 0).toLocaleString('en-GB')} &middot;
+                            Net saving: <strong class="money">£${Number(p.net_saving || 0).toLocaleString('en-GB')}</strong>
+                        </div>
+                    </div>`
+                ).join('');
+            } else {
+                container.innerHTML = '<div class="prop-item" style="color:#94a3b8;">No property data stored for this report.</div>';
+            }
+            container.dataset.loaded = 'true';
+        } catch (err) {
+            container.innerHTML = '<div class="prop-item" style="color:#ef4444;">Failed to load properties.</div>';
+        }
+    } else {
+        container.style.display = 'block';
+        badge.querySelector('i').className = 'fas fa-chevron-up';
+    }
+}
 
 // ── Utilities ──────────────────────────────────────────────
 function esc(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
