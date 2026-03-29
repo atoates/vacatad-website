@@ -28,7 +28,7 @@ Year: 2026
     <link rel="preconnect" href="https://www.googletagmanager.com">
 
     <link rel="stylesheet" href="css/styles.css?v=20260327">
-    <link rel="stylesheet" href="css/calculator.css?v=20260327">
+    <link rel="stylesheet" href="css/calculator.css?v=20260331">
 
     <meta name="theme-color" content="#232523">
 
@@ -231,10 +231,16 @@ Year: 2026
                 <form id="rates-calculator" novalidate>
                     <!-- Property Lookup -->
                     <div class="calc-field" id="postcode-lookup-field">
-                        <label class="calc-label" for="postcodeSearch">
-                            Find Your Property
-                            <span class="calc-label-help" data-tip="Enter your postcode to look up your property's rateable values automatically from the VOA rating lists.">?</span>
-                        </label>
+                        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.5rem;">
+                            <label class="calc-label" for="postcodeSearch" style="margin-bottom:0;">
+                                Find Your Property
+                                <span class="calc-label-help" data-tip="Search by postcode or full address to look up your property's rateable values automatically from the VOA rating lists.">?</span>
+                            </label>
+                            <div class="calc-search-mode-toggle" id="searchModeToggle">
+                                <button type="button" class="calc-mode-btn active" data-mode="postcode">Postcode</button>
+                                <button type="button" class="calc-mode-btn" data-mode="address">Address</button>
+                            </div>
+                        </div>
                         <div class="calc-search-wrap">
                             <input type="text" id="postcodeSearch" name="postcodeSearch" placeholder="Enter postcode, e.g. SW1A 1AA" autocomplete="off" spellcheck="false">
                             <button type="button" id="postcodeSearchBtn" class="calc-search-btn" aria-label="Search">
@@ -589,7 +595,7 @@ Year: 2026
 
     <script src="js/calculator-data.js?v=20260327"></script>
     <script src="js/calculator.js?v=20260327"></script>
-    <script src="js/voa-lookup.js?v=20260327"></script>
+    <script src="js/voa-lookup.js?v=20260331"></script>
     <script src="js/lib/jspdf.umd.min.js"></script>
     <script src="js/lib/jspdf.plugin.autotable.min.js"></script>
     <script src="js/batch-calculator.js?v=20260327"></script>

@@ -35,6 +35,30 @@
   var debounceTimer = null;
   var currentRequest = null;
   var lastResults = null; // Store results for client-side filtering
+  var searchMode = "postcode"; // "postcode" or "address"
+
+  // ── Search mode toggle ──
+  var toggleContainer = document.getElementById("searchModeToggle");
+  if (toggleContainer) {
+    var modeBtns = toggleContainer.querySelectorAll(".calc-mode-btn");
+    modeBtns.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        modeBtns.forEach(function (b) { b.classList.remove("active"); });
+        btn.classList.add("active");
+        searchMode = btn.getAttribute("data-mode");
+
+        // Update placeholder and clear results
+        if (searchMode === "address") {
+          searchInput.placeholder = "Enter address, e.g. 10 Downing Street";
+        } else {
+          searchInput.placeholder = "Enter postcode, e.g. SW1A 1AA";
+        }
+        searchInput.value = "";
+        hideResults();
+        searchInput.focus();
+      });
+    });
+  }
 
   // Search on button click
   searchBtn.addEventListener("click", function () {
@@ -52,7 +76,8 @@
   // Auto-search with debounce as user types
   searchInput.addEventListener("input", function () {
     var val = searchInput.value.trim();
-    if (val.length >= MIN_SEARCH_LENGTH) {
+    var minLen = searchMode === "address" ? 4 : MIN_SEARCH_LENGTH;
+    if (val.length >= minLen) {
       clearTimeout(debounceTimer);
       debounceTimer = setTimeout(doSearch, DEBOUNCE_MS);
     } else {
@@ -76,10 +101,8 @@
 
   function doSearch() {
     var query = searchInput.value.trim();
-    if (!query || query.length < MIN_SEARCH_LENGTH) return;
-
-    // Normalise postcode format
-    var postcode = query.toUpperCase().replace(/[^A-Z0-9\s]/g, "");
+    var minLen = searchMode === "address" ? 4 : MIN_SEARCH_LENGTH;
+    if (!query || query.length < minLen) return;
 
     showLoading();
 
@@ -91,7 +114,14 @@
     var controller = new AbortController();
     currentRequest = controller;
 
-    var url = API_URL + "/api/lookup?postcode=" + encodeURIComponent(postcode);
+    var url;
+    if (searchMode === "address") {
+      url = API_URL + "/api/lookup?q=" + encodeURIComponent(query);
+    } else {
+      // Normalise postcode format
+      var postcode = query.toUpperCase().replace(/[^A-Z0-9\s]/g, "");
+      url = API_URL + "/api/lookup?postcode=" + encodeURIComponent(postcode);
+    }
 
     fetch(url, { signal: controller.signal })
       .then(function (response) {
@@ -103,7 +133,7 @@
         if (data.properties && data.properties.length > 0) {
           showResults(data.properties);
         } else {
-          showEmpty(postcode);
+          showEmpty(query);
         }
       })
       .catch(function (err) {
@@ -115,8 +145,11 @@
   }
 
   function showLoading() {
+    var msg = searchMode === "address"
+      ? "Searching VOA rating list by address\u2026"
+      : "Searching VOA rating list\u2026";
     resultsContainer.innerHTML =
-      '<div class="calc-search-loading">Searching VOA rating list...</div>';
+      '<div class="calc-search-loading">' + msg + '</div>';
     resultsContainer.style.display = "block";
   }
 
@@ -262,11 +295,14 @@
     }
   }
 
-  function showEmpty(postcode) {
+  function showEmpty(query) {
+    var hint = searchMode === "address"
+      ? "Try a different address or switch to postcode search."
+      : "Check the postcode and try again, or enter your rateable values manually below.";
     resultsContainer.innerHTML =
       '<div class="calc-search-empty">' +
-        'No properties found for <strong>' + escapeHtml(postcode) + '</strong>. ' +
-        'Check the postcode and try again, or enter your rateable values manually below.' +
+        'No properties found for <strong>' + escapeHtml(query) + '</strong>. ' +
+        hint +
       '</div>';
     resultsContainer.style.display = "block";
   }
