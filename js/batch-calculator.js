@@ -14,6 +14,7 @@
   var batchSearch, batchSearchBtn, batchResults;
   var batchList, batchTotals, batchGenerateBtn;
   var batchController = null;
+  var batchSearchMode = "postcode"; // "postcode" or "address"
 
   document.addEventListener("DOMContentLoaded", function () {
     modeTabs        = document.querySelectorAll(".calc-mode-tab");
@@ -73,26 +74,59 @@
         batchResults.innerHTML = "";
       }
     });
+
+    // Search mode toggle
+    var toggleBtns = document.querySelectorAll("#batchSearchModeToggle .calc-mode-btn");
+    toggleBtns.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        toggleBtns.forEach(function (b) { b.classList.remove("active"); });
+        btn.classList.add("active");
+        batchSearchMode = btn.getAttribute("data-mode");
+        batchSearch.value = "";
+        batchResults.style.display = "none";
+        batchResults.innerHTML = "";
+        batchSearch.placeholder = batchSearchMode === "address"
+          ? "Search by address, e.g. Power Road London"
+          : "Enter postcode, e.g. SW1A 1AA";
+        batchSearch.focus();
+      });
+    });
   }
 
   function doBatchSearch() {
-    var query = batchSearch.value.trim().toUpperCase().replace(/[^A-Z0-9\s]/g, "");
-    if (!query || query.length < 3) return;
+    var raw = batchSearch.value.trim();
+    if (!raw) return;
 
-    batchResults.innerHTML = '<div class="calc-search-loading">Searching VOA rating list\u2026</div>';
+    var url;
+    if (batchSearchMode === "address") {
+      if (raw.length < 4) return;
+      url = API_URL + "/api/lookup?q=" + encodeURIComponent(raw);
+    } else {
+      var postcode = raw.toUpperCase().replace(/[^A-Z0-9\s]/g, "");
+      if (postcode.length < 3) return;
+      url = API_URL + "/api/lookup?postcode=" + encodeURIComponent(postcode);
+    }
+
+    var loadingMsg = batchSearchMode === "address"
+      ? "Searching VOA rating list by address\u2026"
+      : "Searching VOA rating list\u2026";
+    batchResults.innerHTML = '<div class="calc-search-loading">' + loadingMsg + '</div>';
     batchResults.style.display = "block";
 
     if (batchController) batchController.abort();
     batchController = new AbortController();
 
-    fetch(API_URL + "/api/lookup?postcode=" + encodeURIComponent(query), { signal: batchController.signal })
+    fetch(url, { signal: batchController.signal })
       .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
       .then(function (data) {
         batchController = null;
         if (data.properties && data.properties.length > 0) {
           showBatchResults(data.properties);
         } else {
-          batchResults.innerHTML = '<div class="calc-search-empty">No properties found for <strong>' + esc(query) + '</strong>.</div>';
+          var hint = batchSearchMode === "address"
+            ? "Try a different address or switch to postcode search."
+            : "Check the postcode and try again.";
+          batchResults.innerHTML = '<div class="calc-search-empty">No properties found for <strong>' + esc(raw) + '</strong>. ' + hint + '</div>';
         }
       })
       .catch(function (err) {
@@ -292,7 +326,7 @@
 
   function renderBatchList() {
     if (batchProperties.length === 0) {
-      batchList.innerHTML = '<div class="batch-empty"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="12" y2="14"/></svg><p>Search for a postcode above and click a property to add it to your batch.</p></div>';
+      batchList.innerHTML = '<div class="batch-empty"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="12" y2="14"/></svg><p>Search by postcode or address above and click a property to add it to your batch.</p></div>';
       batchGenerateBtn.disabled = true;
       batchTotals.style.display = "none";
       return;

@@ -492,12 +492,18 @@ Year: 2026
                         <p>Add multiple properties by postcode, then generate a portfolio PDF report with full breakdowns and VacatAd savings estimates.</p>
                     </div>
 
-                    <!-- Batch postcode lookup -->
+                    <!-- Batch property lookup -->
                     <div class="calc-field" id="batch-postcode-field">
-                        <label class="calc-label" for="batchPostcodeSearch">
-                            Add Properties by Postcode
-                            <span class="calc-label-help" data-tip="Search a postcode, then click properties to add them to your batch. Repeat for different postcodes.">?</span>
-                        </label>
+                        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.5rem;">
+                            <label class="calc-label" for="batchPostcodeSearch" style="margin-bottom:0;">
+                                Add Properties
+                                <span class="calc-label-help" data-tip="Search by postcode or full address, then click properties to add them to your batch. Repeat for different searches.">?</span>
+                            </label>
+                            <div class="calc-search-mode-toggle" id="batchSearchModeToggle">
+                                <button type="button" class="calc-mode-btn active" data-mode="postcode">Postcode</button>
+                                <button type="button" class="calc-mode-btn" data-mode="address">Address</button>
+                            </div>
+                        </div>
                         <div class="calc-search-wrap">
                             <input type="text" id="batchPostcodeSearch" name="batchPostcodeSearch" placeholder="Enter postcode, e.g. SW1A 1AA" autocomplete="off" spellcheck="false">
                             <button type="button" id="batchSearchBtn" class="calc-search-btn" aria-label="Search">
