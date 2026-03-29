@@ -164,23 +164,27 @@ export default {
 };
 
 async function handleLookup(url, env) {
-  const postcode = (url.searchParams.get('postcode') || '').trim().toUpperCase().slice(0, 10);
-  const query = (url.searchParams.get('q') || '').trim().toUpperCase().slice(0, 100);
+  // Accept either ?q= (unified) or legacy ?postcode= parameter
+  const raw = (url.searchParams.get('q') || url.searchParams.get('postcode') || '').trim().toUpperCase().slice(0, 100);
 
-  if (!postcode && !query) {
+  if (!raw) {
     return jsonResponse({ error: 'Please provide a postcode or search query' }, 400);
   }
 
-  if (query && query.length < 2) {
+  if (raw.length < 2) {
     return jsonResponse({ error: 'Search query must be at least 2 characters' }, 400);
   }
 
+  // Auto-detect UK postcode pattern: A9 9AA, A99 9AA, A9A 9AA, AA9 9AA, AA99 9AA, AA9A 9AA
+  const postcodeRegex = /^[A-Z]{1,2}\d[A-Z\d]?\s*\d[A-Z]{2}$/;
+  const isPostcode = postcodeRegex.test(raw.replace(/\s+/g, ' ').trim());
+
   let sql, args;
 
-  if (postcode) {
+  if (isPostcode) {
     // Exact postcode match (normalised)
     // UK postcodes always have a 3-char inward code — strip all spaces then reinsert
-    const stripped = postcode.replace(/\s+/g, '');
+    const stripped = raw.replace(/\s+/g, '');
     const normalised = stripped.length > 3
       ? stripped.slice(0, -3) + ' ' + stripped.slice(-3)
       : stripped;
@@ -194,7 +198,7 @@ async function handleLookup(url, env) {
     args = [{ type: 'text', value: normalised }];
   } else {
     // Address search — split into words, each must match in address OR firm name
-    const words = query.split(/\s+/).filter(w => w.length > 0).slice(0, 6);
+    const words = raw.split(/\s+/).filter(w => w.length > 0).slice(0, 6);
     const wordClauses = words.map(() =>
       `(full_address LIKE ? OR firm_name LIKE ?)`
     ).join(' AND ');

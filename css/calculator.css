@@ -306,40 +306,6 @@
     outline-offset: -2px;
 }
 
-/* ── Search Mode Toggle ── */
-.calc-search-mode-toggle {
-    display: flex;
-    border: 1.5px solid var(--border-light);
-    border-radius: 8px;
-    overflow: hidden;
-    flex-shrink: 0;
-}
-
-.calc-mode-btn {
-    padding: 0.3rem 0.75rem;
-    font-size: 0.78rem;
-    font-weight: 600;
-    border: none;
-    background: transparent;
-    color: var(--grey-text);
-    cursor: pointer;
-    transition: background 0.15s, color 0.15s;
-    line-height: 1.3;
-}
-
-.calc-mode-btn:not(:last-child) {
-    border-right: 1.5px solid var(--border-light);
-}
-
-.calc-mode-btn.active {
-    background: var(--eerie-black);
-    color: var(--white);
-}
-
-.calc-mode-btn:hover:not(.active) {
-    background: rgba(26, 28, 26, 0.06);
-}
-
 /* ── Postcode Search ── */
 .calc-search-wrap {
     display: flex;

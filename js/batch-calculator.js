@@ -14,7 +14,6 @@
   var batchSearch, batchSearchBtn, batchResults;
   var batchList, batchTotals, batchGenerateBtn;
   var batchController = null;
-  var batchSearchMode = "postcode"; // "postcode" or "address"
 
   document.addEventListener("DOMContentLoaded", function () {
     modeTabs        = document.querySelectorAll(".calc-mode-tab");
@@ -74,47 +73,19 @@
         batchResults.innerHTML = "";
       }
     });
-
-    // Search mode toggle
-    var toggleBtns = document.querySelectorAll("#batchSearchModeToggle .calc-mode-btn");
-    toggleBtns.forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        toggleBtns.forEach(function (b) { b.classList.remove("active"); });
-        btn.classList.add("active");
-        batchSearchMode = btn.getAttribute("data-mode");
-        batchSearch.value = "";
-        batchResults.style.display = "none";
-        batchResults.innerHTML = "";
-        batchSearch.placeholder = batchSearchMode === "address"
-          ? "Search by address, e.g. Power Road London"
-          : "Enter postcode, e.g. SW1A 1AA";
-        batchSearch.focus();
-      });
-    });
   }
 
   function doBatchSearch() {
     var raw = batchSearch.value.trim();
-    if (!raw) return;
+    if (!raw || raw.length < 3) return;
 
-    var url;
-    if (batchSearchMode === "address") {
-      if (raw.length < 4) return;
-      url = API_URL + "/api/lookup?q=" + encodeURIComponent(raw);
-    } else {
-      var postcode = raw.toUpperCase().replace(/[^A-Z0-9\s]/g, "");
-      if (postcode.length < 3) return;
-      url = API_URL + "/api/lookup?postcode=" + encodeURIComponent(postcode);
-    }
-
-    var loadingMsg = batchSearchMode === "address"
-      ? "Searching VOA rating list by address\u2026"
-      : "Searching VOA rating list\u2026";
-    batchResults.innerHTML = '<div class="calc-search-loading">' + loadingMsg + '</div>';
+    batchResults.innerHTML = '<div class="calc-search-loading">Searching VOA rating list\u2026</div>';
     batchResults.style.display = "block";
 
     if (batchController) batchController.abort();
     batchController = new AbortController();
+
+    var url = API_URL + "/api/lookup?q=" + encodeURIComponent(raw);
 
     fetch(url, { signal: batchController.signal })
       .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
@@ -123,10 +94,7 @@
         if (data.properties && data.properties.length > 0) {
           showBatchResults(data.properties);
         } else {
-          var hint = batchSearchMode === "address"
-            ? "Try a different address or switch to postcode search."
-            : "Check the postcode and try again.";
-          batchResults.innerHTML = '<div class="calc-search-empty">No properties found for <strong>' + esc(raw) + '</strong>. ' + hint + '</div>';
+          batchResults.innerHTML = '<div class="calc-search-empty">No properties found for <strong>' + esc(raw) + '</strong>. Check your search and try again.</div>';
         }
       })
       .catch(function (err) {

@@ -231,18 +231,12 @@ Year: 2026
                 <form id="rates-calculator" novalidate>
                     <!-- Property Lookup -->
                     <div class="calc-field" id="postcode-lookup-field">
-                        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.5rem;">
-                            <label class="calc-label" for="postcodeSearch" style="margin-bottom:0;">
-                                Find Your Property
-                                <span class="calc-label-help" data-tip="Search by postcode or full address to look up your property's rateable values automatically from the VOA rating lists.">?</span>
-                            </label>
-                            <div class="calc-search-mode-toggle" id="searchModeToggle">
-                                <button type="button" class="calc-mode-btn active" data-mode="postcode">Postcode</button>
-                                <button type="button" class="calc-mode-btn" data-mode="address">Address</button>
-                            </div>
-                        </div>
+                        <label class="calc-label" for="postcodeSearch">
+                            Find Your Property
+                            <span class="calc-label-help" data-tip="Search by postcode or full address to look up your property's rateable values automatically from the VOA rating lists.">?</span>
+                        </label>
                         <div class="calc-search-wrap">
-                            <input type="text" id="postcodeSearch" name="postcodeSearch" placeholder="Enter postcode, e.g. SW1A 1AA" autocomplete="off" spellcheck="false">
+                            <input type="text" id="postcodeSearch" name="postcodeSearch" placeholder="Search by postcode (e.g. SW1A 1AA) or address (e.g. Power Road London)" autocomplete="off" spellcheck="false">
                             <button type="button" id="postcodeSearchBtn" class="calc-search-btn" aria-label="Search">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
                             </button>
@@ -494,18 +488,12 @@ Year: 2026
 
                     <!-- Batch property lookup -->
                     <div class="calc-field" id="batch-postcode-field">
-                        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.5rem;">
-                            <label class="calc-label" for="batchPostcodeSearch" style="margin-bottom:0;">
-                                Add Properties
-                                <span class="calc-label-help" data-tip="Search by postcode or full address, then click properties to add them to your batch. Repeat for different searches.">?</span>
-                            </label>
-                            <div class="calc-search-mode-toggle" id="batchSearchModeToggle">
-                                <button type="button" class="calc-mode-btn active" data-mode="postcode">Postcode</button>
-                                <button type="button" class="calc-mode-btn" data-mode="address">Address</button>
-                            </div>
-                        </div>
+                        <label class="calc-label" for="batchPostcodeSearch">
+                            Add Properties
+                            <span class="calc-label-help" data-tip="Search by postcode or full address, then click properties to add them to your batch. Repeat for different searches.">?</span>
+                        </label>
                         <div class="calc-search-wrap">
-                            <input type="text" id="batchPostcodeSearch" name="batchPostcodeSearch" placeholder="Enter postcode, e.g. SW1A 1AA" autocomplete="off" spellcheck="false">
+                            <input type="text" id="batchPostcodeSearch" name="batchPostcodeSearch" placeholder="Search by postcode (e.g. SW1A 1AA) or address (e.g. Power Road London)" autocomplete="off" spellcheck="false">
                             <button type="button" id="batchSearchBtn" class="calc-search-btn" aria-label="Search">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
                             </button>
@@ -520,7 +508,7 @@ Year: 2026
                     <div id="batchPropertyList" class="batch-property-list">
                         <div class="batch-empty">
                             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="12" y2="14"/></svg>
-                            <p>Search for a postcode above and click a property to add it to your batch.</p>
+                            <p>Search by postcode or address above and click a property to add it to your batch.</p>
                         </div>
                     </div>
 

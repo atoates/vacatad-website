@@ -35,30 +35,6 @@
   var debounceTimer = null;
   var currentRequest = null;
   var lastResults = null; // Store results for client-side filtering
-  var searchMode = "postcode"; // "postcode" or "address"
-
-  // ── Search mode toggle ──
-  var toggleContainer = document.getElementById("searchModeToggle");
-  if (toggleContainer) {
-    var modeBtns = toggleContainer.querySelectorAll(".calc-mode-btn");
-    modeBtns.forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        modeBtns.forEach(function (b) { b.classList.remove("active"); });
-        btn.classList.add("active");
-        searchMode = btn.getAttribute("data-mode");
-
-        // Update placeholder and clear results
-        if (searchMode === "address") {
-          searchInput.placeholder = "Enter address, e.g. 10 Downing Street";
-        } else {
-          searchInput.placeholder = "Enter postcode, e.g. SW1A 1AA";
-        }
-        searchInput.value = "";
-        hideResults();
-        searchInput.focus();
-      });
-    });
-  }
 
   // Search on button click
   searchBtn.addEventListener("click", function () {
@@ -76,8 +52,7 @@
   // Auto-search with debounce as user types
   searchInput.addEventListener("input", function () {
     var val = searchInput.value.trim();
-    var minLen = searchMode === "address" ? 4 : MIN_SEARCH_LENGTH;
-    if (val.length >= minLen) {
+    if (val.length >= MIN_SEARCH_LENGTH) {
       clearTimeout(debounceTimer);
       debounceTimer = setTimeout(doSearch, DEBOUNCE_MS);
     } else {
@@ -101,8 +76,7 @@
 
   function doSearch() {
     var query = searchInput.value.trim();
-    var minLen = searchMode === "address" ? 4 : MIN_SEARCH_LENGTH;
-    if (!query || query.length < minLen) return;
+    if (!query || query.length < MIN_SEARCH_LENGTH) return;
 
     showLoading();
 
@@ -114,14 +88,7 @@
     var controller = new AbortController();
     currentRequest = controller;
 
-    var url;
-    if (searchMode === "address") {
-      url = API_URL + "/api/lookup?q=" + encodeURIComponent(query);
-    } else {
-      // Normalise postcode format
-      var postcode = query.toUpperCase().replace(/[^A-Z0-9\s]/g, "");
-      url = API_URL + "/api/lookup?postcode=" + encodeURIComponent(postcode);
-    }
+    var url = API_URL + "/api/lookup?q=" + encodeURIComponent(query);
 
     fetch(url, { signal: controller.signal })
       .then(function (response) {
@@ -145,11 +112,8 @@
   }
 
   function showLoading() {
-    var msg = searchMode === "address"
-      ? "Searching VOA rating list by address\u2026"
-      : "Searching VOA rating list\u2026";
     resultsContainer.innerHTML =
-      '<div class="calc-search-loading">' + msg + '</div>';
+      '<div class="calc-search-loading">Searching VOA rating list\u2026</div>';
     resultsContainer.style.display = "block";
   }
 
@@ -298,13 +262,10 @@
   }
 
   function showEmpty(query) {
-    var hint = searchMode === "address"
-      ? "Try a different address or switch to postcode search."
-      : "Check the postcode and try again, or enter your rateable values manually below.";
     resultsContainer.innerHTML =
       '<div class="calc-search-empty">' +
         'No properties found for <strong>' + escapeHtml(query) + '</strong>. ' +
-        hint +
+        'Check your search and try again, or enter your rateable values manually below.' +
       '</div>';
     resultsContainer.style.display = "block";
   }
