@@ -1388,6 +1388,32 @@
     color: #c62828;
 }
 
+/* ── Inline property toggle ── */
+.batch-item-toggles {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.4rem 0 0.15rem;
+}
+
+.batch-inline-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.75rem;
+    color: var(--grey-text);
+    cursor: pointer;
+    user-select: none;
+}
+
+.batch-inline-toggle input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
+    margin: 0;
+    cursor: pointer;
+    accent-color: var(--eerie-black);
+}
+
 /* ── Figures row ── */
 .batch-item-figures {
     display: flex;

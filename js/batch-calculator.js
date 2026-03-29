@@ -326,6 +326,37 @@
     updateBatchTotals();
   }
 
+  function recalcBatchItem(index) {
+    var item = batchProperties[index];
+    var prop = item.prop;
+    var previousBill = calculatePreviousBill(prop.rv_2023 || 0);
+    var inputs = {
+      rateableValue:  prop.rv_2026 || 0,
+      oldRV:          prop.rv_2023 || null,
+      isRHL:          prop.is_rhl || false,
+      isSoleProperty: false,
+      isPubOrVenue:   prop.is_pub_venue || false,
+      isIndustrial:   prop.is_industrial || false,
+      isLondon:       prop.is_london || false,
+      previousBill:   previousBill,
+      lostRelief:     false,
+    };
+    var result = calculateBusinessRates(inputs);
+    result.previousBillCalc = previousBill;
+    result.oldRV = prop.rv_2023;
+
+    var minFee = RATES_CONFIG.minimumFee || 500;
+    if (result.vacatadFee.belowMinimum) {
+      result.vacatadFee.feeAmount = minFee;
+      result.potentialNetSaving = Math.round((result.potentialAnnualSaving - minFee) * 100) / 100;
+      if (result.potentialNetSaving < 0) result.potentialNetSaving = 0;
+    }
+
+    item.result = result;
+    renderBatchList();
+    updateBatchTotals();
+  }
+
   function renderBatchList() {
     if (batchProperties.length === 0) {
       batchList.innerHTML = '<div class="batch-empty"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="12" y2="14"/></svg><p>Search by postcode or address above and click a property to add it to your batch.</p></div>';
@@ -358,6 +389,12 @@
             '</div>' +
             '<button type="button" class="batch-item-remove" data-index="' + i + '" aria-label="Remove property">&times;</button>' +
           '</div>' +
+          '<div class="batch-item-toggles">' +
+            '<label class="batch-inline-toggle">' +
+              '<input type="checkbox" data-index="' + i + '" data-field="industrial"' + (prop.is_industrial ? ' checked' : '') + '>' +
+              'Industrial' +
+            '</label>' +
+          '</div>' +
           '<div class="batch-item-figures">' +
             '<div class="batch-figure"><span class="batch-figure-label">RV 2026</span><span class="batch-figure-value">' + rv26 + '</span></div>' +
             '<div class="batch-figure"><span class="batch-figure-label">Annual Bill</span><span class="batch-figure-value">\u00A3' + result.annualBill.toLocaleString("en-GB", { minimumFractionDigits: 2 }) + '</span></div>' +
@@ -373,6 +410,17 @@
     batchList.querySelectorAll(".batch-item-remove").forEach(function (btn) {
       btn.addEventListener("click", function () {
         removeFromBatch(parseInt(this.getAttribute("data-index"), 10));
+      });
+    });
+
+    batchList.querySelectorAll('.batch-inline-toggle input').forEach(function (cb) {
+      cb.addEventListener("change", function () {
+        var idx = parseInt(this.getAttribute("data-index"), 10);
+        var field = this.getAttribute("data-field");
+        if (field === "industrial") {
+          batchProperties[idx].prop.is_industrial = this.checked;
+          recalcBatchItem(idx);
+        }
       });
     });
   }
