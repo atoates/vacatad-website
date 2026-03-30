@@ -98,3 +98,8 @@ env/
 
 # Cloudflare Wrangler local cache (may contain account metadata)
 .wrangler/
+
+# Local marketing/strategy files (not part of website)
+*.rtf
+linkedin-campaign-*
+linkedin-rates-*

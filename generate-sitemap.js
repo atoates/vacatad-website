@@ -24,49 +24,49 @@ const BLOG_POSTS_DIR = path.join(__dirname, 'blog/posts');
 const STATIC_PAGES = [
     {
         loc: '/',
-        lastmod: '2025-10-15',
+        lastmod: '2026-03-30',
         changefreq: 'weekly',
         priority: 1.0
     },
     {
         loc: '/faqs.html',
-        lastmod: '2025-10-15',
+        lastmod: '2026-03-30',
         changefreq: 'monthly',
         priority: 0.8
     },
     {
         loc: '/contact.html',
-        lastmod: '2025-10-15',
+        lastmod: '2026-03-30',
         changefreq: 'monthly',
         priority: 0.9
     },
     {
         loc: '/blog/',
-        lastmod: '2025-10-15',
+        lastmod: '2026-03-30',
         changefreq: 'weekly',
         priority: 0.7
     },
     {
         loc: '/local.html',
-        lastmod: '2025-10-15',
+        lastmod: '2026-03-30',
         changefreq: 'monthly',
         priority: 0.8
     },
     {
         loc: '/affiliate-program.html',
-        lastmod: '2025-10-15',
+        lastmod: '2026-03-30',
         changefreq: 'monthly',
         priority: 0.6
     },
     {
         loc: '/privacy.html',
-        lastmod: '2025-10-15',
+        lastmod: '2026-03-30',
         changefreq: 'yearly',
         priority: 0.3
     },
     {
         loc: '/terms.html',
-        lastmod: '2025-10-15',
+        lastmod: '2026-03-30',
         changefreq: 'yearly',
         priority: 0.3
     },
@@ -78,91 +78,103 @@ const STATIC_PAGES = [
     },
     {
         loc: '/how-we-work.html',
-        lastmod: '2025-10-15',
+        lastmod: '2026-03-30',
         changefreq: 'monthly',
         priority: 0.9
     },
     {
+        loc: '/calculator.html',
+        lastmod: '2026-03-30',
+        changefreq: 'monthly',
+        priority: 0.9
+    },
+    {
+        loc: '/the-team.html',
+        lastmod: '2026-03-30',
+        changefreq: 'monthly',
+        priority: 0.7
+    },
+    {
         loc: '/city/london.html',
-        lastmod: '2025-10-15',
+        lastmod: '2026-03-30',
         changefreq: 'monthly',
         priority: 0.7
     },
     {
         loc: '/city/manchester.html',
-        lastmod: '2025-10-15',
+        lastmod: '2026-03-30',
         changefreq: 'monthly',
         priority: 0.7
     },
     {
         loc: '/city/birmingham.html',
-        lastmod: '2025-10-15',
+        lastmod: '2026-03-30',
         changefreq: 'monthly',
         priority: 0.7
     },
     {
         loc: '/city/leeds.html',
-        lastmod: '2025-10-15',
+        lastmod: '2026-03-30',
         changefreq: 'monthly',
         priority: 0.7
     },
     {
         loc: '/city/liverpool.html',
-        lastmod: '2025-10-15',
+        lastmod: '2026-03-30',
         changefreq: 'monthly',
         priority: 0.7
     },
     {
         loc: '/city/bristol.html',
-        lastmod: '2025-10-15',
+        lastmod: '2026-03-30',
         changefreq: 'monthly',
         priority: 0.7
     },
     {
         loc: '/city/sheffield.html',
-        lastmod: '2025-10-15',
+        lastmod: '2026-03-30',
         changefreq: 'monthly',
         priority: 0.7
     },
     {
         loc: '/city/cambridge.html',
-        lastmod: '2025-10-15',
+        lastmod: '2026-03-30',
         changefreq: 'monthly',
         priority: 0.7
     },
     {
         loc: '/city/oxford.html',
-        lastmod: '2025-10-15',
+        lastmod: '2026-03-30',
         changefreq: 'monthly',
         priority: 0.7
     },
     {
         loc: '/city/northampton.html',
-        lastmod: '2025-10-15',
+        lastmod: '2026-03-30',
         changefreq: 'monthly',
         priority: 0.7
     },
     {
         loc: '/city/newcastle.html',
-        lastmod: '2025-10-15',
+        lastmod: '2026-03-30',
         changefreq: 'monthly',
         priority: 0.7
     },
     {
         loc: '/city/nottingham.html',
-        lastmod: '2025-10-15',
+        lastmod: '2026-03-30',
         changefreq: 'monthly',
         priority: 0.7
     },
     {
         loc: '/city/leicester.html',
-        lastmod: '2025-10-15',
+        lastmod: '2026-03-30',
         changefreq: 'monthly',
         priority: 0.7
     },
     {
         loc: '/city/',
-        lastmod: '2025-10-15',
+        lastmod: '2026-03-30',
         changefreq: 'monthly',
         priority: 0.8
     }
@@ -212,15 +224,30 @@ function generateSitemap() {
         console.log(`Found ${posts.length} blog posts`);
 
         posts.forEach(post => {
+            // Try to get folder name from image path first
             const imagePath = post.image || '';
             const match = imagePath.match(/posts\/([^/]+)\//);
-            const folderName = match ? match[1] : null;
+            let folderName = match ? match[1] : null;
+
+            // Fallback: find folder by matching slug in directory listing
             if (!folderName) {
+                try {
+                    const dirs = fs.readdirSync(BLOG_POSTS_DIR);
+                    const matchDir = dirs.find(d => d.endsWith('-' + post.slug));
+                    folderName = matchDir || null;
+                } catch (e) {
+                    // ignore
+                }
+            }
+
+            if (!folderName) {
+                console.warn(`Warning: Could not find folder for post "${post.title}"`);
                 return;
             }
 
             const postFile = path.join(BLOG_POSTS_DIR, folderName, 'index.html');
             if (!fs.existsSync(postFile)) {
+                console.warn(`Warning: Post file not found: ${postFile}`);
                 return;
             }
 

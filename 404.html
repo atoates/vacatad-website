@@ -237,6 +237,57 @@ Year: 2026
     <!-- Footer -->
     <vacatad-footer base-path="."></vacatad-footer>
 
+    <!-- Blog redirect handler: maps old URLs (without date prefix) to current paths -->
+    <script>
+    (function() {
+        var path = window.location.pathname;
+        if (path.indexOf('/blog/posts/') !== 0) return;
+
+        var slug = path.replace('/blog/posts/', '').replace(/\/$/, '');
+        if (/^\d{2}-\d{2}-\d{2}-/.test(slug)) return;
+
+        var redirects = {
+            'navigating-the-void-how-vacatad-revolutionises-rates-relief': '23-04-01-navigating-the-void-how-vacatad-revolutionises-rates-relief',
+            'the-vacatad-edge-transforming-business-rates': '23-07-07-the-vacatad-edge-transforming-business-rates',
+            'maximising-savings-on-empty-commercial-spaces': '23-12-04-maximising-savings-on-empty-commercial-spaces',
+            'revolutionising-empty-property-management-how-vacatad-offers-a-new-perspective': '24-02-14-revolutionising-empty-property-management-how-vacatad-offers-a-new-perspective',
+            'how-vacatad-aligns-with-government-consultation-findings': '24-03-28-how-vacatad-aligns-with-government-consultation-findings',
+            'the-true-cost-of-an-empty-property-a-technological-solution': '24-06-11-the-true-cost-of-an-empty-property-a-technological-solution',
+            'from-burden-to-relief': '24-07-19-from-burden-to-relief',
+            'adapting-to-new-business-rates-how-vacatad-supports-property-owners': '24-08-08-adapting-to-new-business-rates-how-vacatad-supports-property-owners',
+            'securing-your-vacant-properties-how-vacatad-transforms-risks-into-rewards-in-a-post-pandemic-world': '24-08-12-securing-your-vacant-properties-how-vacatad-transforms-risks-into-rewards-in-a-post-pandemic-world',
+            'legal-grey-areas-and-innovative-solutions-in-business-rates-mitigation-a-comparison': '24-09-10-legal-grey-areas-and-innovative-solutions-in-business-rates-mitigation-a-comparison',
+            'the-uks-business-rates-reform-what-it-means-for-property-owners-and-how-vacatad-can-help': '24-11-11-the-uks-business-rates-reform-what-it-means-for-property-owners-and-how-vacatad-can-help',
+            'a-beginners-guide-to-business-rates': '25-01-15-a-beginners-guide-to-business-rates',
+            'in-depth-analysis-legally-reducing-business-rates-on-vacant-property-vacatads-techfirst-solution': '25-02-17-in-depth-analysis-legally-reducing-business-rates-on-vacant-property-vacatads-techfirst-solution',
+            'spring-budget-2025-business-rates-shake-up-and-the-case-for-strategic-occupation': '25-03-26-spring-budget-2025-business-rates-shake-up-and-the-case-for-strategic-occupation',
+            'vacant-and-vulnerable-securing-empty-commercial-properties-in-a-post-pandemic-world': '25-04-06-vacant-and-vulnerable-securing-empty-commercial-properties-in-a-post-pandemic-world',
+            'the-real-cost-of-vacant-commercial-property-in-2025': '25-04-15-the-real-cost-of-vacant-commercial-property-in-2025',
+            'beneficial-occupation-explained-what-landlords-need-to-know': '25-05-22-beneficial-occupation-explained-what-landlords-need-to-know',
+            'why-2025-is-the-year-technology-redefined-business-rates-mitigation': '25-06-18-why-2025-is-the-year-technology-redefined-business-rates-mitigation',
+            'understanding-the-13-week-occupation-rule-how-to-stay-compliant': '25-07-10-understanding-the-13-week-occupation-rule-how-to-stay-compliant',
+            'from-empty-units-to-community-hubs-the-social-value-of-vacatad': '25-08-14-from-empty-units-to-community-hubs-the-social-value-of-vacatad',
+            'high-courts-2025-ruling-reshapes-business-rates-mitigation-landscape': '25-09-25-high-courts-2025-ruling-reshapes-business-rates-mitigation-landscape',
+            'business-rates-forward-look-what-the-latest-updates-mean-for-your-business': '25-10-02-business-rates-forward-look-what-the-latest-updates-mean-for-your-business',
+            'snail-farms-in-the-office-a-cautionary-tale-for-commercial-landlords': '25-10-22-snail-farms-in-the-office-a-cautionary-tale-for-commercial-landlords',
+            'autumn-budget-2025-what-the-changes-mean-for-vacant-properties-and-the-wider-sector': '25-12-01-autumn-budget-2025-what-the-changes-mean-for-vacant-properties-and-the-wider-sector',
+            'end-of-year-business-rates-strategy-maximising-relief-before-april-2026-revaluation': '25-12-05-end-of-year-business-rates-strategy-maximising-relief-before-april-2026-revaluation',
+            'winter-void-management-why-empty-properties-cost-more-in-q4-and-how-to-protect-your-assets': '25-12-18-winter-void-management-why-empty-properties-cost-more-in-q4-and-how-to-protect-your-assets',
+            '2026-budget-predictions-what-commercial-landlords-should-expect-for-business-rates-reform': '26-01-08-2026-budget-predictions-what-commercial-landlords-should-expect-for-business-rates-reform',
+            '2026-revaluation-unveiled-what-the-draft-values-reveal-about-your-rates-bill': '26-01-22-2026-revaluation-unveiled-what-the-draft-values-reveal-about-your-rates-bill',
+            'the-vacant-properties-bill-could-councils-force-open-your-empty-units': '26-02-19-the-vacant-properties-bill-could-councils-force-open-your-empty-units',
+            'the-april-reset-your-complete-guide-to-the-biggest-rates-overhaul-in-a-decade': '26-03-12-the-april-reset-your-complete-guide-to-the-biggest-rates-overhaul-in-a-decade',
+            'the-double-squeeze-why-rising-rates-and-epc-rules-are-a-perfect-storm-for-vacant-property-owners': '26-03-26-the-double-squeeze-why-rising-rates-and-epc-rules-are-a-perfect-storm-for-vacant-property-owners',
+            'business-rates-101-everything-you-need-to-know-for-2026': '26-03-28-business-rates-101-everything-you-need-to-know-for-2026',
+            'jtg177zcrzd0d1881lzfmwfcrf3xi4': '25-04-06-vacant-and-vulnerable-securing-empty-commercial-properties-in-a-post-pandemic-world'
+        };
+
+        if (redirects[slug]) {
+            window.location.replace('/blog/posts/' + redirects[slug] + '/');
+        }
+    })();
+    </script>
+
     <!-- JavaScript -->
     <script src="js/analytics-config.js"></script>
     <script src="js/script.js"></script>
