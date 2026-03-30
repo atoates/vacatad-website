@@ -247,8 +247,8 @@ async function handleLookup(url, env) {
 
     return jsonResponse({
       count: properties.length,
-      postcode: postcode || undefined,
-      query: query || undefined,
+      query: raw,
+      isPostcode,
       properties,
     });
   } catch (err) {
